@@ -1,0 +1,380 @@
+[
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2dzX3AyNTBfdmlzaW9uc19saWdodC44MjBlNmJmMzBiYjg2ZTFlMDdmOTJhNjNlODdiOTgzMTQzNGFjNjExLnBuZw--/auto/auto/85/notrim/f2d569dc2a364da0eca8104aa27d21b3.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Visions",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3AyNTBfY3liZXJjcm9jX2xpZ2h0LmU1MTAxYjBlMTkwM2U5OTNmNWFmYjUxODRjODllODMxMmMwM2ZlNmIucG5n/auto/auto/85/notrim/cd570e3093b39ff7d5f3e4c0d92af7bc.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | See Ya Later",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3AyNTBfYXNpaW1vdl9saWdodC4xZjc4MDEwNTQ0ZDFhZWU0MjFmY2NmMDAwNTY5ZTZkODIwZTIzNjExLnBuZw--/auto/auto/85/notrim/1c9bc1eda1e30b7296389ba5fc4c269e.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Asiimov",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3AyNTBfaW1wYWN0X2xpZ2h0LjZmNjdmZmRiZGIyNTc5NWExNWRkY2YyOTE1YjUzMWUyNjQ2YmUzNDgucG5n/auto/auto/85/notrim/6e394c1bdc0aec4a4f963dccc99d12a0.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Epicenter",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5ZV9waW5rX2NvcmFsX2xpZ2h0LmMwNmY1ZWYxYzQxNjU1MGQ2MjAxNjAxYWNmNDllNDZiNjQ1NjMyZTEucG5n/auto/auto/85/notrim/4f7ead3b9f87ff22145bfa00fe3ef1c6.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Red Tide",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3AyNTBfbWFuZGFsYV9saWdodC4zNzBlYjRlNzI5YjFkMjdkZWJjYzMyYzZjMWQ5MTBiNjU5MjhmYWYwLnBuZw--/auto/auto/85/notrim/0f074c7879b9ebafd10ed9e364e8425c.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Muertos",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X21vbmV5X2xpZ2h0LmMyNWI4MDU3ZjNmZmMzNzI5OWQ5YzNlMzRmMTNjNjI5MWZlZDQ4YTAucG5n/auto/auto/85/notrim/2b1806e71267a043c5e2f6e4bd3e1b8b.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Franklin",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2dzX3AyNTBfYXBlcF9saWdodC4xZTI4ZjczODBlODA5YzZiMzg0OTJhMDRkOGEyN2RmYmU4ODQzMzZiLnBuZw--/auto/auto/85/notrim/751e4ac64757dc4c9bf866afa4715d33.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Apep's Curse",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FhX3AyNTBfZ3JhdmVkaWdnZXJzX2xpZ2h0LjQ4ZGQ4MmNhNzUxOWMyM2U4NmU0ZmU3ZmQ0YTg0MDRhMzQyMTU5MjgucG5n/auto/auto/85/notrim/472cc9df1cf9b80e649951b76670ae0f.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Nevermore",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FxX3AyNTBfY2FydGVsX2xpZ2h0Ljg5ZTEyNWRiMjAyMGExODg0YjQ3MzBiZDYxNDZiNWRmMjdhMGY2MGYucG5n/auto/auto/85/notrim/cc37efb8d08815609ac03a2967582267.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Cartel",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FtX3AyNTBfYmVhZGVkX3BhaW50X2xpZ2h0LjJlYjQzZWJiMDc5ZGNmNWZkMmVkMDRjMmVhYzNjNDQ3MWU2YjRhNGYucG5n/auto/auto/85/notrim/8860076327d4c8cbf5f245defc7c9dda.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Undertow",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NvZV95ZWxsb3dfc3dpcmxfbGlnaHQuMWFkNmJlNGE0MWNiODAyZDc1MWQxYzM4MjRiZWI2NjU2ZmJjZGRmMC5wbmc-/auto/auto/85/notrim/efe1d6a7dba6bda33cd398e2afb86580.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Sedimentary",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X3AyNTBfY3JhY2tzaG90X2xpZ2h0LmNhZTEzM2RmZWY3ZTk4ZjU5ZGI4MjE0NDUxZjMwMjZkYjBjZjVmM2MucG5n/auto/auto/85/notrim/aebf60d821dec90aee3ee3442e7cfbdf.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Wingshot",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2dzX3AyNTBfY2hlY2tlcl9saWdodC40ZjIwN2Y1MjUzMjYzODVmYjRiM2FiYjk0ZDRhNzllNmU2ZTcxNGQ3LnBuZw--/auto/auto/85/notrim/8e82da498fd8686f9af4bcee3dca5f89.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Vino Primo",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NvY2hfaHVudGVyX2JsYXplX3AyNTBfbGlnaHQuYzJlNWI0NWJlNmE4YTUyM2M3ZDdlMWUwZDA1NWIyNzRhMDg0Yjk5NS5wbmc-/auto/auto/85/notrim/d0aab2c1e5b3b788616ec3b852697cd8.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Small Game",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NvX3doaXRlb3V0X2xpZ2h0LmQyMDc5NTViNGJlNjUzNDA1ODZiMjJlMTVmMGZhOTAxYTE3NjlmYjkucG5n/auto/auto/85/notrim/8702348fad89baa20c78efdeafcef61e.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Whiteout",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FtX3VyYmFuX2xpZ2h0LjQ2MjMzYmEwZTk4MjljMTU0Yjc0MjYwMDdmZDUyMDhjNDhlMmU1NDcucG5n/auto/auto/85/notrim/76bbfd761f59bf2527cf2fb96648978c.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Metallic DDPAT",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3hyYXlfcDI1MF9saWdodC40MDhjYzU1MjUxODI1YWUyZjFlYTcyMGQ2OGFmMDJlMTI0YWFmNTAxLnBuZw--/auto/auto/85/notrim/12aa42c706b9903a48bdf15579b0d04b.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | X-Ray",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3AyNTBfY2Fzc2V0dGVfbGlnaHQuY2RjNjNhZDE5YWMzOWJjNjJiZTVjMzM5M2U5NjQzM2Y2NTJhMWI3ZS5wbmc-/auto/auto/85/notrim/20f44919c884b7cef484327b10150932.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Cassette",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3AyNTBfcmVmaW5lZF9saWdodC5lOGMzMTI1YTIyZWJlZTI0NjVjODVjYzVjZjc5ODM1YmI0MWU4ZGViLnBuZw--/auto/auto/85/notrim/336ee5bf9df2865d806238393a60b344.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Mehndi",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X2JpdHRlcnN3ZWV0X2xpZ2h0LmJmOWIyZmFjNzkzYTczZTg2OWY4YzBiNzM0ZTk0YzBlYzAwMjFmMTAucG5n/auto/auto/85/notrim/52c68401bdf5d5bb43ab184be1bb79fe.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Supernova",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FxX3AyNTBfY29udG91cl9saWdodC5kZTgxMzU1MzJiNTRkYjk3YTQ5ZTZmNTg3YTNiZjc5OGYwOWI5NzEwLnBuZw--/auto/auto/85/notrim/31970687497d749e76ced69218e33e30.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Valence",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2dzX3AyNTBfY3liZXJzaGVsbF9saWdodC4yZTJjM2E4OGM3M2JhNGViYjJlM2ZjZGQyZWExOTdiNWYzMGU1Njc5LnBuZw--/auto/auto/85/notrim/4df0685fafe599d5ea10c89fa8704c9d.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Cyber Shell",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FhX3ZlcnRpZ29nZW9fbmVvbl9saWdodC42NWY1MGQzODcwMGI3ZGM2NWExNzdiODNlODVkYjYyNmI0NzhkNGI1LnBuZw--/auto/auto/85/notrim/d950c9db33388e331ead75ce36c4a580.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Digital Architect",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3AyNTBfYXhpb21fbGlnaHQuNmE3YjM1ODdlYWNhYTdlNzc3NDk2NmUwOGE0NTYzZmRkY2Y5MWQyYS5wbmc-/auto/auto/85/notrim/68f271b613a82b0b93c86df662cb0ed6.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Red Rock",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2R1Y3RzX2JsdWVfbGlnaHQuNDkyYmNkN2ZkZjQxYWFhMDJmYmEyMDdmMTM3MjQ0YWRhMmEzNTc2YS5wbmc-/auto/auto/85/notrim/abfc9ceffa4aa8608e5504c8f07e11c7.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Exchanger",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3AyNTBfaW5mZWN0X2xpZ2h0LjY2YjNhY2UzMjcyZGVhYzU5ZmRkODM4OTI2ZTI2NTY5YzQ2ZmYwOTQucG5n/auto/auto/85/notrim/a1ddcd2452dccae4409a2a1dd46d4551.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Contaminant",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2tpbW9ub19kaWFtb25kc19yZWRfbGlnaHQuZTNmYzQxNzJlNDI1YTdjOTg0OTZkNzMwMjY2ZjE1Mjk2NWM5NjkwOC5wbmc-/auto/auto/85/notrim/dffa8123c69af9c341c59cf84217de0f.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Crimson Kimono",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2N1X3AyNTBfcmVidWlsdF9saWdodC5kOWYxZjViOTMzYjRhNDRhYzQ3NWRlYWZkODE5M2M5OTM1MGMzOWFmLnBuZw--/auto/auto/85/notrim/7b77d38f229f365deb1b82179a90ae8b.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Re.built",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NwX3NwbGFzaF9wMjUwX2xpZ2h0LmRjMGRhMjFlODM4ZmVhMDgyYTNmNDY1NjIzODJmZTcwZjVjYmE0MzIucG5n/auto/auto/85/notrim/7f91e7e5010c640ba3f6a46d31fdf06b.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Splash",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2JydXRhbGlzdF9hcmNoaXRlY3R1cmVfbGlnaHQuOWJhNmI1ZGQyZDliODQxZDllMDc2YmFlNTc3ODE0NzdmNDkzYjJkZi5wbmc-/auto/auto/85/notrim/345d2f54c3c351125652dc504c7e4554.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Constructivist",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FxX3AyNTBfdmVyZGlncmlzX2xpZ2h0LmUzM2EwYWZmODU1ZWI5MjhmNDgyNGIzYWUzZDE4OWZhY2MzMzA5NjkucG5n/auto/auto/85/notrim/7240dd37ebbf44c0be941877005cb90e.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Verdigris",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2dzX3AyNTBfaW5mZXJub19saWdodC5hNTE4Nzg5MDNlYWEwMjE1ODVjNzJmMjE1YTkzY2YwYWVhMzdlZThlLnBuZw--/auto/auto/85/notrim/4cc6ab912a5bfdbc5ba338be83595ae2.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Inferno",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NwX2tpbW9ub19kaWFtb25kc19saWdodC44MzY1MTcwM2IxY2Q0MWYwY2Y4YjRhYzJiZWNiYTMzYTkxZDM0NjVhLnBuZw--/auto/auto/85/notrim/532f3358818ecd7ba39a4500380ce041.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Mint Kimono",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2JsdWVwcmludF9yZWRfbGlnaHQuMjFjZDZlNWE5YmExOWZiZDI5ZTg1ZjNlOGI2YjFhMTM1ZjVmMGNlNS5wbmc-/auto/auto/85/notrim/7d7157bc9e76cc898ac3f89c8cd89026.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Facility Draft",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X3AyNTBfdGlnZXJfbGlnaHQuODM2MThhM2I1Mjk5OGE3NTRkNTYyNjFkOTY4NjE4N2JlY2U3NjBiZS5wbmc-/auto/auto/85/notrim/0808e554e59cc91814637147bee06b88.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Bengal Tiger",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NwX251a2VzdHJpcGVfZ3JlZW5fbGlnaHQuYmE4NzM0NzIzMjQ5ZjAxMmEyNmMwNDcxMGFiZjY1ZTc1MzI1Y2UzZS5wbmc-/auto/auto/85/notrim/3924c30a1f91fcf5bfc5260ac8970d28.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Nuclear Threat",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FtX3AyNTBfc3B1dG5pa19saWdodC45NDhjZTJjMWNkYmIzNWU4ZTRkYzI0NjM0Y2VjNWQ5ZDY1ZTg1NmM3LnBuZw--/auto/auto/85/notrim/a1de1d31fa216c99975bf2093ae27ed9.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Ripple",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2ZvcmVzdF9uaWdodF9saWdodC44NTU0NmMyY2MzNWUyMjU1ZjU4NDIxMmUxMzY5YjNmZGM0M2Y3MjVjLnBuZw--/auto/auto/85/notrim/c6e187e8f438963a77ed1d9988682dce.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Forest Night",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NvX3NhbmRfbGlnaHQuODVhNGE2YWQyNzc3ZDlhN2FkNzQ3ZDg4ZDMxZjAyYWVjNjc2MTBmMy5wbmc-/auto/auto/85/notrim/d816d344e9685988d43440c7b45b0f10.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Sand Dune",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NvX2dyZXlibHVlX3AyNTBfbGlnaHQuNjNiM2FlOWIxYWExZGE2YzVjZmQwNjZlMjFlM2YzNmE3ZjVlZWQzNS5wbmc-/auto/auto/85/notrim/4b5310f011b4cf8194fd907c55e87187.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Copper Oxide",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NwX2xhY2VfbGlnaHQuMmE0ZWM2YjFlNGVhMjYzNTI1NjllYzdmM2ZhMTE5ZDYyMjg1YWQyMi5wbmc-/auto/auto/85/notrim/f8571b1a386357271dd0b5b97bf641c8.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Plum Netting",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NwX2Rlc2VydF9za3VsbHNfZGF3bl9saWdodC4xZWEwMmFlNGFkZGE4ODllODQ2ZjYwNjU4ODdiZTA3NDUzYjRiMTViLnBuZw--/auto/auto/85/notrim/3024a5282d9742a0064c88c955499760.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Drought",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FtX2RkcGF0ZGVuc2Vfc2lsdmVyX2xpZ2h0LjViZmZhYzE1NzgzODMzYjgwMmQzY2Y2Njg2OTQwYTI1YmY0ZDJmYTUucG5n/auto/auto/85/notrim/f72630b1db091e7c2dd1f6ad7675bb6c.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Steel Disruption",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X3JlZGhleF9saWdodC4xZmVhNzU2OTU4OGUxNDEyNTRmOGVhNWEwYjE1ZDAzNDE3NGMyY2YxLnBuZw--/auto/auto/85/notrim/1f78f6179554ddc0d5999a40ab461692.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Hive",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2dlbHBlbl9saWdodC5lZDk4NmY1ZDY5YTNiZmU2NjgzMWU0YzJlN2I3ZTA1MjQ2ZGMyMzMyLnBuZw--/auto/auto/85/notrim/6fef3293c5389e7a6e8da4c54d7ea503.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Gunsmoke",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2NydW1wbGVfZGFya19icmF2b19saWdodC4yZTA4ZTEzYzVjYjZmOWE4MjEyNjk5MjMwY2EzYWY5NTFjYzUyMWIzLnBuZw--/auto/auto/85/notrim/eb679fb67bf475b5fd2e72cd185aadf4.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Facets",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2Rlc2VydF9tdWx0aWNhbV9saWdodC40YzE0MWMwZmUxOGY1OWVlMDQ0MmY3OGQ4MDBiMDQwMDBhODcwMzM0LnBuZw--/auto/auto/85/notrim/36f9f6cc8e5fa298d7457d0db1445133.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Black & Tan",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2FtX3Jlbl9kYXJrX2xpZ2h0LmNhZjQwOGM5NmM3NjI0NWFmNzI4YzU5MDM4N2Y3YjVhMTc0MTYwNTUucG5n/auto/auto/85/notrim/c755956748973babeb86b4910154ce27.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Dark Filigree",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X251Y2xlYXJfc2t1bGxzNF9wMjUwX2xpZ2h0Ljk5NTQ5NWQyNzQ5NDhhZjQ2OGUyZmQzYjlkMDNmNjJjNzEyYmFhNDMucG5n/auto/auto/85/notrim/91099d17cad4f6dac8b50db4851c7b29.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Contamination",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2dzX3AyNTBfbWV0YWxfcGFuZWxzX2xpZ2h0LmFmNjZmZDUxNDdmOTBiNWRmNjcxNjJmMjk1ZTFlMTExODQ4MTZmYjAucG5n/auto/auto/85/notrim/2d8b9e158c94dc63e5202ab17a6ecba4.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "P250 | Iron Clad",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX3NwX3RhcGVfbGlnaHQuMTk5ZDUyMTNhNGQxMzJlZjE0MmJjODA4NWQ4NTA3ZTBhNjVkZDJiMC5wbmc-/auto/auto/85/notrim/e976753c82078248fede9787a9d7c01b.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Bone Mask",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2ZvcmVzdF9ib3JlYWxfbGlnaHQuNmVlNzM1NjdiZDg0MGRhMDA1ZThmZGNiYzAwNTk0Y2Y2MjE1OTViMS5wbmc-/auto/auto/85/notrim/1097b2c0ae202806a231ae0b4dd541d2.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "P250 | Boreal Forest",
+    "rarity": "Consumer Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9wMjUwX2h5X2h1bnRlcl9tb2Rlcm5fbGlnaHQuYmQzYmFiZWIwYjk2Y2FmMzQ0NTlkY2Y1ZDg5YzEzNjIyNWU3Zjk1ZS5wbmc-/auto/auto/85/notrim/7f58e2df85758338678b6dc6171a90e0.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "P250 | Modern Hunter",
+    "rarity": "Mil-Spec"
+  }
+]

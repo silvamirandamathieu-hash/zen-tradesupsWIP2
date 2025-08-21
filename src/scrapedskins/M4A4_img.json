@@ -1,0 +1,331 @@
+[
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfdGVtdWthdV9saWdodC40MWIxZDU1NmY1MTBjZWY0ZmM3MDAwN2Y4ZjNmMzViNzI5MjQzMjc5LnBuZw--/auto/auto/85/notrim/a2ed4d47e8b2c878aa7c61ce39a383b5.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Temukau",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfbmVvX25vaXJfbGlnaHQuMmY3MGU0YzBjNDc4MjNhMzY4N2E5NDBhNjE5NGQ5ZTcyYWE0M2NmYS5wbmc-/auto/auto/85/notrim/6c8ffe6fdf469db849b29a8dd4de84b1.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Neo-Noir",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfZGVzb2xhdGVfc3BhY2VfbGlnaHQuYTJlNGQ1NjVkNDM5ZGM4YTdjN2FhZTdkZGM1ZTVkNzMxMWJjY2ZmZC5wbmc-/auto/auto/85/notrim/6b6407fe51d55177424a742fb509099c.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Desolate Space",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2dzX200YTRfc2VjdG9yX2xpZ2h0LjE3M2ZhZTEzNzcwM2MyZTU0ZDI0OWQxNzI2Nzg4ZDA2MTEyMmQ4OWUucG5n/auto/auto/85/notrim/daa1ac27abd36939e6409494f5f4b520.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Buzz Kill",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfcXVlZW5mYWlyeV9saWdodC44OTg3ZGVjYTI4NDY4MWU3NDA2OTQwZTkzMmQ3ZWRmZmRkYTBhODM4LnBuZw--/auto/auto/85/notrim/bc240bbf9fba441853c1ac212be5f68d.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Tooth Fairy",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2dzX200YTRfZW1wZXJvcl9saWdodC44OWE1NjU0YTc2NTExMGFlNTY5N2U3YjBkMTdmZjBkYWYzMTdkZWZlLnBuZw--/auto/auto/85/notrim/6e51084ac660f74319b2e88e12f913ce.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | The Emperor",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX3NwZV9saWdodG5pbmdfbGlnaHQuNTg1ZmM4N2U5NTAyNDVlYzg3Njc5MGMxODY5NzI3MmIxMDFlMjM2Ny5wbmc-/auto/auto/85/notrim/86bca1371edc5cb84f191848a564c2ed.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Sheet Lightning",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfYW5jZXN0cmFsX2xpZ2h0LjUwNmFjYTkyOWU2YzZmYjMzNThlNWRjYmM2Yzc2ZTI3MzNhZmQwMDQucG5n/auto/auto/85/notrim/215547624557483aa8e5b99623844685.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | 龍王 (Dragon King)",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfbG92ZV9saWdodC44MmNjZDFlMGFiZjdkNTVmNDVkZDdjMzlhMTlhYzQ5MDRhZmI0OGIyLnBuZw--/auto/auto/85/notrim/5af55b1b6cca111f54454bba314bd7c5.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | In Living Color",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2dzX200YTRfcmFfbGlnaHQuZWJiZGMwN2U1NWRlM2VjMGZiYTg2Nzc1NjdhY2MxODkyMmY4NDgwNS5wbmc-/auto/auto/85/notrim/be253f48d3d4ad62fcdf650d6cdc3f13.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "M4A4 | Eye of Horus",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X2J1bGxldF9yYWluX200YTFfbGlnaHQuNGE0MmE4YjViNDlmN2NhNDEwYjAwZjI0MTZlMjgwMThjZWRmYjI5MC5wbmc-/auto/auto/85/notrim/eb171691dc48a108bd929060d56b6abe.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Bullet Rain",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2dzX200X2Zsb3dlcnNfbGlnaHQuNDhmOGJkZjM1OTJkNTRkNzg5MWY3NmFkMzA2YmI3YzRhNjQ5YjcyOC5wbmc-/auto/auto/85/notrim/4d1f8e38cf102afde580bf678aafe712.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Spider Lily",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfdHJhaW5faGVsbF9saWdodC5iYTdlZjU2NjJiZDE5NTk3NjY1NmFiMjgzODhlOGEzZTY2Yzg5MDIyLnBuZw--/auto/auto/85/notrim/01666860b0f8e07a09071f023f08e062.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "M4A4 | Hellish",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X3RpdGFuc3Rvcm1fbGlnaHQuOTE2MjliNzEwNGMxMTg1YjIxNGJiNzZmNDdjYzBmMmI0MzdhYmU5ZS5wbmc-/auto/auto/85/notrim/21f91d22dc4a0a34cc0d6816f2c5d79e.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Desert-Strike",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2dzX200YTRfcGlvbmVlcl9saWdodC5jNjBmYjdhYzA4NWE5ZDYxMWVjMTc0MjM0ZTNkMWY1MDhmODUyZmExLnBuZw--/auto/auto/85/notrim/c05b98045a58fac1213476c6e305b3e8.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | The Battlestar",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2dzX200YTRfcm95YWxfc3F1aXJlX2xpZ2h0LmQyNjA4OWJmZDU0ZmFjM2UzY2VlOWY5ZWE2NzRlOTM0ZmJkZDg3MDAucG5n/auto/auto/85/notrim/b09f31538e073cdd003a5b2ec9357fe4.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Royal Paladin",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfaGVsbGZpcmVfbGlnaHQuMGZjM2M2Y2UzYzczZDAxMmQ5ZjhkN2VmNjhkNjIwNjVkZmJlMzRjZS5wbmc-/auto/auto/85/notrim/b73abb09e2d76b3b3f38859b2d0ff3fd.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Hellfire",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200X2FzaW1vdl9saWdodC4zYzBmYWNhOTBkM2E2YzJiNTJlN2E3NTY4MGI4ZWVjYjZkMzlmY2I4LnBuZw--/auto/auto/85/notrim/f1e17c8937e4249076282bd86ad0105d.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Asiimov",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX200YTRfc25ha2ViaXRlX2xpZ2h0LmU2OTM4NzRjOGY0YzlmZWJiOTY2NjRhNDU2NjkxZjBmN2NhODgyM2IucG5n/auto/auto/85/notrim/ee11a7fb94727861af621fc46438759e.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Etch Lord",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfZXZpbF9kYWlteW9fbGlnaHQuNjg1NTQ1OGNkMzcxMTNjMTU2OGRlYmY1M2YwMWY5ZjBjZmYxM2Q5YS5wbmc-/auto/auto/85/notrim/92a4182369152c3a1bfd2f6ca8c6cc86.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Evil Daimyo",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2dzX200YTRfY29hbGl0aW9uX2xpZ2h0LjEzOWEyMjAwNTBkNmIyNjI4ODJhY2Y4YjdlYTI2YzkyMmRhMDIyNjQucG5n/auto/auto/85/notrim/3dea1f9a4c12331c79afa53d68e2cf8d.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | The Coalition",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfY3liZXJwdW5rX2xpZ2h0LjhkNzJiMDA5NDVmZDBiNGFhZTJmMTAzZjVkNTQwZDVjMTllZTA4ZmUucG5n/auto/auto/85/notrim/079da02f97e9984d9a9864cc6fda936d.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Cyber Security",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX200YTRfZnVzaW9uX2xpZ2h0LmJmYmFmMjUzZWUzNjgyMzVjNGFlNmMxOTYwNDFjNWI4YmZlOGRlOTMucG5n/auto/auto/85/notrim/2c4f93d1d8fc736191acc1a474c36c72.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Turbine",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfZ3JpZmZpbl9saWdodC5kMTNkYmFkMTE2YjI5MzZiYTIzMzg5N2I1YmNlZjRhYTdhYTc4MWQ3LnBuZw--/auto/auto/85/notrim/7b7f7fd246a86ea83cb1df6a24783ea5.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Griffin",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2dzX200YTRfY2hvcHBlcl9naG9zdF9saWdodC5mYjI5MTkyNDQ5Y2YzYThhZmJlOGYyZDExMGIxYjVjNjRkN2IwN2QwLnBuZw--/auto/auto/85/notrim/264747b2e74e5af162c782e7cc2109f0.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Magnesium",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX3Nvb19wb2x5c291cF9tNGE0X2xpZ2h0LjU2NDI2OWVmMjQ3NjQwNDQzYmRkYjhhYzU2MzYyNmU0NTNjYjg0YzQucG5n/auto/auto/85/notrim/f0009646ffb3b203f29cc6de1603d62f.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Polysoup",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2h5X3JlZF9oZXhfbGlnaHQuZjc4YmE0MjlhZWQ0OWFiNWQwMDNiOTJhNDJmYjY2ZmNjZmMzNWE3Yi5wbmc-/auto/auto/85/notrim/2008fdf9b00da2b8630b3ff03a6bb0bd.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "M4A4 | Converter",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX200YTRfZ3JlZW5fY2Ftb19saWdodC4wMTYwMDVkZjNjY2EwNWYwYWQyNDFhZDU4Mzc1OTNiNjlhMDdiMzFmLnBuZw--/auto/auto/85/notrim/bab3b69ba415fa5c7d970c74f9ddc876.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Choppa",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2h5X2RkcGF0X3VyYmFuX3JlZF9saWdodC42NWY2NzVhY2Q3Yzk3YjUzZTc5ODkyMjY5YTg4ODEzZTc3MmRmMjdhLnBuZw--/auto/auto/85/notrim/66d3bc9600af07bb76e7c73bc38e6174.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "M4A4 | Red DDPAT",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X3hyYXlfbTRfbGlnaHQuNzkyZGExZmQ1MTg1NjBkNzVjNzUyZjJkYThlZjNjN2IzMWU1Njc4MS5wbmc-/auto/auto/85/notrim/f1469b1194b1e458960cd3fe0ce688ea.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | X-Ray",
+    "rarity": "Covert"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2h0X21ldGFsX2VkZ2VzX2xpZ2h0LjIxNGJmMzQ3NGZhMTgwY2VkYTJlYjUwMjY0OGU5NjIzYjQ0YmZjZDIucG5n/auto/auto/85/notrim/c73f6a91c73ad2d4ff3bf5be1c8350d5.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Steel Work",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2h5ZV9ibHVlX200YTRfbGlnaHQuMzI2MTRkNTUyNzA5ZjM5ZWIxYmUyNjc0NTJiY2I2ZmIwNTM2MzUwMi5wbmc-/auto/auto/85/notrim/f53eeeaae64f795c93c42361444ee1ff.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Naval Shred Camo",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX3NwX2J1ZF9ibHVlX2xpZ2h0LjllZjc1MzAwOGI5OWZlZTViMjBkZmFkZjg4MTQxNTlmY2IzYTZkNzIucG5n/auto/auto/85/notrim/1b91558d58e69f2e22730546326316f7.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Dark Blossom",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX3NvX3Rvcm5hZG9fbGlnaHQuYWJjY2YwZTg4Nzk4YmFmMjMyZTcwOWE1OWNlZDAzOTRmM2ZjMGFlZS5wbmc-/auto/auto/85/notrim/0387b270b92ccbcc595b3b8392653cfb.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "M4A4 | Tornado",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2h5X2RkcGF0X3VyYl9saWdodC4wMDI0NjNlNTFiNzA4NDVjNDQzNDMxYWVjOTA0ZmY3MjJhOThmZjY3LnBuZw--/auto/auto/85/notrim/0aa20ed3b520c97ae791e3d9e0c87ae3.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "M4A4 | Urban DDPAT",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX3NwX251a2VzdHJpcGVfb3JhbmdlX2xpZ2h0LmZhZGRkMTk4N2Q3YjY3ZmJmMTZmYjQxZWQ2M2RhMWU3OTdiYjJiMmYucG5n/auto/auto/85/notrim/f216db617ceedb65566488cff3b749d9.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "M4A4 | Radiation Hazard",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2h5X2Rlc2VydF9saWdodC4xNWE2MDdiNWIzODExODJhMDAyNDk2NjJiMTdlYzJkZGFjYjE5MzM4LnBuZw--/auto/auto/85/notrim/50f4d5ce700b2afbe6ea0d6490edcdd2.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Desert Storm",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X2NzZ29fY2Ftb19saWdodC5kZjUwZDJiY2ZmNTk0NzM4ZGY1YjkwNzFkODFmYTYxNTU5NzY4MDk3LnBuZw--/auto/auto/85/notrim/3a4ba865813d9d821ad67412ac58261a.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Global Offensive",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2FtX2NpcmN1aXRib2FyZF9zaWx2ZXJfbGlnaHQuOWVlM2Q2NWM1NTAzYTI5YWUyY2E0MDdjZWM5MzEwNGUyNTUxNGEzMi5wbmc-/auto/auto/85/notrim/d33ff6a702409407da0a893d2221d7aa.webp",
+    "isST": "N/A",
+    "isSV": "Souvenir Available",
+    "name": "M4A4 | Mainframe",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTRfZWxpdGVfdGFjdGljYWxfbGlnaHQuODQ4ZmUwMzU5MmNkYWEyM2YwNWU0NzVlOWQ2YzFjMjI5MWNmMDI5ZS5wbmc-/auto/auto/85/notrim/9912140607dcad5d1f700052ae05b427.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Poly Mag",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX3NwX3N0YXJfYnJhdm9fbGlnaHQuYjMyNzczOTA4NzU1OTZlNjllNzk5ZGY2ZTU0N2U1YTRmNTQ3ZTc3My5wbmc-/auto/auto/85/notrim/9d85a9dedecd44445ec8d01bbe73cd3f.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Zirka",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX3NwX3plYnJhY2FtX2J3X2xpZ2h0LmZmYjBhODA3OTJiMjQ2MmE4YWU2YjM0YWQ3NTI2N2I0NWUxYjQxZGEucG5n/auto/auto/85/notrim/6e40997e01a7ce873333cf8100178b03.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Faded Zebra",
+    "rarity": "Mil-Spec"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2h5X2h1bnRlcl9tb2Rlcm5fbGlnaHQuMmFiYzE1NjUxYjE5NGU5ZGRhODZhOTYyYTk2NzVlNTEzNWJiNWYzNy5wbmc-/auto/auto/85/notrim/c8fa26642ca32c616e9243c7d4754672.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Modern Hunter",
+    "rarity": "Restricted"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2h5X3ZfdGlnZXJfbGlnaHQuYTI0YWNlMTYzYmVkM2YyMTg1Yzc3OGNkY2UwNzMwY2FjNTk3NGJmYS5wbmc-/auto/auto/85/notrim/69576b59006f1490aca0e221d72aa269.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Jungle Tiger",
+    "rarity": "Industrial Grade"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X3Bvc2VpZG9uX2xpZ2h0LmVmMWJhOGQzMDRlNTkzZDFmZDJkMThkYzQ4ZDM2MDU0MDVmNjNiN2EucG5n/auto/auto/85/notrim/7e8202c49ec3a9c57c81c6c532fb405f.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Poseidon",
+    "rarity": "Classified"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2N1X200YTFfaG93bGluZ19saWdodC40OTEwYTA5ZDgxOTgwZDAxZmYxNDdjNDEyMzlkZjFlZGVkYjVkZjYxLnBuZw--/auto/auto/85/notrim/b42b790d09f14c493898c3bca9d42885.webp",
+    "isST": "StatTrak Available",
+    "isSV": "N/A",
+    "name": "M4A4 | Howl",
+    "rarity": "Contraband"
+  },
+  {
+    "imageUrl": "https://cdn.csgoskins.gg/public/uih/items/aHR0cHM6Ly9jZG4uY3Nnb3NraW5zLmdnL3B1YmxpYy9pbWFnZXMvYnVja2V0cy9lY29uL2RlZmF1bHRfZ2VuZXJhdGVkL3dlYXBvbl9tNGExX2FtX2tpbW9ub19zdW5yaXNlX2xpZ2h0LjgyYWY0ZjliMjI1NDQ3YjIwMTMzNDhlN2I3ODBlZjhkNjhiMGZmNWMucG5n/auto/auto/85/notrim/1cbca0b5a0a67a77fb96a3dcbf0d103a.webp",
+    "isST": "N/A",
+    "isSV": "N/A",
+    "name": "M4A4 | Daybreak",
+    "rarity": "Restricted"
+  }
+]
