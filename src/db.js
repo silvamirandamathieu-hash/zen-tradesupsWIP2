@@ -4,14 +4,12 @@ import Dexie from 'dexie';
 
 export const db = new Dexie('cs2TradeUpDB');
 
-db.version(2).stores({
+// Définition des tables
+db.version(1).stores({
   inventory: '++id,name,wear,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
   allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl',
-  history:  '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume',
-  tradeups: '++id,name,date,inputs,outputs,isArchived' // 👈 AJOUT
+  history:  '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume'
 });
-
-
 
 //
 // 📦 INVENTAIRE
@@ -103,14 +101,4 @@ export async function getHistory() {
 
 export async function clearHistory() {
   return db.history.clear();
-}
-
-//Trade up
-
-export async function addTradeup(tradeup) {
-  return db.tradeups.add(tradeup);
-}
-
-export async function getTradeups(archived = false) {
-  return db.tradeups.where('isArchived').equals(archived).toArray();
 }
