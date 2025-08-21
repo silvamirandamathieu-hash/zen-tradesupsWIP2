@@ -1,10 +1,11 @@
 // InventoryTabs.js
 
 import { useState, useRef } from 'react';
-import { CSSTransition, SwitchTransition } from 'react-transition-group';
+import { CSSTransition, SwitchTransition} from 'react-transition-group';
 import InventoryManager from './InventoryManager';
 import '../styles/InventoryTabs.css';
 import AllSkins from './AllSkins';
+import TradeUpTab from './TradeUpTab';
 
 function InventoryTabs({
   inventory,
@@ -22,7 +23,8 @@ function InventoryTabs({
 
   const tabs = [
     { key: 'inventory', label: '🎒 Mon inventaire' },
-    { key: 'allskins', label: '🗂️ All skins' }
+    { key: 'allskins', label: '🗂️ All skins' },
+    { key: 'tradeup', label: '🔁 Trade-Up' }
   ];
 
   const nodeRef = useRef(null);
@@ -48,6 +50,9 @@ function InventoryTabs({
           onAllReset={onAllReset}
         />
       );
+    }
+    else if (activeTab === 'tradeup') {
+      return <TradeUpTab inventory={inventory} allSkins={allInventory} />;
     }
   };
 
