@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import React, { useState, useMemo } from 'react';
 import {
   List, Card, SkinImage, SkinTitle, SkinDetails,
-  Label, Value, PriceColumn, FilterBar, Select, CollectionImage, ImageWrapper
+  Label, Value, PriceColumn, FilterBar, Select, CollectionImage, ImageWrapper, colorMap
 } from './StyledInventory';
 
 const QuantityBadge = styled.div`
@@ -276,11 +276,18 @@ function InventoryManager({ inventory, priceMap = {}, onExport, onImport, onRese
                   >
                     {skin.isStatTrak ? `StatTrak™ ${skin.name}` : skin.name}
                   </SkinTitle>
+                  <p>
+                    <Label>Usure  :  </Label>
+                    <Value
+                      style={{
+                        color: colorMap[skin.wear?.trim()] ?? '#ccc',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {skin.wear}
+                    </Value>
 
-
-
-                  <p><Label>Usure :</Label> <Value>{skin.wear}</Value></p>
-
+                  </p>
                   <p>
                     <Label>Collection :</Label> <Value>{skin.collection}</Value>
                     {skin.collectionIMGUrl && (

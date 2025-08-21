@@ -5,6 +5,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import InventoryManager from './InventoryManager';
 import '../styles/InventoryTabs.css';
 import AllSkins from './AllSkins';
+import TradeUp from './TradeUpTab'; 
 
 function InventoryTabs({
   inventory,
@@ -22,7 +23,8 @@ function InventoryTabs({
 
   const tabs = [
     { key: 'inventory', label: '🎒 Mon inventaire' },
-    { key: 'allskins', label: '🗂️ All skins' }
+    { key: 'allskins', label: '🗂️ All skins' },
+    { key: 'TradeUp', label: '💹Trade-Ups'}
   ];
 
   const nodeRef = useRef(null);
@@ -48,8 +50,10 @@ function InventoryTabs({
           onAllReset={onAllReset}
         />
       );
-    }
-  };
+    } else if (activeTab === 'TradeUp') {
+        return <TradeUp />;// 👈 Ton composant vide pour l'instant
+      }
+    };
 
   return (
     <div style={{ padding: '2rem' }}>

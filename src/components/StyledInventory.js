@@ -3,6 +3,15 @@
 import styled from 'styled-components';
 
 
+export const colorMap = {
+  "Factory New": "#4CAF50",       // Vert
+  "Minimal Wear": "#8BC34A",      // Vert clair
+  "Field-Tested": "#FFC107",      // Jaune
+  "Well-Worn": "#FF9800",         // Orange
+  "Battle-Scarred": "#F44336",    // Rouge
+};
+
+
 export const List = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(580px, 1fr));
