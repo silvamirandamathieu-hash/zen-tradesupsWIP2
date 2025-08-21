@@ -79,6 +79,8 @@ function TradeUp({ }) {
     'Well-Worn': '#FF9800',
     'Battle-Scarred': '#F44336'
   };
+  const formatRarity = (rarity) => rarity?.toLowerCase().replace(/\s+/g, '-');
+
   const availableCollections = useMemo(() => {
     const source = activeTab === 'myInventory' ? inventory : allSkins;
     const collections = source.map(skin => skin.collection).filter(Boolean);
@@ -109,9 +111,9 @@ function TradeUp({ }) {
                 <>
                   <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
                   <div className="skin-info">
-                    <p className="skin-name">
-                      {skin.isStatTrak ? 'StatTrak™ ' : ''}
-                      {skin.isSouvenir ? 'Souvenir ' : ''}
+                    <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
+                      {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
+                      {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
                       {skin.name}
                     </p>
                     <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
@@ -187,9 +189,9 @@ function TradeUp({ }) {
                   <>
                     <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
                     <div>
-                      <p className="skin-name">
-                        {skin.isStatTrak ? 'StatTrak™ ' : ''}
-                        {skin.isSouvenir ? 'Souvenir ' : ''}
+                      <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
+                        {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
+                        {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
                         {skin.name}
                       </p>
                       <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
@@ -271,9 +273,9 @@ function TradeUp({ }) {
                       <div key={index} className="skin-card">
                         <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
                         <div className="skin-info">
-                          <p className="skin-name">
-                            {skin.isStatTrak ? 'StatTrak™ ' : ''}
-                            {skin.isSouvenir ? 'Souvenir ' : ''}
+                          <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
+                            {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
+                            {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
                             {skin.name}
                           </p>
                           <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>

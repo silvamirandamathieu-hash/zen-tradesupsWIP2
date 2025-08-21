@@ -7,8 +7,8 @@
   justify-content: flex-start;
   padding: 0.75rem 0.75rem 2.5rem; /* espace en bas pour le bouton */
   border-radius: 8px;
-  background-color: #252659;
-  border: 1px solid #444;
+  background-color: #242442;
+  border: 1px solid #615a5a;
   height: 220px;
   box-sizing: border-box;
   transition: border 0.3s ease;
@@ -24,8 +24,8 @@
   right: 8px;
   padding: 4px 0;
   font-size: 0.6rem;
-  background: #2e2e4d;
-  color: #ccc;
+  background: #48486d;
+  color: #6b4141;
   border: 1px solid #444;
   border-radius: 4px;
   cursor: pointer;
@@ -33,6 +33,18 @@
   text-align: center;
 }
 
+.stattrak-tag {
+  color: #ff9800 !important;
+}
+
+.souvenir-tag {
+  color: #ebda3c !important;
+}
+
+.stattrak-tag,
+.souvenir-tag {
+  text-shadow: 1 6 4px rgba(31, 28, 28, 0.3);
+}
 
 
 .skin-card button:hover {
@@ -64,7 +76,7 @@
 .skin-name {
   font-weight: bold;
   font-size: 0.6rem;
-  color: #dcdcf0;
+  color: #d9d9e5;
   margin: 0;
 }
 
@@ -153,6 +165,31 @@
   margin: 0;
   color: #666;
 }
+.rarity-consumer {
+  color: #b0c3d9 !important; /* gris bleu pâle */
+}
+
+.rarity-industrial {
+  color: #5e98d9 !important; /* bleu clair */
+}
+
+.rarity-mil-spec {
+  color: #4b69ff !important; /* bleu foncé */
+}
+
+.rarity-restricted {
+  color: #8847ff !important; /* violet */
+}
+
+.rarity-classified {
+  color: #d32ce6 !important; /* rose violet */
+}
+
+.rarity-covert {
+  color: #eb4b4b !important;/* rouge */
+}
+
+
 .result-card {
   background: #1e1e1e;
   border: 2px solid #333;
@@ -171,7 +208,7 @@
   font-weight: bold;
   font-size: 0.95rem;
   margin: 0;
-  color: #7c7c97;
+  color: #e0d5fe;
 }
 .skin-card button {
   margin-top: 6px;
