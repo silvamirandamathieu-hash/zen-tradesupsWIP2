@@ -1,8 +1,8 @@
 // src/components/TradeUpTab.jsx
 
 import React, { useState, useEffect } from 'react';
-import { getTradeups, addTradeup } from '../db';
-import calculateProfit from './TradeUpAnalytics';
+import { getTradeups, addTradeup, db } from '../db';
+import { calculateProfit } from './TradeUpAnalytics.jsx'; // ✅ Import par défaut
 
 function TradeUpTab({ inventory, allSkins }) {
   const [inputs, setInputs] = useState([]);
@@ -30,35 +30,53 @@ function TradeUpTab({ inventory, allSkins }) {
 
   const profitData = calculateProfit({ inputs, outputs });
 
+  const renderTradeupList = (filterArchived = false) => {
+    const filtered = tradeups.filter(t => t.isArchived === filterArchived);
+    if (filtered.length === 0) return <p>Aucun trade-up enregistré.</p>;
+
+    return (
+      <ul>
+        {filtered.map((t, i) => {
+          const stats = calculateProfit(t);
+          return (
+            <li key={i}>
+              <strong>{t.name}</strong> — {stats.profit.toFixed(2)} € ({stats.profitPercent.toFixed(1)}%)
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+
   return (
     <div style={{ padding: '2rem' }}>
       <h2>🔁 Trade-Up</h2>
 
       <div style={{ marginBottom: '1rem' }}>
         <strong>Inputs:</strong>
-        <ul>{inputs.map((skin, i) => <li key={i}>{skin.name} ({skin.wear}) — {skin.price_now} €</li>)}</ul>
+        {inputs.length > 0 ? (
+          <ul>{inputs.map((skin, i) => (
+            <li key={i}>{skin.name} ({skin.wear}) — {skin.price_now} €</li>
+          ))}</ul>
+        ) : <p>Aucun skin sélectionné.</p>}
+
         <strong>Outputs:</strong>
-        <ul>{outputs.map((skin, i) => <li key={i}>{skin.name} ({skin.wear}) — {skin.price_now} €</li>)}</ul>
-        <p>💰 Profit: {profitData.profit.toFixed(2)} € ({profitData.profitPercent.toFixed(1)}%)</p>
+        {outputs.length > 0 ? (
+          <ul>{outputs.map((skin, i) => (
+            <li key={i}>{skin.name} ({skin.wear}) — {skin.price_now} €</li>
+          ))}</ul>
+        ) : <p>Aucun skin en sortie.</p>}
+
+        <p>💰 Profit estimé : {profitData.profit.toFixed(2)} € ({profitData.profitPercent.toFixed(1)}%)</p>
         <button onClick={handleSaveTradeup}>💾 Sauvegarder Trade-Up</button>
       </div>
 
       <div style={{ marginTop: '2rem' }}>
         <button onClick={() => setActiveView('current')}>🧪 Trade-Up en cours</button>
-        <button onClick={() => setActiveView('archived')}>📚 Tous les Trade-Ups</button>
+        <button onClick={() => setActiveView('archived')}>📚 Trade-Ups archivés</button>
 
-        {activeView === 'current' && (
-          <ul>
-            {tradeups.map((t, i) => {
-              const stats = calculateProfit(t);
-              return (
-                <li key={i}>
-                  <strong>{t.name}</strong> — {stats.profit.toFixed(2)} € ({stats.profitPercent.toFixed(1)}%)
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        {activeView === 'current' && renderTradeupList(false)}
+        {activeView === 'archived' && renderTradeupList(true)}
       </div>
     </div>
   );

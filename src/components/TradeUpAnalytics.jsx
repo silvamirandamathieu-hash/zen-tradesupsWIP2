@@ -1,6 +1,4 @@
-// src/components/TradeUpAnalytics.jsx
-
-function calculateProfit(tradeup) {
+export const calculateProfit = (tradeup) => {
   const totalInputCost = tradeup.inputs?.reduce((sum, skin) => sum + (skin?.price_now || 0), 0) || 0;
   const averageOutputValue = tradeup.outputs?.reduce((sum, skin) => sum + (skin?.price_now || 0), 0) / (tradeup.outputs?.length || 1);
 
@@ -12,4 +10,4 @@ function calculateProfit(tradeup) {
   };
 }
 
-export default calculateProfit;
+
