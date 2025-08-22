@@ -6,6 +6,11 @@ import InventoryManager from './InventoryManager';
 import '../styles/InventoryTabs.css';
 import AllSkins from './AllSkins';
 import TradeUp from './TradeUpTab'; 
+import TradeUpCurrent from './TradeUpCurrent';
+import TradeUpSaved from './TradeUpSaved';
+import { saveTradeUp, clearCurrentTradeUp, saveCurrentTradeUp } from '../db';
+
+
 
 function InventoryTabs({
   inventory,
@@ -24,10 +29,17 @@ function InventoryTabs({
   const tabs = [
     { key: 'inventory', label: '🎒 Mon inventaire' },
     { key: 'allskins', label: '🗂️ All skins' },
-    { key: 'TradeUp', label: '💹Trade-Ups'}
+    { key: 'TradeUp', label: '💹Trade-Ups'},
+    { key: 'tradeupcurrent', label: '⚙️ Trade-up en cours' },
+    { key: 'tradeupsaved', label: '💾 Trade-ups sauvegardés' }
   ];
 
   const nodeRef = useRef(null);
+  const handleRefreshPrices = () => {
+    // Exemple : re-fetch des prix depuis AllSkins ou API
+    console.log('🔄 Mise à jour des prix demandée');
+  };
+
 
   const renderTabContent = () => {
     if (activeTab === 'inventory') {
@@ -52,7 +64,11 @@ function InventoryTabs({
       );
     } else if (activeTab === 'TradeUp') {
         return <TradeUp />;// 👈 Ton composant vide pour l'instant
-      }
+    } else if (activeTab === 'tradeupcurrent') {
+        return <TradeUpCurrent priceMap={priceMap} />;
+    } else if (activeTab === 'tradeupsaved') {
+        return <TradeUpSaved priceMap={priceMap} onRefreshPrices={handleRefreshPrices} />;
+    }
     };
 
   return (

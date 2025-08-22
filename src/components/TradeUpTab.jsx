@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './TradeUp.css';
-import { getAllInventory, getInventory } from '../db';
+import { getAllInventory, getInventory, clearCurrentTradeUps , addCurrentTradeUp, addSavedTradeUp} from '../db';
 import { useAdvancedFilters } from './useAdvancedFilters';
 import { filterSkins } from './filterSkins';
 import AdvancedFilterPanel from './AdvancedFilterPanel';
@@ -45,6 +45,7 @@ const [warning, setWarning] = useState(null);
 
 
 
+
   const filteredSkins = useMemo(() => {
     const source = activeTab === 'myInventory' ? inventory : allSkins;
     const filtered = filterSkins(source, filters);
@@ -52,6 +53,27 @@ const [warning, setWarning] = useState(null);
       searchTerm === '' || skin.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [inventory, allSkins, activeTab, filters, searchTerm]);
+  const handleSetAsCurrent = async () => {
+    try {
+      await clearCurrentTradeUps();
+      await addCurrentTradeUp({ inputs, outputs });
+      alert('⚙️ Trade-up défini comme en cours');
+    } catch (err) {
+      console.error('Erreur lors de la mise à jour du trade-up en cours :', err);
+      alert('❌ Une erreur est survenue');
+    }
+  };
+
+  const handleSaveTradeUp = async () => {
+    try {
+      await addSavedTradeUp({ inputs, outputs });
+      alert('✅ Trade-up sauvegardé');
+    } catch (err) {
+      console.error('Erreur lors de la sauvegarde :', err);
+      alert('❌ Impossible de sauvegarder');
+    }
+  };
+
 
   const handleSelectSkin = (skin) => {
     if (panelType === 'input') {
@@ -161,6 +183,7 @@ const [warning, setWarning] = useState(null);
     updated[index] = null;
     setOutputs(updated);
   };
+
 
 
   const colorMap = {
@@ -336,6 +359,9 @@ const [warning, setWarning] = useState(null);
             ))}
           </div>
         </div>
+        <button onClick={handleSaveTradeUp}>💾 Sauvegarder</button>
+        <button onClick={handleSetAsCurrent}>⚙️ Définir comme en cours</button>
+
       </section>
 
       {/* PANEL LATÉRAL */}
