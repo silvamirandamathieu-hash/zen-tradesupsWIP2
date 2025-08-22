@@ -8,16 +8,6 @@ import AllSkins from './AllSkins';
 import TradeUp from './TradeUpTab'; 
 import TradeUpCurrent from './TradeUpCurrent';
 import TradeUpSaved from './TradeUpSaved';
-import {
-  addSavedTradeUp,
-  clearCurrentTradeUps,
-  saveCurrentTradeUps,
-  deleteCurrentTradeUp,
-  deleteSavedTradeUp,
-  currentTradeUps
-} from '../db';
-
-
 
 
 function InventoryTabs({

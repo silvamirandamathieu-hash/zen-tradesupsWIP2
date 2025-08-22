@@ -3,13 +3,13 @@ import Dexie from 'dexie';
 export const db = new Dexie('cs2TradeUpDB');
 
 // Définition des tables
-db.version(3).stores({
+db.version(4).stores({
   inventory: '++id,name,wear,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
   allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl',
   history:  '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume',
   tradeUps: '++id,date,data', // nouvelle table pour les trade-ups sauvegardés
-  currentTradeUps: '++id,date,data',   // table pour le trade-up en cours (id fixe = 1)
-  savedTradeUps: '++id,date,data'
+  currentTradeUps: '++id,data,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,imageUrl',   // table pour le trade-up en cours (id fixe = 1)
+  savedTradeUps: '++id,data,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,imageUrl'
 });
 
 //
@@ -95,35 +95,4 @@ export async function clearHistory() {
 //
 // 🧪 TRADE-UP
 //
-// Ajouter un trade-up en cours
-export async function addCurrentTradeUp(tradeUpData) {
-  if (!tradeUpData || typeof tradeUpData !== 'object') throw new Error('Trade-up invalide');
-  return db.currentTradeUps.add({ date: Date.now(), data: tradeUpData });
-}
-
-// Récupérer tous les trade-ups en cours
-export async function getCurrentTradeUps() {
-  return db.currentTradeUps.orderBy('date').reverse().toArray();
-}
-
-// Supprimer tous les trade-ups en cours
-export async function clearCurrentTradeUps() {
-  return db.currentTradeUps.clear();
-}
-
-
-// Supprimer un trade-up en cours spécifique
-export async function deleteCurrentTradeUp(id) {
-  return db.currentTradeUps.delete(id);
-}
-export async function addSavedTradeUp(tradeUpData) {
-  return db.savedTradeUps.add({ date: Date.now(), data: tradeUpData });
-}
-
-export async function getSavedTradeUps() {
-  return db.savedTradeUps.orderBy('date').reverse().toArray();
-}
-
-export async function deleteSavedTradeUp(id) {
-  return db.savedTradeUps.delete(id);
-}
+// Ajouter un trade-up en cours}
