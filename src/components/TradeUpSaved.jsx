@@ -1,46 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { getSavedTradeUps } from '../db';
-import TradeUpCard from './TradeUpCard'; // à créer pour afficher chaque trade-up
+import TradeUpCard from './TradeUpCard';
+import { normalizeTradeUp } from '../utils/normalizeTradeUp';
 
-function normalizeTradeUp(rawTrade) {
-  return {
-    inputs: rawTrade.inputs.map(skin => ({
-      name: skin.name,
-      float: skin.float,
-      price: skin.price,
-      imageUrl: skin.imageUrl
-    })),
-    outputs: rawTrade.outputs.map(skin => ({
-      name: skin.name,
-      price: skin.price,
-      imageUrl: skin.imageUrl
-    })),
-    isStatTrak: rawTrade.isStatTrak ?? false,
-    isSouvenir: rawTrade.isSouvenir ?? false
-  };
-}
-
-function TradeUpSaved({ priceMap, onRefreshPrices }) {
+function TradeUpSaved({ priceMap, onRefreshPrices, handleDelete }) {
   const [savedTradeUps, setSavedTradeUps] = useState([]);
 
-useEffect(() => {
-  getSavedTradeUps().then(setSavedTradeUps);
-}, []);
-
-getSavedTradeUps().then(data => {
-  console.log("Saved trade-ups:", data);
-  setSavedTradeUps(data);
-});
-
+  useEffect(() => {
+    getSavedTradeUps().then(data => {
+      console.log("Saved trade-ups:", data);
+      setSavedTradeUps(data);
+    });
+  }, []);
 
   return (
     <div style={{ padding: '2rem' }}>
       <h2>💾 Trade-ups sauvegardés</h2>
       <button onClick={onRefreshPrices}>🔄 Actualiser les prix</button>
-      {savedTradeUps.map((trade, i) => (
-        <TradeUpCard trade={normalizeTradeUp(trade.data)} priceMap={priceMap} />
-      ))}
+      {savedTradeUps.length === 0 ? (
+        <p>Aucun trade-up sauvegardé pour le moment.</p>
+      ) : (
+        savedTradeUps.map((trade, i) => (
+          <TradeUpCard
+            key={i}
+            trade={normalizeTradeUp(trade.data)}
+            priceMap={priceMap}
+            onDelete={() => handleDelete(trade.id)}
+          />
+        ))
+      )}
     </div>
   );
 }
+
 export default TradeUpSaved;

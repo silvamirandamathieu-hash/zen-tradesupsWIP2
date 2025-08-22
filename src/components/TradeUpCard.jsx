@@ -1,46 +1,43 @@
 import React from 'react';
-import { addSavedTradeUp , deleteCurrentTradeUp } from '../db';
+import { addSavedTradeUp, deleteCurrentTradeUp } from '../db';
 
-function TradeUpCard({ trade, priceMap ,onDelete}) {
+function TradeUpCard({ trade, priceMap, onDelete }) {
   if (!trade || !Array.isArray(trade.inputs)) return null;
 
-    const {
+  const {
     inputs = [],
     outputs = [],
     isStatTrak = false,
-    } = trade;
+    isSouvenir = false,
+    id
+  } = trade;
 
   const safeInputs = inputs.filter(skin => skin && skin.name);
 
-    const totalCost = safeInputs.reduce((sum, skin) => {
-    const price = priceMap?.[skin.name]?.price ?? 0;
+  const totalCost = safeInputs.reduce((sum, skin) => {
+    const price = priceMap?.[skin.name]?.price ?? skin.price ?? 0;
     return sum + price;
-    }, 0);
+  }, 0);
 
-
-
-
-  // 🎯 Calcul du gain moyen
   const averageOutputValue = outputs.reduce((sum, skin) => {
-    const price = priceMap?.[skin.name]?.price ?? 0;
+    const price = priceMap?.[skin.name]?.price ?? skin.price ?? 0;
     return sum + price;
   }, 0) / outputs.length;
 
-  // 🧪 Float moyen
   const averageFloat = inputs.reduce((sum, skin) => sum + (skin.float ?? 0), 0) / inputs.length;
 
-  // 📈 Rentabilité
   const profit = averageOutputValue - totalCost;
   const profitColor = profit > 0 ? 'green' : profit < 0 ? 'red' : 'gray';
 
   const handleSave = async () => {
-    await addSavedTradeUp (trade);
+    await addSavedTradeUp(trade);
     alert('📥 Trade-up sauvegardé !');
   };
 
   const handleDelete = async () => {
-    await deleteCurrentTradeUp(trade.id);
+    await deleteCurrentTradeUp(id);
     alert('🗑️ Supprimé des trade-ups en cours');
+    if (onDelete) onDelete(); // déclenche le callback si fourni
   };
 
   return (
@@ -51,7 +48,9 @@ function TradeUpCard({ trade, priceMap ,onDelete}) {
       borderRadius: '8px',
       backgroundColor: '#f9f9f9'
     }}>
-      <h3>🎯 Trade-up {isStatTrak ? 'StatTrak™' : ''}</h3>
+      <h3>
+        🎯 Trade-up {isStatTrak && 'StatTrak™'} {isSouvenir && 'Souvenir'}
+      </h3>
 
       <p><strong>💰 Coût total :</strong> {totalCost.toFixed(2)} €</p>
       <p><strong>🎯 Valeur moyenne de sortie :</strong> {averageOutputValue.toFixed(2)} €</p>
@@ -62,12 +61,6 @@ function TradeUpCard({ trade, priceMap ,onDelete}) {
         <button onClick={handleSave} style={{ marginRight: '1rem' }}>📥 Sauvegarder</button>
         <button onClick={handleDelete}>🗑️ Supprimer</button>
       </div>
-      {onDelete && (
-  <button onClick={onDelete} style={{ marginTop: '0.5rem' }}>
-    🗑️ Supprimer ce trade-up
-  </button>
-)}
-
 
       <details style={{ marginTop: '1rem' }}>
         <summary>📦 Voir les skins</summary>
@@ -75,7 +68,9 @@ function TradeUpCard({ trade, priceMap ,onDelete}) {
           <h4>Entrées :</h4>
           <ul>
             {inputs.map((skin, i) => (
-              <li key={i}>{skin.name} — Float: {skin.float ?? 'N/A'}</li>
+              <li key={i}>
+                {skin.name} — Float: {skin.float?.toFixed(4) ?? 'N/A'}
+              </li>
             ))}
           </ul>
           <h4>Sorties :</h4>

@@ -8,7 +8,15 @@ import AllSkins from './AllSkins';
 import TradeUp from './TradeUpTab'; 
 import TradeUpCurrent from './TradeUpCurrent';
 import TradeUpSaved from './TradeUpSaved';
-import { saveTradeUp, clearCurrentTradeUp, saveCurrentTradeUp } from '../db';
+import {
+  addSavedTradeUp,
+  clearCurrentTradeUps,
+  saveCurrentTradeUps,
+  deleteCurrentTradeUp,
+  deleteSavedTradeUp,
+  currentTradeUps
+} from '../db';
+
 
 
 
@@ -25,6 +33,8 @@ function InventoryTabs({
   onAllImport
 }) {
   const [activeTab, setActiveTab] = useState('inventory');
+  const [currentTradeUps, setCurrentTradeUps] = useState([]);
+  const [addSavedTradeUp, setSavedTradeUps] = useState([]);
 
   const tabs = [
     { key: 'inventory', label: '🎒 Mon inventaire' },
@@ -39,37 +49,69 @@ function InventoryTabs({
     // Exemple : re-fetch des prix depuis AllSkins ou API
     console.log('🔄 Mise à jour des prix demandée');
   };
-
-
-  const renderTabContent = () => {
-    if (activeTab === 'inventory') {
-      return (
-        <InventoryManager
-          inventory={inventory}
-          priceMap={priceMap}
-          onExport={onExport}
-          onImport={onImport}
-          onReset={onReset}
-        />
-      );
-    } else if (activeTab === 'allskins') {
-      return (
-        <AllSkins
-          allSkinsInventory={allInventory}   // ✅ allInventory dynamique
-          setAllInventory={setAllInventory} // ✅ nom correct
-          priceMap={priceMap}
-          onAllImport={onAllImport}
-          onAllReset={onAllReset}
-        />
-      );
-    } else if (activeTab === 'TradeUp') {
-        return <TradeUp />;// 👈 Ton composant vide pour l'instant
-    } else if (activeTab === 'tradeupcurrent') {
-        return <TradeUpCurrent priceMap={priceMap} />;
-    } else if (activeTab === 'tradeupsaved') {
-        return <TradeUpSaved priceMap={priceMap} onRefreshPrices={handleRefreshPrices} />;
-    }
+    const handleDeleteCurrent = async (id) => {
+    await deleteCurrentTradeUp(id);
+      setCurrentTradeUps(prev => prev.filter(trade => trade.id !== id));
+      console.log(`🗑️ Trade-up en cours supprimé : ${id}`);
     };
+
+    const handleDeleteSaved = async (id) => {
+      await deleteSavedTradeUp(id);
+      setSavedTradeUps(prev => prev.filter(trade => trade.id !== id));
+      console.log(`🗑️ Trade-up sauvegardé supprimé : ${id}`);
+    };
+
+
+    const renderTabContent = () => {
+      switch (activeTab) {
+        case 'inventory':
+          return (
+            <InventoryManager
+              inventory={inventory}
+              priceMap={priceMap}
+              onExport={onExport}
+              onImport={onImport}
+              onReset={onReset}
+            />
+          );
+
+        case 'allskins':
+          return (
+            <AllSkins
+              allSkinsInventory={allInventory}
+              setAllInventory={setAllInventory}
+              priceMap={priceMap}
+              onAllImport={onAllImport}
+              onAllReset={onAllReset}
+            />
+          );
+
+        case 'TradeUp':
+          return <TradeUp />;
+
+        case 'tradeupcurrent':
+          return (
+            <TradeUpCurrent
+              priceMap={priceMap}
+              onRefreshPrices={handleRefreshPrices}
+              onDelete={handleDeleteCurrent}
+            />
+          );
+
+        case 'tradeupsaved':
+          return (
+            <TradeUpSaved
+              priceMap={priceMap}
+              onRefreshPrices={handleRefreshPrices}
+              handleDelete={handleDeleteSaved}
+            />
+          );
+
+        default:
+          return <p>🧭 Onglet inconnu : {activeTab}</p>;
+      }
+    };
+
 
   return (
     <div style={{ padding: '2rem' }}>

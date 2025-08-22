@@ -1,44 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { getCurrentTradeUps } from '../db';
-import TradeUpCard from './TradeUpCard'; // à créer pour afficher chaque trade-up
-function normalizeTradeUp(rawTrade) {
-  return {
-    inputs: rawTrade.inputs.map(skin => ({
-      name: skin.name,
-      float: skin.float,
-      price: skin.price,
-      imageUrl: skin.imageUrl
-    })),
-    outputs: rawTrade.outputs.map(skin => ({
-      name: skin.name,
-      price: skin.price,
-      imageUrl: skin.imageUrl
-    })),
-    isStatTrak: rawTrade.isStatTrak ?? false,
-    isSouvenir: rawTrade.isSouvenir ?? false
-  };
-}
+import TradeUpCard from './TradeUpCard';
+import { normalizeTradeUp } from '../utils/normalizeTradeUp';
 
-function TradeUpCurrent({ priceMap, onRefreshPrices, onDelete  }) {
-  const [savedTradeUps, setCurrentTradeUps] = useState([]);
+function TradeUpCurrent({ priceMap, onRefreshPrices, onDelete }) {
+  const [currentTradeUps, setCurrentTradeUps] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getCurrentTradeUps().then(setCurrentTradeUps);
+    getCurrentTradeUps().then(data => {
+      console.log("Current trade-ups:", data);
+      setCurrentTradeUps(data);
+      setLoading(false);
+    });
   }, []);
-  getCurrentTradeUps().then(data => {
-  console.log("Saved trade-ups:", data);
-  getCurrentTradeUps(data);
-});
-
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>💾 Trade-ups sauvegardés</h2>
+      <h2>📈 Trade-ups en cours</h2>
       <button onClick={onRefreshPrices}>🔄 Actualiser les prix</button>
-      {savedTradeUps.map((trade, i) => (
-        <TradeUpCard trade={normalizeTradeUp(trade.data)} priceMap={priceMap} />
-      ))}
+
+      {loading ? (
+        <p>Chargement des trade-ups...</p>
+      ) : currentTradeUps.length === 0 ? (
+        <p>Aucun trade-up en cours pour le moment.</p>
+      ) : (
+        currentTradeUps.map((trade, i) => (
+          <TradeUpCard
+            key={i}
+            trade={normalizeTradeUp(trade.data)}
+            priceMap={priceMap}
+            onDelete={() => onDelete(trade.id)}
+          />
+        ))
+      )}
     </div>
   );
 }
+
 export default TradeUpCurrent;
