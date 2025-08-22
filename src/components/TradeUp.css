@@ -18,8 +18,8 @@
 
 
 .skin-card button {
-  position: absolute;
-  bottom: 6px;
+  position: relative;
+  bottom: 26px;
   left: 8px;
   right: 8px;
   padding: 4px 0;
@@ -129,7 +129,7 @@
 /* Cartes de skin et de résultat */
 .skin-price {
   position: absolute;
-  bottom: 21px; /* juste au-dessus du bouton */
+  bottom: 30px; /* juste au-dessus du bouton */
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.85rem;
@@ -327,9 +327,27 @@
   top: 6px;
   right: 6px;
   display: flex;
-  gap: 4px;
+  flex-direction: row;
+  gap: 8px; /* or use margin below */
   z-index: 2;
 }
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button button {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+}
+
 
 .input-actions button {
   background-color: #333;
@@ -352,6 +370,28 @@
   gap: 12px;
   margin-top: 20px;
 }
+.skin-footer {
+  position: absolute;
+  top: 203px;
+  left: 2px;
+  right: 16px;
+}
+
+.skin-footer button {
+  width: 100%;
+  padding: 6px 12px;
+  background-color: #2d3748;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.skin-footer button:hover {
+  background-color: #4a5568;
+}
 
 
 .skin-card {
@@ -363,7 +403,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden;
+  overflow: visible;
 }
 
 

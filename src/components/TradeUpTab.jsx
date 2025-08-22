@@ -160,10 +160,17 @@ useEffect(() => {
 
                   {/* ✅ Boutons d'action */}
                   <div className="input-actions">
-                    <button onClick={(e) => { e.stopPropagation(); duplicateSkinToNextInput(i); }}>➕</button>
-                    <button onClick={(e) => { e.stopPropagation(); fillAllWithSkin(skin); }}>📥</button>
-                    <button onClick={(e) => { e.stopPropagation(); removeSkin(i); }}>❌</button>
+                    <div className="action-button">
+                      <button onClick={(e) => { e.stopPropagation(); duplicateSkinToNextInput(i); }}>➕</button>
+                    </div>
+                    <div className="action-button">
+                      <button onClick={(e) => { e.stopPropagation(); fillAllWithSkin(skin); }}>📥</button>
+                    </div>
+                    <div className="action-button">
+                      <button onClick={(e) => { e.stopPropagation(); removeSkin(i); }}>❌</button>
+                    </div>
                   </div>
+
                 </>
               ) : (
                 <p>Input {i + 1}</p>
@@ -391,7 +398,9 @@ useEffect(() => {
                             💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
                           </p>
 
-                          <button onClick={() => handleSelectSkin(skin)}>Ajouter au slot</button>
+                          <div className="skin-footer">
+                            <button onClick={() => handleSelectSkin(skin)}>Ajouter au slot</button>
+                          </div>
                         </div>
                       </div>
                     );
