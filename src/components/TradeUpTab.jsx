@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './TradeUp.css';
-import { getAllInventory } from '../db';
+import { getAllInventory, getInventory } from '../db';
 import { useAdvancedFilters } from './useAdvancedFilters';
 import { filterSkins } from './filterSkins';
 import AdvancedFilterPanel from './AdvancedFilterPanel';
@@ -21,14 +21,17 @@ function TradeUp() {
   const [collectionSearch, setCollectionSearch] = useState('');
   const [showCollectionDropdown, setShowCollectionDropdown] = useState(false);
 
-  useEffect(() => {
-    const fetchInventory = async () => {
-      const data = await getAllInventory();
-      setInventory(data);
-      setAllSkins(data);
-    };
-    fetchInventory();
-  }, []);
+useEffect(() => {
+  const fetchInventories = async () => {
+    const userInventory = await getInventory(); // Ton inventaire perso
+    const allSkinsData = await getAllInventory(); // Toutes les skins
+    setInventory(userInventory);
+    setAllSkins(allSkinsData);
+  };
+  fetchInventories();
+}, []);
+
+
 
   const filteredSkins = useMemo(() => {
     const source = activeTab === 'myInventory' ? inventory : allSkins;
@@ -77,10 +80,12 @@ function TradeUp() {
     Covert: '#F44336',
   };
   const allCollections = useMemo(() => {
-    return [...new Set((activeTab === 'myInventory' ? inventory : allSkins)
+    const source = activeTab === 'myInventory' ? inventory : allSkins;
+    return [...new Set(source
       .map(s => s.collection)
       .filter(c => c && c !== 'Limited Edition Item Collection'))].sort();
   }, [inventory, allSkins, activeTab]);
+  
   const filteredCollections = allCollections.filter(c =>
     c.toLowerCase().includes(collectionSearch.toLowerCase())
   );
