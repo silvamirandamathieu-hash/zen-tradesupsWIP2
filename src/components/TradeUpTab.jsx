@@ -4,7 +4,7 @@ import { getAllInventory, getInventory } from '../db';
 import { useAdvancedFilters } from './useAdvancedFilters';
 import { filterSkins } from './filterSkins';
 import AdvancedFilterPanel from './AdvancedFilterPanel';
-
+import { calculateTradeStats } from '../utils/tradeupCalc'
 
 
 function TradeUp() {
@@ -20,6 +20,8 @@ function TradeUp() {
   const { filters, setFilters, resetFilters } = useAdvancedFilters();
   const [collectionSearch, setCollectionSearch] = useState('');
   const [showCollectionDropdown, setShowCollectionDropdown] = useState(false);
+  const stats = useMemo(() => calculateTradeStats(inputs, outputs), [inputs, outputs]);
+
 
 useEffect(() => {
   const fetchInventories = async () => {
@@ -30,6 +32,16 @@ useEffect(() => {
   };
   fetchInventories();
 }, []);
+useEffect(() => {
+  const totalChance = outputs.reduce((sum, o) => sum + (o?.chance || 0), 0);
+  if (totalChance !== 100) {
+    setWarning("⚠️ Vérifiez les chances : elles ne font pas 100%");
+  } else {
+    setWarning(null);
+  }
+}, [outputs]);
+
+const [warning, setWarning] = useState(null);
 
 
 
@@ -88,6 +100,30 @@ useEffect(() => {
     updated[index] = null;
     setInputs(updated);
   };
+  const updateFloat = (index, value) => {
+    const updated = [...inputs];
+    if (updated[index]) updated[index].float = value;
+    setInputs(updated);
+  };
+
+  const updatePrice = (index, value) => {
+    const updated = [...inputs];
+    if (updated[index]) updated[index].price = value;
+    setInputs(updated);
+  };
+
+  const updateChance = (index, value) => {
+    const updated = [...outputs];
+    if (updated[index]) updated[index].chance = value;
+    setOutputs(updated);
+  };
+
+  const updateOutputPrice = (index, value) => {
+    const updated = [...outputs];
+    if (updated[index]) updated[index].price = value;
+    setOutputs(updated);
+  };
+
 
 
   const fillAllWithSkin = (skin) => {
@@ -166,6 +202,8 @@ useEffect(() => {
                     {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
                       <p className="skin-collection">{skin.collection}</p>
                     )}
+                    
+
                     <p className="skin-price">
                       💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
                     </p>
@@ -183,15 +221,37 @@ useEffect(() => {
                       <button onClick={(e) => { e.stopPropagation(); removeSkin(i); }}>❌</button>
                     </div>
                   </div>
+                  <div className="skin-fields">
+                    <input
+                            type="number"
+                            value={skin.float || ''}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => updateFloat(i, parseFloat(e.target.value))}
+                            step="0.0001"
+                            placeholder="Float"
+                          />
+                          <input
+                            type="number"
+                            value={skin.price || ''}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => updatePrice(i, parseFloat(e.target.value))}
+                            step="0.01"
+                            placeholder="Prix"
+                          />
+                  </div>
 
+                  
                 </>
               ) : (
                 <p>Input {i + 1}</p>
               )}
             </div>
+            
+
           ))}
 
         </div>
+        
 
       </section>
 
@@ -199,11 +259,11 @@ useEffect(() => {
       <section className="tradeup-analysis">
         <h2>📊 Analyse du trade-up</h2>
         <div className="analysis-grid">
-          <div className="analysis-card"><span className="label">Avg Float</span><span className="value">0.12</span></div>
-          <div className="analysis-card"><span className="label">Prix du trade-up</span><span className="value">€24.50</span></div>
-          <div className="analysis-card"><span className="label">Rentabilité</span><span className="value">87%</span></div>
-          <div className="analysis-card"><span className="label">Profit par trade</span><span className="value">€3.20</span></div>
-          <div className="analysis-card"><span className="label">Chance de profit</span><span className="value">60%</span></div>
+          <div className="analysis-card"><span className="label">Avg Float</span><span className="value">{stats.avgFloat}</span></div>
+          <div className="analysis-card"><span className="label">Prix du trade-up</span><span className="value">€{stats.totalInputPrice}</span></div>
+          <div className="analysis-card"><span className="label">Rentabilité</span><span className="value">{stats.rentability}%</span></div>
+          <div className="analysis-card"><span className="label">Profit par trade</span><span className="value">€{stats.profit}</span></div>
+          <div className="analysis-card"><span className="label">Chance de profit</span><span className="value">{stats.chance}%</span></div>
         </div>
       </section>
 
@@ -241,9 +301,30 @@ useEffect(() => {
                       {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
                         <p className="skin-collection">{skin.collection}</p>
                       )}
+                      
+                      
+
                       <p className="skin-price">
                         💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
                       </p>
+                    </div>
+                    <div className="skin-fields">
+                    <input
+                        type="number"
+                        value={skin.chance || ''}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => updateChance(i, parseFloat(e.target.value))}
+                        step="0.1"
+                        placeholder="% chance"
+                      />
+                      <input
+                        type="number"
+                        value={skin.price || ''}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => updateOutputPrice(i, parseFloat(e.target.value))}
+                        step="0.01"
+                        placeholder="Prix"
+                      />
                     </div>
                     
                   </>

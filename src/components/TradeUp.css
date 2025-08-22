@@ -129,7 +129,7 @@
 /* Cartes de skin et de résultat */
 .skin-price {
   position: absolute;
-  bottom: 30px; /* juste au-dessus du bouton */
+  bottom: 60px; /* juste au-dessus du bouton */
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.85rem;
@@ -430,7 +430,7 @@
   background-color: #1e1e1e;
   border-radius: 8px;
   padding: 10px;
-  min-height: 180px;
+  min-height: 240px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -443,6 +443,33 @@
   gap: 10px;
   margin-bottom: 10px;
   flex-wrap: wrap;
+}
+.skin-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.skin-fields input {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 13px;
+  width: 75%;
+  box-sizing: border-box;
+}
+
+.skin-fields input::placeholder {
+  color: #aaa;
+}
+
+.skin-fields input:focus {
+  outline: none;
+  border-color: #00bcd4;
+  background-color: #333;
 }
 
 .action-btn {
