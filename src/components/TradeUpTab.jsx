@@ -112,13 +112,19 @@ function TradeUp() {
                 <>
                   <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
                   <div className="skin-info">
-                    <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
-                      {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
-                      {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
-                      {skin.name}
-                    </p>
-                    <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
-                  </div>
+                        <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
+                          {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
+                          {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
+                          {skin.name}
+                        </p>
+                        <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
+                        {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
+                          <p className="skin-collection">{skin.collection}</p>
+                        )}
+                        <p className="skin-price">
+                          💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
+                        </p>
+                      </div>
                 </>
               ) : (
                 <p>Input {i + 1}</p>
