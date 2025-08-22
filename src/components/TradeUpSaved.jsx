@@ -5,9 +5,15 @@ import TradeUpCard from './TradeUpCard'; // à créer pour afficher chaque trade
 function TradeUpSaved({ priceMap, onRefreshPrices }) {
   const [savedTradeUps, setSavedTradeUps] = useState([]);
 
-  useEffect(() => {
-    getSavedTradeUps().then(setSavedTradeUps);
-  }, []);
+useEffect(() => {
+  getSavedTradeUps().then(setSavedTradeUps);
+}, []);
+
+getSavedTradeUps().then(data => {
+  console.log("Saved trade-ups:", data);
+  setSavedTradeUps(data);
+});
+
 
   return (
     <div style={{ padding: '2rem' }}>

@@ -2,15 +2,18 @@ import React from 'react';
 import { addSavedTradeUp , deleteCurrentTradeUp } from '../db';
 
 function TradeUpCard({ trade, priceMap ,onDelete}) {
-  if (!trade) return null;
+  if (!trade || !Array.isArray(trade.inputs)) return null;
+  const safeInputs = trade.inputs.filter(skin => skin && skin.name);
+
 
   const { inputs = [], outputs = [], isStatTrak = false } = trade;
 
   // 💰 Calcul du coût total
-  const totalCost = inputs.reduce((sum, skin) => {
+  const totalCost = safeInputs.reduce((sum, skin) => {
     const price = priceMap?.[skin.name]?.price ?? 0;
     return sum + price;
   }, 0);
+
 
   // 🎯 Calcul du gain moyen
   const averageOutputValue = outputs.reduce((sum, skin) => {

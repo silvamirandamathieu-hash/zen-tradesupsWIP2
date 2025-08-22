@@ -3,7 +3,7 @@ import Dexie from 'dexie';
 export const db = new Dexie('cs2TradeUpDB');
 
 // Définition des tables
-db.version(2).stores({
+db.version(3).stores({
   inventory: '++id,name,wear,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
   allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl',
   history:  '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume',
@@ -117,7 +117,6 @@ export async function deleteCurrentTradeUp(id) {
   return db.currentTradeUps.delete(id);
 }
 export async function addSavedTradeUp(tradeUpData) {
-  if (!tradeUpData || typeof tradeUpData !== 'object') throw new Error('Trade-up invalide');
   return db.savedTradeUps.add({ date: Date.now(), data: tradeUpData });
 }
 

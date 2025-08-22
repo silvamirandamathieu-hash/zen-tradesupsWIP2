@@ -8,6 +8,11 @@ function TradeUpCurrent({ priceMap, onRefreshPrices, onDelete  }) {
   useEffect(() => {
     getCurrentTradeUps().then(setCurrentTradeUps);
   }, []);
+  getCurrentTradeUps().then(data => {
+  console.log("Saved trade-ups:", data);
+  getCurrentTradeUps(data);
+});
+
 
   return (
     <div style={{ padding: '2rem' }}>
