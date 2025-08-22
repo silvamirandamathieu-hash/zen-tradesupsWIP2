@@ -3,16 +3,21 @@ import { addSavedTradeUp , deleteCurrentTradeUp } from '../db';
 
 function TradeUpCard({ trade, priceMap ,onDelete}) {
   if (!trade || !Array.isArray(trade.inputs)) return null;
-  const safeInputs = trade.inputs.filter(skin => skin && skin.name);
 
+    const {
+    inputs = [],
+    outputs = [],
+    isStatTrak = false,
+    } = trade;
 
-  const { inputs = [], outputs = [], isStatTrak = false } = trade;
+  const safeInputs = inputs.filter(skin => skin && skin.name);
 
-  // 💰 Calcul du coût total
-  const totalCost = safeInputs.reduce((sum, skin) => {
+    const totalCost = safeInputs.reduce((sum, skin) => {
     const price = priceMap?.[skin.name]?.price ?? 0;
     return sum + price;
-  }, 0);
+    }, 0);
+
+
 
 
   // 🎯 Calcul du gain moyen
