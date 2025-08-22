@@ -54,9 +54,9 @@ function InventoryManager({ inventory, priceMap = {}, onExport, onImport, onRese
   };
 
   const rarityOrder = [
-    "Consumer Grade",
-    "Industrial Grade",
-    "Mil-Spec Grade",
+    "Consumer",
+    "Industrial",
+    "Mil-spec",
     "Restricted",
     "Classified",
     "Covert",
