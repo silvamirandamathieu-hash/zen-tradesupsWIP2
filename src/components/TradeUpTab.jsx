@@ -120,6 +120,11 @@ useEffect(() => {
     setInputs(Array(10).fill(null));
     setOutputs(Array(5).fill(null));
   };
+  const removeThisOutput = (index) => {
+    const updated = [...outputs];
+    updated[index] = null;
+    setOutputs(updated);
+  };
 
 
   const colorMap = {
@@ -224,7 +229,7 @@ useEffect(() => {
                   <>
                     <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
                     <div className="action2-button">
-                      <button onClick={(e) => { e.stopPropagation(); removeOutput(i); }}>❌</button>
+                      <button onClick={(e) => { e.stopPropagation(); removeThisOutput(i); }}>❌</button>
                     </div>
                     <div className="skin-info">
                       <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
