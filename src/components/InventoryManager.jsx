@@ -269,13 +269,15 @@ function InventoryManager({ inventory, priceMap = {}, onExport, onImport, onRese
                 </ImageWrapper>
 
                 <SkinDetails>
-                  <SkinTitle
-                    $rarity={skin.rarity}
-                    $isStatTrak={skin.isStatTrak}
-                    className={skin.isStatTrak ? 'stattrak-title' : ''}
-                  >
-                    {skin.isStatTrak ? `StatTrak™ ${skin.name}` : skin.name}
-                  </SkinTitle>
+                    <SkinTitle $rarity={skin.rarity}>
+                      {skin.isStatTrak && (
+                        <span style={{ color: '#FFA500', marginRight: '0.5rem' }}>StatTrak™</span>
+                      )}
+                      {skin.isSouvenir && (
+                        <span style={{ color: '#d6e412', marginRight: '0.5rem' }}>Souvenir</span>
+                      )}
+                      {skin.name}
+                    </SkinTitle>
                   <p>
                     <Label>Usure  :  </Label>
                     <Value

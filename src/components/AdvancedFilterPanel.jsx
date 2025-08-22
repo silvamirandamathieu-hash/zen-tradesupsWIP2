@@ -1,10 +1,5 @@
-//AdvancedFilterPanel.jsx
-
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
-
-
 
 const Panel = styled.div`
   background: #1a1d29;
@@ -21,6 +16,8 @@ const Section = styled.div`
 const Title = styled.h3`
   margin-bottom: 0.5rem;
   color: #fff;
+  cursor: pointer;
+  user-select: none;
 `;
 
 const CheckboxGroup = styled.div`
@@ -43,6 +40,8 @@ export default function AdvancedFilterPanel({
   onReset
 }) {
   const [showCollections, setShowCollections] = useState(false);
+  const [showWeapons, setShowWeapons] = useState(false);
+
   const uniqueCollections = [...new Set(allSkins.map(s => s.collection).filter(Boolean))].sort();
   const uniqueWeapons = [...new Set(allSkins.map(s => s.name.split(' | ')[0]))];
 
@@ -57,107 +56,140 @@ export default function AdvancedFilterPanel({
 
   return (
     <Panel>
+      {/* Usures */}
       <Section>
         <Title>🧩 Usures</Title>
         <CheckboxGroup>
-          {['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle-Scarred'].map(w =>
-            <label key={w}>
-              <input
-                type="checkbox"
-                checked={filters.wear.includes(w)}
-                onChange={() => toggle('wear', w)}
-              /> {w}
-            </label>
-          )}
+          {['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle-Scarred'].map(w => {
+            const id = `wear-${w}`;
+            return (
+              <label key={id} htmlFor={id}>
+                <input
+                  id={id}
+                  type="checkbox"
+                  checked={filters.wear.includes(w)}
+                  onChange={() => toggle('wear', w)}
+                /> {w}
+              </label>
+            );
+          })}
         </CheckboxGroup>
       </Section>
 
+      {/* Raretés */}
       <Section>
         <Title>🎨 Raretés</Title>
         <CheckboxGroup>
-          {['Consumer', 'Industrial', 'Mil-spec', 'Restricted', 'Classified', 'Covert'].map(r =>
-            <label key={r}>
-              <input
-                type="checkbox"
-                checked={filters.rarity.includes(r)}
-                onChange={() => toggle('rarity', r)}
-              /> {r}
-            </label>
-          )}
+          {['Consumer', 'Industrial', 'Mil-spec', 'Restricted', 'Classified', 'Covert'].map(r => {
+            const id = `rarity-${r}`;
+            return (
+              <label key={id} htmlFor={id}>
+                <input
+                  id={id}
+                  type="checkbox"
+                  checked={filters.rarity.includes(r)}
+                  onChange={() => toggle('rarity', r)}
+                /> {r}
+              </label>
+            );
+          })}
         </CheckboxGroup>
       </Section>
 
+      {/* Type */}
       <Section>
         <Title>🔧 Type</Title>
         <CheckboxGroup>
-          {['StatTrak', 'Souvenir', 'Regular'].map(t =>
-            <label key={t}>
-              <input
-                type="checkbox"
-                checked={filters.type.includes(t)}
-                onChange={() => toggle('type', t)}
-              /> {t}
-            </label>
-          )}
+          {['StatTrak', 'Souvenir', 'Regular'].map(t => {
+            const id = `type-${t}`;
+            return (
+              <label key={id} htmlFor={id}>
+                <input
+                  id={id}
+                  type="checkbox"
+                  checked={filters.type.includes(t)}
+                  onChange={() => toggle('type', t)}
+                /> {t}
+              </label>
+            );
+          })}
         </CheckboxGroup>
       </Section>
 
+      {/* Collections */}
       <Section>
-        <Title
-          style={{ cursor: 'pointer', userSelect: 'none' }}
-          onClick={() => setShowCollections(prev => !prev)}
-        >
+        <Title onClick={() => setShowCollections(prev => !prev)}>
           📦 Collections {showCollections ? '▲' : '▼'}
         </Title>
-
         {showCollections && (
-          <CheckboxGroup
-            style={{
-              maxHeight: '300px',
-              overflowY: 'auto',
-              paddingLeft: '1rem',
-              marginTop: '0.5rem'
-            }}
-          >
-            {uniqueCollections.map(c => (
-              <label key={c} style={{ display: 'block', marginBottom: '4px' }}>
-                <input
-                  type="checkbox"
-                  checked={filters.collection.includes(c)}
-                  onChange={() => toggle('collection', c)}
-                />{' '}
-                {c}
-              </label>
-            ))}
+          <CheckboxGroup style={{ maxHeight: '300px', overflowY: 'auto', paddingLeft: '1rem' }}>
+            {uniqueCollections.map(c => {
+              const id = `collection-${c}`;
+              return (
+                <label key={id} htmlFor={id} style={{ display: 'block', marginBottom: '4px' }}>
+                  <input
+                    id={id}
+                    type="checkbox"
+                    checked={filters.collection.includes(c)}
+                    onChange={() => toggle('collection', c)}
+                  /> {c}
+                </label>
+              );
+            })}
           </CheckboxGroup>
         )}
       </Section>
 
-
+      {/* Armes */}
       <Section>
-        <Title>🔫 Armes</Title>
-        <CheckboxGroup>
-          {uniqueWeapons.map(w =>
-            <label key={w}>
-              <input
-                type="checkbox"
-                checked={filters.weapon.includes(w)}
-                onChange={() => toggle('weapon', w)}
-              /> {w}
-            </label>
-          )}
-        </CheckboxGroup>
+        <Title onClick={() => setShowWeapons(prev => !prev)}>
+          🔫 Armes {showWeapons ? '▲' : '▼'}
+        </Title>
+        {showWeapons && (
+          <CheckboxGroup style={{ maxHeight: '300px', overflowY: 'auto', paddingLeft: '1rem' }}>
+            {uniqueWeapons.map(w => {
+              const id = `weapon-${w}`;
+              return (
+                <label key={id} htmlFor={id} style={{ display: 'block', marginBottom: '4px' }}>
+                  <input
+                    id={id}
+                    type="checkbox"
+                    checked={filters.weapon.includes(w)}
+                    onChange={() => toggle('weapon', w)}
+                  /> {w}
+                </label>
+              );
+            })}
+          </CheckboxGroup>
+        )}
       </Section>
 
+      {/* Prix */}
       <Section>
         <Title>💰 Prix</Title>
         <PriceRange>
-          <label>Min: <input type="number" value={filters.priceMin} onChange={e => setFilters(prev => ({ ...prev, priceMin: e.target.value }))} /></label>
-          <label>Max: <input type="number" value={filters.priceMax} onChange={e => setFilters(prev => ({ ...prev, priceMax: e.target.value }))} /></label>
+          <label htmlFor="priceMin">
+            Min: <input
+              id="priceMin"
+              type="number"
+              value={filters.priceMin}
+              onChange={e => setFilters(prev => ({ ...prev, priceMin: e.target.value }))}
+            />
+          </label>
+          <label htmlFor="priceMax">
+            Max: <input
+              id="priceMax"
+              type="number"
+              value={filters.priceMax}
+              onChange={e => setFilters(prev => ({ ...prev, priceMax: e.target.value }))}
+            />
+          </label>
         </PriceRange>
       </Section>
 
+      {/* Boutons */}
       <div style={{ display: 'flex', gap: '1rem' }}>
+        <button onClick={onApply}>✅ Appliquer</button>
         <button onClick={onReset}>♻️ Réinitialiser</button>
       </div>
     </Panel>

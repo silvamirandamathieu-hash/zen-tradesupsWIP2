@@ -1,47 +1,56 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './TradeUp.css';
 import { getAllInventory } from '../db';
+import { useAdvancedFilters } from './useAdvancedFilters';
+import { filterSkins } from './filterSkins';
+import AdvancedFilterPanel from './AdvancedFilterPanel';
 
 
-function TradeUp({ }) {
+
+function TradeUp() {
+  const [inputs, setInputs] = useState(Array(10).fill(null));
   const [outputs, setOutputs] = useState(Array(5).fill(null));
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [panelType, setPanelType] = useState(null); // 'input' ou 'output'
-  const [activeTab, setActiveTab] = useState('myInventory'); // 'search' ou 'stats'
+  const [panelType, setPanelType] = useState(null);
+  const [activeTab, setActiveTab] = useState('myInventory');
   const [inventory, setInventory] = useState([]);
   const [allSkins, setAllSkins] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [wearFilter, setWearFilter] = useState('all');
-  const [collectionFilter, setCollectionFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [advancedFilters, setAdvancedFilters] = useState({
-    wear: [],
-    rarity: [],
-    type: [],
-    collection: [],
-    weapon: [],
-    priceMin: '',
-    priceMax: ''
-  });
+  const [showFilters, setShowFilters] = useState(false);
+  const { filters, setFilters, resetFilters } = useAdvancedFilters();
+  const [collectionSearch, setCollectionSearch] = useState('');
+  const [showCollectionDropdown, setShowCollectionDropdown] = useState(false);
+
   useEffect(() => {
     const fetchInventory = async () => {
       const data = await getAllInventory();
       setInventory(data);
-      setAllSkins(data); // si tu veux les mêmes pour les deux onglets
+      setAllSkins(data);
     };
     fetchInventory();
   }, []);
+
   const filteredSkins = useMemo(() => {
     const source = activeTab === 'myInventory' ? inventory : allSkins;
+    const filtered = filterSkins(source, filters);
+    return filtered.filter(skin =>
+      searchTerm === '' || skin.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [inventory, allSkins, activeTab, filters, searchTerm]);
 
-    return source.filter(skin => {
-      const matchesSearch = searchTerm === '' || skin.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesWear = wearFilter === 'all' || skin.wear === wearFilter;
-      const matchesCollection = collectionFilter === 'all' || skin.collection === collectionFilter;
-
-      return matchesSearch && matchesWear && matchesCollection;
-    });
-  }, [inventory, allSkins, activeTab, searchTerm, wearFilter, collectionFilter]);
+  const handleSelectSkin = (skin) => {
+    if (panelType === 'input') {
+      const newInputs = [...inputs];
+      newInputs[selectedSlot] = skin;
+      setInputs(newInputs);
+    } else {
+      const newOutputs = [...outputs];
+      newOutputs[selectedSlot] = skin;
+      setOutputs(newOutputs);
+    }
+    setSelectedSlot(null);
+    setPanelType(null);
+  };
 
   const addOutput = () => {
     if (outputs.length < 10) {
@@ -59,19 +68,23 @@ function TradeUp({ }) {
     setSelectedSlot(null);
     setPanelType(null);
   };
-  const handleSelectSkin = (skin) => {
-    if (panelType === 'input') {
-      const newInputs = [...inputs];
-      newInputs[selectedSlot] = skin;
-      setInputs(newInputs);
-    } else {
-      const newOutputs = [...outputs];
-      newOutputs[selectedSlot] = skin;
-      setOutputs(newOutputs);
-    }
-    closePanel();
+  const rarityColors = {
+    Consumer: '#9e9e9e',
+    Industrial: '#448095ff',
+    'Mil-spec': '#1d29aeff',
+    Restricted: '#8b4098ff',
+    Classified: '#e52bd6ff',
+    Covert: '#F44336',
   };
-  const [inputs, setInputs] = useState(Array(10).fill(null));
+  const allCollections = useMemo(() => {
+    return [...new Set((activeTab === 'myInventory' ? inventory : allSkins)
+      .map(s => s.collection)
+      .filter(c => c && c !== 'Limited Edition Item Collection'))].sort();
+  }, [inventory, allSkins, activeTab]);
+  const filteredCollections = allCollections.filter(c =>
+    c.toLowerCase().includes(collectionSearch.toLowerCase())
+  );
+
   const colorMap = {
     'Factory New': '#4CAF50',
     'Minimal Wear': '#8BC34A',
@@ -79,18 +92,6 @@ function TradeUp({ }) {
     'Well-Worn': '#FF9800',
     'Battle-Scarred': '#F44336'
   };
-  const formatRarity = (rarity) => rarity?.toLowerCase().replace(/\s+/g, '-');
-
-  const availableCollections = useMemo(() => {
-    const source = activeTab === 'myInventory' ? inventory : allSkins;
-    const collections = source.map(skin => skin.collection).filter(Boolean);
-    const unique = [...new Set(collections)];
-    return unique.sort();
-  }, [inventory, allSkins, activeTab]);
-
-
-
-
 
   return (
     <div className="tradeup-container">
@@ -131,26 +132,11 @@ function TradeUp({ }) {
       <section className="tradeup-analysis">
         <h2>📊 Analyse du trade-up</h2>
         <div className="analysis-grid">
-          <div className="analysis-card">
-            <span className="label">Avg Float</span>
-            <span className="value">0.12</span>
-          </div>
-          <div className="analysis-card">
-            <span className="label">Prix du trade-up</span>
-            <span className="value">€24.50</span>
-          </div>
-          <div className="analysis-card">
-            <span className="label">Rentabilité</span>
-            <span className="value">87%</span>
-          </div>
-          <div className="analysis-card">
-            <span className="label">Profit par trade</span>
-            <span className="value">€3.20</span>
-          </div>
-          <div className="analysis-card">
-            <span className="label">Chance de profit</span>
-            <span className="value">60%</span>
-          </div>
+          <div className="analysis-card"><span className="label">Avg Float</span><span className="value">0.12</span></div>
+          <div className="analysis-card"><span className="label">Prix du trade-up</span><span className="value">€24.50</span></div>
+          <div className="analysis-card"><span className="label">Rentabilité</span><span className="value">87%</span></div>
+          <div className="analysis-card"><span className="label">Profit par trade</span><span className="value">€3.20</span></div>
+          <div className="analysis-card"><span className="label">Chance de profit</span><span className="value">60%</span></div>
         </div>
       </section>
 
@@ -159,22 +145,9 @@ function TradeUp({ }) {
         <h2>🎯 Résultats possibles</h2>
         <div className="output-section">
           <div className="output-actions-side">
-            <button
-              className="output-btn add"
-              onClick={addOutput}
-              style={{ visibility: outputs.length < 10 ? 'visible' : 'hidden' }}
-            >
-              ➕
-            </button>
-            <button
-              className="output-btn remove"
-              onClick={removeOutput}
-              style={{ visibility: outputs.length > 1 ? 'visible' : 'hidden' }}
-            >
-              ➖
-            </button>
+            <button className="output-btn add" onClick={addOutput} style={{ visibility: outputs.length < 10 ? 'visible' : 'hidden' }}>➕</button>
+            <button className="output-btn remove" onClick={removeOutput} style={{ visibility: outputs.length > 1 ? 'visible' : 'hidden' }}>➖</button>
           </div>
-
           <div className="result-grid">
             {outputs.map((skin, i) => (
               <div
@@ -202,7 +175,7 @@ function TradeUp({ }) {
                 )}
               </div>
             ))}
-          </div> 
+          </div>
         </div>
       </section>
 
@@ -215,6 +188,7 @@ function TradeUp({ }) {
             </h3>
             <button onClick={closePanel}>✖</button>
           </div>
+
           <div className="panel-content">
             {/* Onglets */}
             <div className="panel-tabs">
@@ -233,96 +207,121 @@ function TradeUp({ }) {
             </div>
 
             {/* Contenu de l’onglet actif */}
-            {activeTab === 'allSkins' && (
-              <div className="tab-content">
-                <input
-                  type="text"
-                  placeholder="🔍 Rechercher un skin..."
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                  className="search-input"
-                />
-
-                <select value={collectionFilter} onChange={e => setCollectionFilter(e.target.value)} className="collection-select">
-                  <option value="all">Toutes les collections</option>
-                  {availableCollections.map((collection, index) => (
-                    <option key={index} value={collection}>{collection}</option>
-                  ))}
-                </select>
-
-
-                <div className="wear-buttons">
-                  {['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle-Scarred'].map(wear => (
-                    <button
-                      key={wear}
-                      className={`wear-btn ${wearFilter === wear ? 'active' : ''}`}
-                      onClick={() => setWearFilter(wear)}
-                    >
-                      {wear}
-                    </button>
-                  ))}
-                  <button className="wear-btn reset" onClick={() => setWearFilter('all')}>Réinitialiser</button>
+            <div className="tab-content">
+              <input
+                type="text"
+                placeholder="🔍 Rechercher un skin..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+              <div className="filter-row">
+                {['Consumer', 'Industrial', 'Mil-spec', 'Restricted', 'Classified', 'Covert'].map(rarity => (
+                  <button
+                    key={rarity}
+                    style={{ backgroundColor: rarityColors[rarity], color: 'white' }}
+                    onClick={() => setFilters(prev => ({ ...prev, rarity }))}
+                  >
+                    {rarity}
+                  </button>
+                ))}
+              </div>
+              <div className="collection-search-wrapper">
+                <div className="collection-search-bar">
+                  <input
+                    type="text"
+                    placeholder="🔍 Rechercher une collection..."
+                    value={collectionSearch}
+                    onChange={e => setCollectionSearch(e.target.value)}
+                    onFocus={() => setShowCollectionDropdown(true)}
+                    className="search-input"
+                  />
+                  <button onClick={() => setShowCollectionDropdown(prev => !prev)} className="dropdown-toggle">
+                    ⏷
+                  </button>
                 </div>
 
-
-                <div className="skin-results">
-                  {filteredSkins.length === 0 ? (
-                    <p>Aucun skin trouvé.</p>
-                  ) : (
-                    filteredSkins.map((skin, index) => (
-                      <div key={index} className="skin-card">
-                        <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
-                        <div className="skin-info">
-                          <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
-                            {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
-                            {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
-                            {skin.name}
-                          </p>
-                          <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
-                          {skin.collection !== 'Limited Edition Item Collection' && (
-                            <p className="skin-collection">{skin.collection}</p>
-                          )}
-                          <p className="skin-price">💰 {skin.price} €</p>
-                          <button onClick={() => handleSelectSkin(skin)}>Ajouter au slot</button>
-                        </div>
+                {showCollectionDropdown && (
+                  <div className="collection-dropdown-list">
+                    {filteredCollections.map((collection, i) => (
+                      <div
+                        key={i}
+                        className="collection-item"
+                        onClick={() => {
+                          setFilters(prev => ({ ...prev, collection }));
+                          setCollectionSearch(collection);
+                          setShowCollectionDropdown(false);
+                        }}
+                      >
+                        {collection}
                       </div>
-                    ))
-                  )}
-                </div>
+                    ))}
+                  </div>
+                  
+                )}
               </div>
-            )}
-
-            {activeTab === 'myInventory' && (
-              <div className="tab-content">
-                <input
-                  type="text"
-                  placeholder="🔍 Rechercher un skin..."
-                  className="search-input"
-                />
-
-                <select className="collection-select">
-                  <option value="">Toutes les collections</option>
-                  <option value="Prisma">Prisma</option>
-                  <option value="Gamma">Gamma</option>
-                  <option value="Revolver">Revolver</option>
-                </select>
-
-                <div className="wear-buttons">
-                  <button className="wear-btn fn">Factory New</button>
-                  <button className="wear-btn mw">Minimal Wear</button>
-                  <button className="wear-btn ft">Field-Tested</button>
-                  <button className="wear-btn ww">Well-Worn</button>
-                  <button className="wear-btn bs">Battle-Scarred</button>
-                </div>
-
-                <div className="skin-results">
-                  <p>Résultats filtrés ici...</p>
-                </div>
+              <div className="filter-row">
+                {['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle-Scarred'].map(wear => (
+                  <button
+                    key={wear}
+                    style={{ backgroundColor: colorMap[wear], color: 'white' }}
+                    onClick={() => setFilters(prev => ({ ...prev, wear: wear }))}
+                  >
+                    {wear}
+                  </button>
+                ))}
               </div>
-            )}
+              <button className="reset-filters-btn" onClick={resetFilters}>
+                🔄 Réinitialiser tous les filtres
+              </button>
+
+
+
+              <button
+                className="toggle-filters-btn"
+                onClick={() => setShowFilters(prev => !prev)}
+              >
+                {showFilters ? 'Masquer les filtres' : '🎛️ Afficher les filtres'}
+              </button>
+              {showFilters && (
+                  <AdvancedFilterPanel
+                    allSkins={activeTab === 'myInventory' ? inventory : allSkins}
+                    filters={filters}
+                    setFilters={setFilters}
+                    onApply={() => {}}
+                    onReset={resetFilters}
+                  />
+                )}
+
+
+              <div className="skin-results">
+                {filteredSkins.length === 0 ? (
+                  <p>Aucun skin trouvé.</p>
+                ) : (
+                  filteredSkins.map((skin, index) => (
+                    <div key={index} className="skin-card">
+                      <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
+                      <div className="skin-info">
+                        <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
+                          {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
+                          {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
+                          {skin.name}
+                        </p>
+                        <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
+                        {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
+                          <p className="skin-collection">{skin.collection}</p>
+                        )}
+                        <p className="skin-price">
+                          💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
+                        </p>
+                        <button onClick={() => handleSelectSkin(skin)}>Ajouter au slot</button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
           </div>
-
-
         </div>
       )}
     </div>
