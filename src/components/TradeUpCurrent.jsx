@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {
-  getCurrentTradeUps,
-  saveTradeUp,
-  clearCurrentTradeUps
-} from '../db';
-import TradeUpCard from './TradeUpCard';
+import { getCurrentTradeUps } from '../db';
+import TradeUpCard from './TradeUpCard'; // à créer pour afficher chaque trade-up
 
-function TradeUpCurrent({ priceMap, onRefreshPrices }) {
-  const [currentTradeUps, setCurrentTradeUps] = useState([]);
+function TradeUpCurrent({ priceMap, onRefreshPrices, onDelete  }) {
+  const [savedTradeUps, setCurrentTradeUps] = useState([]);
 
   useEffect(() => {
     getCurrentTradeUps().then(setCurrentTradeUps);
@@ -15,13 +11,12 @@ function TradeUpCurrent({ priceMap, onRefreshPrices }) {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>🧪 Trade-ups en cours</h2>
+      <h2>💾 Trade-ups sauvegardés</h2>
       <button onClick={onRefreshPrices}>🔄 Actualiser les prix</button>
-      {currentTradeUps.map((trade, i) => (
-        <TradeUpCard key={i} trade={trade.data} priceMap={priceMap} />
+      {savedTradeUps.map((trade, i) => (
+        <TradeUpCard key={i} trade={trade} priceMap={priceMap} />
       ))}
     </div>
   );
 }
-
 export default TradeUpCurrent;

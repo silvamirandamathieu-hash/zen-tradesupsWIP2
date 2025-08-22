@@ -1,7 +1,7 @@
 import React from 'react';
-import { addSavedTradeUp, deleteCurrentTradeUp } from '../db';
+import { addSavedTradeUp , deleteCurrentTradeUp } from '../db';
 
-function TradeUpCard({ trade, priceMap, onDelete }) {
+function TradeUpCard({ trade, priceMap ,onDelete}) {
   if (!trade) return null;
 
   const { inputs = [], outputs = [], isStatTrak = false } = trade;
@@ -26,14 +26,13 @@ function TradeUpCard({ trade, priceMap, onDelete }) {
   const profitColor = profit > 0 ? 'green' : profit < 0 ? 'red' : 'gray';
 
   const handleSave = async () => {
-    await addSavedTradeUp(trade);
+    await addSavedTradeUp (trade);
     alert('📥 Trade-up sauvegardé !');
   };
 
   const handleDelete = async () => {
     await deleteCurrentTradeUp(trade.id);
     alert('🗑️ Supprimé des trade-ups en cours');
-    if (onDelete) onDelete(); // permet de rafraîchir la liste si nécessaire
   };
 
   return (
@@ -55,6 +54,12 @@ function TradeUpCard({ trade, priceMap, onDelete }) {
         <button onClick={handleSave} style={{ marginRight: '1rem' }}>📥 Sauvegarder</button>
         <button onClick={handleDelete}>🗑️ Supprimer</button>
       </div>
+      {onDelete && (
+  <button onClick={onDelete} style={{ marginTop: '0.5rem' }}>
+    🗑️ Supprimer ce trade-up
+  </button>
+)}
+
 
       <details style={{ marginTop: '1rem' }}>
         <summary>📦 Voir les skins</summary>
