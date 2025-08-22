@@ -116,6 +116,11 @@ useEffect(() => {
   const filteredCollections = allCollections.filter(c =>
     c.toLowerCase().includes(collectionSearch.toLowerCase())
   );
+  const resetSlots = () => {
+    setInputs(Array(10).fill(null));
+    setOutputs(Array(5).fill(null));
+  };
+
 
   const colorMap = {
     'Factory New': '#4CAF50',
@@ -130,6 +135,9 @@ useEffect(() => {
       {/* SECTION INPUTS */}
       <section className="tradeup-inputs">
         <h2>🎒 Skins utilisés</h2>
+        <button className="output-btn reset" onClick={resetSlots}>
+          🗑️
+        </button>
         <div className="inputs-grid">
           {inputs.map((skin, i) => (
             <div
@@ -206,7 +214,7 @@ useEffect(() => {
             {outputs.map((skin, i) => (
               <div
                 key={i}
-                className={`result-card ${skin ? '' : 'empty'}`}
+                className={`skin-card ${skin ? '' : 'empty'}`}
                 onClick={() => {
                   setSelectedSlot(i);
                   setPanelType('output');
@@ -215,18 +223,29 @@ useEffect(() => {
                 {skin ? (
                   <>
                     <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
-                    <div>
+                    <div className="action2-button">
+                      <button onClick={(e) => { e.stopPropagation(); removeOutput(i); }}>❌</button>
+                    </div>
+                    <div className="skin-info">
                       <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
                         {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
                         {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
                         {skin.name}
                       </p>
                       <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
+                      {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
+                        <p className="skin-collection">{skin.collection}</p>
+                      )}
+                      <p className="skin-price">
+                        💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
+                      </p>
                     </div>
+                    
                   </>
                 ) : (
                   <p>Output {i + 1}</p>
                 )}
+
               </div>
             ))}
           </div>
