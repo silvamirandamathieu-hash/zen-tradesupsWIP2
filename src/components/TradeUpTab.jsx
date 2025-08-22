@@ -71,6 +71,33 @@ useEffect(() => {
     setSelectedSlot(null);
     setPanelType(null);
   };
+  const duplicateSkinToNextInput = (index) => {
+    const skin = inputs[index];
+    if (!skin) return;
+
+    const updated = [...inputs];
+    const nextIndex = inputs.findIndex((s, i) => i > index && s === null);
+    if (nextIndex !== -1) {
+      updated[nextIndex] = skin;
+      setInputs(updated);
+    }
+  };
+
+  const removeSkin = (index) => {
+    const updated = [...inputs];
+    updated[index] = null;
+    setInputs(updated);
+  };
+
+
+  const fillAllWithSkin = (skin) => {
+    if (!skin) return;
+
+    const updated = inputs.map((s) => (s === null ? skin : s));
+    setInputs(updated);
+  };
+
+
   const rarityColors = {
     Consumer: '#9e9e9e',
     Industrial: '#448095ff',
@@ -103,7 +130,7 @@ useEffect(() => {
       {/* SECTION INPUTS */}
       <section className="tradeup-inputs">
         <h2>🎒 Skins utilisés</h2>
-        <div className="skin-grid">
+        <div className="inputs-grid">
           {inputs.map((skin, i) => (
             <div
               key={i}
@@ -117,19 +144,26 @@ useEffect(() => {
                 <>
                   <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
                   <div className="skin-info">
-                        <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
-                          {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
-                          {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
-                          {skin.name}
-                        </p>
-                        <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
-                        {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
-                          <p className="skin-collection">{skin.collection}</p>
-                        )}
-                        <p className="skin-price">
-                          💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
-                        </p>
-                      </div>
+                    <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
+                      {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
+                      {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
+                      {skin.name}
+                    </p>
+                    <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
+                    {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
+                      <p className="skin-collection">{skin.collection}</p>
+                    )}
+                    <p className="skin-price">
+                      💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
+                    </p>
+                  </div>
+
+                  {/* ✅ Boutons d'action */}
+                  <div className="input-actions">
+                    <button onClick={(e) => { e.stopPropagation(); duplicateSkinToNextInput(i); }}>➕</button>
+                    <button onClick={(e) => { e.stopPropagation(); fillAllWithSkin(skin); }}>📥</button>
+                    <button onClick={(e) => { e.stopPropagation(); removeSkin(i); }}>❌</button>
+                  </div>
                 </>
               ) : (
                 <p>Input {i + 1}</p>
@@ -137,6 +171,7 @@ useEffect(() => {
             </div>
           ))}
         </div>
+
       </section>
 
       {/* SECTION ANALYSE */}
@@ -255,6 +290,7 @@ useEffect(() => {
                 {showCollectionDropdown && (
                   <div className="collection-dropdown-list">
                     {filteredCollections.map((collection, i) => (
+                      
                       <div
                         key={i}
                         className="collection-item"
@@ -309,26 +345,56 @@ useEffect(() => {
                 {filteredSkins.length === 0 ? (
                   <p>Aucun skin trouvé.</p>
                 ) : (
-                  filteredSkins.map((skin, index) => (
-                    <div key={index} className="skin-card">
-                      <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
-                      <div className="skin-info">
-                        <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
-                          {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
-                          {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
-                          {skin.name}
-                        </p>
-                        <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
-                        {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
-                          <p className="skin-collection">{skin.collection}</p>
-                        )}
-                        <p className="skin-price">
-                          💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
-                        </p>
-                        <button onClick={() => handleSelectSkin(skin)}>Ajouter au slot</button>
+                  filteredSkins.map((skin, index) => {
+                    const statTrakQty = skin.statTrakItems?.length || 0;
+                    const regularQty = skin.regularItems?.length || 0;
+                    const totalQty = statTrakQty + regularQty;
+
+                    return (
+                      <div key={index} className="skin-card">
+                        <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
+                        
+                        <div className="skin-info">
+                          <p className={`skin-name rarity-${skin.rarity?.toLowerCase().replace(/\s+/g, '-')}`}>
+                            {skin.isStatTrak && <span className="stattrak-tag">StatTrak™ </span>}
+                            {skin.isSouvenir && <span className="souvenir-tag">Souvenir </span>}
+                            {skin.name}
+                          </p>
+
+                          {/* ✅ Badge de quantité affiché uniquement si onglet "Mon inventaire" */}
+                          {activeTab === 'myInventory' && totalQty > 0 && (
+                            <div
+                              style={{
+                                position: 'absolute',
+                                bottom: '180px',
+                                right: '8px',
+                                backgroundColor: '#2d3748',
+                                color: '#fff',
+                                padding: '4px 8px',
+                                borderRadius: '6px',
+                                fontWeight: 'bold',
+                                fontSize: '0.9rem',
+                              }}
+                            >
+                              x{totalQty}
+                            </div>
+                          )}
+
+                          <p className="skin-wear" style={{ color: colorMap[skin.wear] }}>{skin.wear}</p>
+
+                          {skin.collection && skin.collection !== 'Limited Edition Item Collection' && (
+                            <p className="skin-collection">{skin.collection}</p>
+                          )}
+
+                          <p className="skin-price">
+                            💰 {typeof skin.price === 'number' ? skin.price.toFixed(2).replace('.', ',') : '—'} €
+                          </p>
+
+                          <button onClick={() => handleSelectSkin(skin)}>Ajouter au slot</button>
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>

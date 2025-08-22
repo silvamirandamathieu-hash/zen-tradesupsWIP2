@@ -322,6 +322,96 @@
   font-weight: bold;
   color: #00ff99;
 }
+.input-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+
+.input-actions button {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.input-actions button:hover {
+  background-color: #555;
+}
+
+.inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.skin-card {
+  position: relative;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.input-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+
+.input-actions button {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.input-actions button:hover {
+  background-color: #555;
+}
+
+
+.tradeup-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  background-color: #2d3748;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.action-btn:hover {
+  background-color: #4a5568;
+}
+
 
 .side-panel {
   position: fixed;
