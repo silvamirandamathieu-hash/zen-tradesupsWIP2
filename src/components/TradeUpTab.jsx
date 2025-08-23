@@ -7,7 +7,8 @@ import {
   addSavedTradeUp,
   deleteCurrentTradeUp,
   saveCurrentTradeUp,
-  getSavedTradeUps
+  getSavedTradeUps,
+  addCurrentTradeUp
 } from '../db';
 import { useAdvancedFilters } from './useAdvancedFilters';
 import { filterSkins } from './filterSkins';
@@ -165,9 +166,6 @@ const [warning, setWarning] = useState(null);
     if (updated[index]) updated[index].price = value;
     setOutputs(updated);
   };
-  const handleSetAsCurrent = (tradeUp) => {
-    setCurrentTradeUp(tradeUp); // ← à adapter selon ton state
-  };
 
   const fillAllWithSkin = (skin) => {
     if (!skin) return;
@@ -175,6 +173,26 @@ const [warning, setWarning] = useState(null);
     const updated = inputs.map((s) => (s === null ? skin : s));
     setInputs(updated);
   };
+  const handleSetAsCurrent = async () => {
+    const resultSkin = outputs.find(o => o?.chance === Math.max(...outputs.map(o => o?.chance ?? 0)));
+    if (!resultSkin || inputs.every(i => i === null)) {
+      alert('⛔ Trade-up incomplet');
+      return;
+    }
+
+  const tradeUp = {
+    name: `TradeUp ${resultSkin.name}`,
+    collection: resultSkin.collection,
+    inputs,
+    outputs,
+    resultSkin,
+    isStatTrak: inputs.some(s => s?.isStatTrak),
+    date: new Date().toISOString()
+  };
+
+  await addCurrentTradeUp(tradeUp);
+  alert('⚙️ Trade-up ajouté aux en cours');
+};
 
 
   const rarityColors = {
@@ -381,9 +399,10 @@ const [warning, setWarning] = useState(null);
           </div>
         </div>
         <button onClick={handleSaveTradeUp}>💾 Sauvegarder</button>
-        <button onClick={handleSetAsCurrent}>⚙️ Définir comme en cours</button>
-
-
+        <button className="action-btn" onClick={handleSetAsCurrent}>
+          ⚙️ Définir comme en cours
+        </button>
+        
       </section>
 
       {/* PANEL LATÉRAL */}
