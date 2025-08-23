@@ -1,7 +1,7 @@
 import React from 'react';
-import { addSavedTradeUp, deleteCurrentTradeUp } from '../db';
+import { deleteCurrentTradeUp } from '../db';
 
-function TradeUpCard({ trade, priceMap, onDelete , onEdit }) {
+function TradeUpCard({ trade, priceMap, onDelete, onEdit }) {
   if (!trade) return null;
 
   const {
@@ -12,42 +12,14 @@ function TradeUpCard({ trade, priceMap, onDelete , onEdit }) {
     resultSkin,
     inputs = [],
     outputs = [],
-    isStatTrak = false,
-    profitability
+    isStatTrak = false
   } = trade;
 
-  // 💰 Calcul du coût total
-    const validInputs = inputs.filter(skin => skin && skin.name);
-    const totalCost = validInputs.reduce((sum, skin) => {
-    const price = priceMap?.[skin.name]?.price ?? 0;
-    return sum + price;
-    }, 0);
-
-
-  // 🎯 Valeur moyenne de sortie
-    const validOutputs = outputs.filter(skin => skin && skin.name);
-    const averageOutputValue = validOutputs.length > 0
-    ? validOutputs.reduce((sum, skin) => {
-        const price = priceMap?.[skin.name]?.price ?? 0;
-        return sum + price;
-        }, 0) / validOutputs.length
-    : 0;
-
-
   // 🧪 Float moyen
+  const validInputs = inputs.filter(skin => skin && skin.name);
   const averageFloat = validInputs.length > 0
     ? validInputs.reduce((sum, skin) => sum + (skin.float ?? 0), 0) / validInputs.length
     : 0;
-
-
-  // 📈 Rentabilité
-  const profit = averageOutputValue - totalCost;
-  const profitColor = profit > 0 ? 'green' : profit < 0 ? 'red' : 'gray';
-
-  const handleSave = async () => {
-    await addSavedTradeUp(trade);
-    alert('📥 Trade-up sauvegardé !');
-  };
 
   const handleDelete = async () => {
     await deleteCurrentTradeUp(id);
@@ -69,10 +41,10 @@ function TradeUpCard({ trade, priceMap, onDelete , onEdit }) {
       <p><strong>🎯 Résultat:</strong> {resultSkin?.name ?? '—'}</p>
       <p>💰 Coût total : {trade.totalInputPrice} €</p>
       <p>📈 Valeur moyenne de sortie : {trade.totalOutputPrice} €</p>
-      <p><strong>🧪 Float moyen:</strong> {averageFloat.toFixed(4)}</p>
       <p style={{ color: trade.profitability >= 0 ? 'green' : 'red' }}>
         📊 Rentabilité : {trade.profitability}%
       </p>
+      <p><strong>🧪 Float moyen:</strong> {averageFloat.toFixed(4)}</p>
 
       <div style={{ marginTop: '1rem' }}>
         {onEdit && (
@@ -93,11 +65,11 @@ function TradeUpCard({ trade, priceMap, onDelete , onEdit }) {
           <h4>Sorties :</h4>
           <ul>
             {outputs
-                ?.filter(skin => skin && skin.name)
-                .map((skin) => (
-                    <div key={skin.name}>{skin.name}</div>
-                ))
-                }
+              ?.filter(skin => skin && skin.name)
+              .map((skin) => (
+                <li key={skin.name}>{skin.name}</li>
+              ))
+            }
           </ul>
         </div>
       </details>

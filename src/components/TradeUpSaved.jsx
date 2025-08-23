@@ -24,7 +24,43 @@ function TradeUpSaved({ priceMap }) {
     setSortByProfitability(prev => !prev);
   };
 
-  const sortedTradeUps = [...savedTradeUps].sort((a, b) => {
+  const enrichTradeUp = (tradeUp) => {
+    const enrichedInputs = tradeUp.inputs.map(skin => {
+      const key = `${skin.name} (${skin.wear})`;
+      const price = priceMap?.[key]?.price ?? skin.price ?? 0;
+      return { ...skin, price };
+    });
+
+    const enrichedOutputs = tradeUp.outputs.map(skin => {
+      const key = `${skin.name} (${skin.wear})`;
+      const price = priceMap?.[key]?.price ?? skin.price ?? 0;
+      return { ...skin, price, chance: skin.chance ?? 0 };
+    });
+
+    const totalInputPrice = enrichedInputs.reduce((sum, s) => sum + s.price, 0);
+    const totalOutputPrice = enrichedOutputs.length > 0
+      ? enrichedOutputs.reduce((sum, s) => sum + s.price, 0) / enrichedOutputs.length
+      : 0;
+
+    const profit = totalOutputPrice - totalInputPrice;
+    const profitability = totalInputPrice > 0
+      ? ((profit / totalInputPrice) * 100).toFixed(2)
+      : '0.00';
+
+    return {
+      ...tradeUp,
+      inputs: enrichedInputs,
+      outputs: enrichedOutputs,
+      totalInputPrice: totalInputPrice.toFixed(2),
+      totalOutputPrice: totalOutputPrice.toFixed(2),
+      profit: profit.toFixed(2),
+      profitability: parseFloat(profitability)
+    };
+  };
+
+  const enrichedTradeUps = savedTradeUps.map(enrichTradeUp);
+
+  const sortedTradeUps = [...enrichedTradeUps].sort((a, b) => {
     if (!sortByProfitability) return 0;
     return (b.profitability ?? 0) - (a.profitability ?? 0);
   });
