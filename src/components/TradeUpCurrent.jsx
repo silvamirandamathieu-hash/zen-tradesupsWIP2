@@ -6,56 +6,104 @@ import { v4 as uuid } from 'uuid';
 function TradeUpCurrent({ priceMap, onRefreshPrices, onEdit }) {
   const [currentTradeUps, setCurrentTradeUps] = useState([]);
 
-  useEffect(() => {
-    const fetchCurrentTradeUps = async () => {
-      const current = await getCurrentTradeUps();
-      const enriched = current.map((trade) => enrichTradeUp(trade));
-      setCurrentTradeUps(enriched);
-    };
-    fetchCurrentTradeUps();
-  }, [priceMap]);
+    useEffect(() => {
+        const fetchCurrentTradeUps = async () => {
+            const current = await getCurrentTradeUps();
+            const enriched = current.map(enrichTradeUp);
+            setCurrentTradeUps(enriched);
+        };
+        fetchCurrentTradeUps();
+        }, [priceMap]);
 
-  const handleDelete = async (id) => {
-    await deleteCurrentTradeUp(id);
-    const updated = await getCurrentTradeUps();
-    const enriched = updated.map((trade) => enrichTradeUp(trade));
-    setCurrentTradeUps(enriched);
-  };
+
+
+    const handleDelete = async (id) => {
+        await deleteCurrentTradeUp(id);
+        const updated = await getCurrentTradeUps();
+        const enriched = updated.map(enrichTradeUp);
+        setCurrentTradeUps(enriched);
+        };
+
+    const enrichTradeUp = (tradeUp) => {
+        const validInputs = tradeUp.inputs?.filter(s => s && s.name) ?? [];
+        const validOutputs = tradeUp.outputs?.filter(s => s && s.name) ?? [];
+
+        const totalInputPrice = validInputs.reduce((sum, skin) => {
+            const price = priceMap?.[skin.name]?.price ?? 0;
+            return sum + price;
+        }, 0);
+
+        const totalOutputPrice = validOutputs.length > 0
+            ? validOutputs.reduce((sum, skin) => {
+                const price = priceMap?.[skin.name]?.price ?? 0;
+                return sum + price;
+            }, 0) / validOutputs.length
+            : 0;
+
+        const averageFloat = validInputs.length > 0
+            ? validInputs.reduce((sum, skin) => sum + (skin.float ?? 0), 0) / validInputs.length
+            : 0;
+
+        const profitability = totalInputPrice > 0
+            ? ((totalOutputPrice - totalInputPrice) / totalInputPrice) * 100
+            : 0;
+
+        return {
+            ...tradeUp,
+            totalInputPrice,
+            totalOutputPrice,
+            averageFloat,
+            profitability
+        };
+        };
+
+
 
   const handleSave = async (tradeUp) => {
-    if (!tradeUp || !tradeUp.resultSkin || !tradeUp.inputs) return;
+    if (!tradeUp || !tradeUp.resultSkin || !tradeUp.inputs?.length) return;
+
+    const validInputs = tradeUp.inputs.filter(s => s && s.name);
+    const validOutputs = tradeUp.outputs?.filter(s => s && s.name) ?? [];
+
+    const totalInputPrice = validInputs.reduce((sum, skin) => {
+        const price = priceMap?.[skin.name]?.price ?? 0;
+        return sum + price;
+    }, 0);
+
+    const totalOutputPrice = validOutputs.length > 0
+        ? validOutputs.reduce((sum, skin) => {
+            const price = priceMap?.[skin.name]?.price ?? 0;
+            return sum + price;
+        }, 0) / validOutputs.length
+        : 0;
+
+    const averageFloat = validInputs.length > 0
+        ? validInputs.reduce((sum, skin) => sum + (skin.float ?? 0), 0) / validInputs.length
+        : 0;
+
+    const profitability = totalInputPrice > 0
+        ? ((totalOutputPrice - totalInputPrice) / totalInputPrice) * 100
+        : 0;
 
     const tradeUpToSave = {
-      id: uuid(),
-      name: `TradeUp ${tradeUp.resultSkin.name}`,
-      collection: tradeUp.collection,
-      inputs: tradeUp.inputs,
-      outputs: tradeUp.outputs ?? [],
-      resultSkin: tradeUp.resultSkin,
-      isStatTrak: tradeUp.isStatTrak ?? false,
-      profitability: tradeUp.profitability,
-      date: new Date().toISOString()
+        id: uuid(),
+        name: `TradeUp ${tradeUp.resultSkin.name}`,
+        collection: tradeUp.collection,
+        inputs: tradeUp.inputs,
+        outputs: tradeUp.outputs ?? [],
+        resultSkin: tradeUp.resultSkin,
+        isStatTrak: tradeUp.isStatTrak ?? false,
+        totalInputPrice,
+        totalOutputPrice,
+        averageFloat,
+        profitability,
+        date: new Date().toISOString()
     };
 
     await addSavedTradeUp(tradeUpToSave);
     alert('📥 Trade-up sauvegardé !');
-  };
-
-  // 🔧 Enrichit un trade-up avec les valeurs calculées
-    const enrichTradeUp = (trade) => {
-    const totalInputPrice = calculateTotalCost(trade.inputs);
-    const totalOutputPrice = calculateAverageOutputValue(trade.outputs);
-    const profitability = calculateProfitability(trade.inputs, trade.resultSkin);
-    const averageFloat = calculateAverageFloat(trade.inputs);
-
-    return {
-        ...trade,
-        totalInputPrice,
-        totalOutputPrice,
-        profitability,
-        averageFloat
     };
-    };
+
 
 
   const calculateTotalCost = (inputs) => {
