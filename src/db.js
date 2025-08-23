@@ -104,32 +104,51 @@ export async function clearHistory() {
 //
 // 🧪 TRADE-UP
 //
-export async function saveCurrentTradeUp(tradeUp) {
+
+// 📥 Ajouter un trade-up en cours
+export async function addCurrentTradeUp(tradeUp) {
   if (!tradeUp || typeof tradeUp !== 'object') throw new Error('Trade-up invalide');
-  return db.currentTradeUps.put({ ...tradeUp, id: 1 }); // id fixe pour le trade-up en cours
+  return db.currentTradeUps.add({ ...tradeUp, date: new Date().toISOString() });
 }
 
-export async function getCurrentTradeUp() {
-  return db.currentTradeUps.get(1);
+// 📋 Récupérer tous les trade-ups en cours
+export async function getCurrentTradeUps() {
+  return db.currentTradeUps.orderBy('date').reverse().toArray();
 }
 
-export async function deleteCurrentTradeUp() {
-  return db.currentTradeUps.delete(1);
+// 🛠 Modifier un trade-up en cours
+export async function updateCurrentTradeUp(id, updatedTradeUp) {
+  if (!id || typeof updatedTradeUp !== 'object') throw new Error('Trade-up invalide');
+  return db.currentTradeUps.update(id, { ...updatedTradeUp, date: new Date().toISOString() });
 }
 
+// ❌ Supprimer un trade-up en cours
+export async function deleteCurrentTradeUp(id) {
+  return db.currentTradeUps.delete(id);
+}
+
+// 🧹 Tout supprimer (optionnel)
+export async function clearCurrentTradeUps() {
+  return db.currentTradeUps.clear();
+}
+
+// 💾 Ajouter un trade-up sauvegardé
 export async function addSavedTradeUp(tradeUp) {
   if (!tradeUp || typeof tradeUp !== 'object') throw new Error('Trade-up invalide');
-  return db.savedTradeUps.add(tradeUp);
+  return db.savedTradeUps.add({ ...tradeUp, date: new Date().toISOString() });
 }
 
+// 📋 Récupérer tous les trade-ups sauvegardés
 export async function getSavedTradeUps() {
   return db.savedTradeUps.orderBy('date').reverse().toArray();
 }
 
+// ❌ Supprimer un trade-up sauvegardé
 export async function deleteSavedTradeUp(id) {
   return db.savedTradeUps.delete(id);
 }
 
+// 🧹 Tout supprimer
 export async function clearSavedTradeUps() {
   return db.savedTradeUps.clear();
 }

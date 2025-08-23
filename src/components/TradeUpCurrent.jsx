@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import {
-  getCurrentTradeUp,
+  getCurrentTradeUps,
   deleteCurrentTradeUp,
   addSavedTradeUp
 } from '../db';
 import TradeUpCard from './TradeUpCard';
 
-function TradeUpCurrent({ priceMap, onRefreshPrices }) {
-  const [currentTradeUp, setCurrentTradeUp] = useState(null);
+function TradeUpCurrent({ priceMap, onRefreshPrices, onEdit }) {
+  const [currentTradeUps, setCurrentTradeUps] = useState([]);
 
   useEffect(() => {
-    const fetchTradeUp = async () => {
-      const trade = await getCurrentTradeUp();
-      setCurrentTradeUp(trade);
+    const fetchTradeUps = async () => {
+      const trades = await getCurrentTradeUps();
+      setCurrentTradeUps(trades);
     };
-    fetchTradeUp();
+    fetchTradeUps();
   }, []);
 
-  const handleSave = async () => {
-    if (!currentTradeUp || !currentTradeUp.resultSkin || !currentTradeUp.inputs) return;
+  const handleSave = async (tradeUp) => {
+    if (!tradeUp || !tradeUp.resultSkin || !tradeUp.inputs) return;
 
     const tradeUpToSave = {
       id: uuid(),
-      name: `TradeUp ${currentTradeUp.resultSkin.name}`,
-      collection: currentTradeUp.collection,
-      inputs: currentTradeUp.inputs,
-      outputs: currentTradeUp.outputs ?? [],
-      resultSkin: currentTradeUp.resultSkin,
-      isStatTrak: currentTradeUp.isStatTrak ?? false,
-      profitability: calculateProfitability(currentTradeUp.inputs, currentTradeUp.resultSkin),
+      name: `TradeUp ${tradeUp.resultSkin.name}`,
+      collection: tradeUp.collection,
+      inputs: tradeUp.inputs,
+      outputs: tradeUp.outputs ?? [],
+      resultSkin: tradeUp.resultSkin,
+      isStatTrak: tradeUp.isStatTrak ?? false,
+      profitability: calculateProfitability(tradeUp.inputs, tradeUp.resultSkin),
       date: new Date().toISOString()
     };
 
@@ -37,9 +37,10 @@ function TradeUpCurrent({ priceMap, onRefreshPrices }) {
     alert('📥 Trade-up sauvegardé !');
   };
 
-  const handleDelete = async () => {
-    await deleteCurrentTradeUp();
-    setCurrentTradeUp(null);
+  const handleDelete = async (id) => {
+    await deleteCurrentTradeUp(id);
+    const updated = await getCurrentTradeUps();
+    setCurrentTradeUps(updated);
     alert('🗑️ Trade-up supprimé');
   };
 
@@ -54,19 +55,28 @@ function TradeUpCurrent({ priceMap, onRefreshPrices }) {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>🧪 Trade-up en cours</h2>
+      <h2>🧪 Trade-ups en cours</h2>
       <button onClick={onRefreshPrices}>🔄 Actualiser les prix</button>
 
-      {currentTradeUp ? (
-        <>
-          <TradeUpCard trade={currentTradeUp} priceMap={priceMap} />
-          <div style={{ marginTop: '1rem' }}>
-            <button onClick={handleSave} style={{ marginRight: '1rem' }}>💾 Sauvegarder</button>
-            <button onClick={handleDelete}>🗑️ Supprimer</button>
-          </div>
-        </>
-      ) : (
+      {currentTradeUps.length === 0 ? (
         <p>Aucun trade-up en cours.</p>
+      ) : (
+        currentTradeUps.map((trade) => (
+          <div key={trade.id} style={{ marginBottom: '2rem' }}>
+            <TradeUpCard
+              trade={trade}
+              priceMap={priceMap}
+              onDelete={() => handleDelete(trade.id)}
+              onEdit={() => onEdit(trade)} // ✅ pour réouverture dans TradeUpTab
+            />
+            <div style={{ marginTop: '1rem' }}>
+              <button onClick={() => handleSave(trade)} style={{ marginRight: '1rem' }}>
+                💾 Sauvegarder
+              </button>
+              <button onClick={() => handleDelete(trade.id)}>🗑️ Supprimer</button>
+            </div>
+          </div>
+        ))
       )}
     </div>
   );

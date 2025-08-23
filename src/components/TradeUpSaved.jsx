@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getSavedTradeUps, deleteSavedTradeUp } from '../db';
 import TradeUpCard from './TradeUpCard';
 
-function TradeUpSaved({ priceMap, onRefreshPrices }) {
+function TradeUpSaved({ priceMap, onRefreshPrices, onEdit }) {
   const [savedTradeUps, setSavedTradeUps] = useState([]);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ function TradeUpSaved({ priceMap, onRefreshPrices }) {
             trade={trade}
             priceMap={priceMap}
             onDelete={() => handleDelete(trade.id)}
+            onEdit={() => onEdit(trade)} // ✅ Ajout du bouton Modifier
           />
         ))
       )}

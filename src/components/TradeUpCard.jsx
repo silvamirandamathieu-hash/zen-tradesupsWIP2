@@ -1,7 +1,7 @@
 import React from 'react';
 import { addSavedTradeUp, deleteCurrentTradeUp } from '../db';
 
-function TradeUpCard({ trade, priceMap, onDelete }) {
+function TradeUpCard({ trade, priceMap, onDelete , onEdit }) {
   if (!trade) return null;
 
   const {
@@ -66,7 +66,9 @@ function TradeUpCard({ trade, priceMap, onDelete }) {
       </p>
 
       <div style={{ marginTop: '1rem' }}>
-        <button onClick={handleSave} style={{ marginRight: '1rem' }}>📥 Sauvegarder</button>
+        {onEdit && (
+          <button onClick={() => onEdit(trade)}>🛠 Modifier</button>
+        )}
         <button onClick={handleDelete}>🗑️ Supprimer</button>
       </div>
 

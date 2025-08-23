@@ -20,6 +20,7 @@ function InventoryTabs({
   onAllImport
 }) {
   const [activeTab, setActiveTab] = useState('inventory');
+  const [editingTradeUp, setEditingTradeUp] = useState(null);
   const nodeRef = useRef(null);
 
   const tabs = [
@@ -32,6 +33,10 @@ function InventoryTabs({
 
   const handleRefreshPrices = () => {
     console.log('🔄 Mise à jour des prix demandée');
+  };
+  const handleEditTradeUp = (tradeUp) => {
+    setEditingTradeUp(tradeUp);
+    setActiveTab('TradeUp'); // Redirige vers l’éditeur
   };
 
   const renderTabContent = () => {
@@ -65,6 +70,7 @@ function InventoryTabs({
         return (
           <TradeUpCurrent
             priceMap={priceMap}
+            editingTradeUp={editingTradeUp}
             onRefreshPrices={handleRefreshPrices}
           />
         );
@@ -73,6 +79,7 @@ function InventoryTabs({
         return (
           <TradeUpSaved
             priceMap={priceMap}
+            editingTradeUp={editingTradeUp}
             onRefreshPrices={handleRefreshPrices}
           />
         );
