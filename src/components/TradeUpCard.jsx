@@ -17,19 +17,28 @@ function TradeUpCard({ trade, priceMap, onDelete , onEdit }) {
   } = trade;
 
   // 💰 Calcul du coût total
-  const totalCost = inputs.reduce((sum, skin) => {
+    const validInputs = inputs.filter(skin => skin && skin.name);
+    const totalCost = validInputs.reduce((sum, skin) => {
     const price = priceMap?.[skin.name]?.price ?? 0;
     return sum + price;
-  }, 0);
+    }, 0);
+
 
   // 🎯 Valeur moyenne de sortie
-  const averageOutputValue = outputs.reduce((sum, skin) => {
-    const price = priceMap?.[skin.name]?.price ?? 0;
-    return sum + price;
-  }, 0) / outputs.length;
+    const validOutputs = outputs.filter(skin => skin && skin.name);
+    const averageOutputValue = validOutputs.length > 0
+    ? validOutputs.reduce((sum, skin) => {
+        const price = priceMap?.[skin.name]?.price ?? 0;
+        return sum + price;
+        }, 0) / validOutputs.length
+    : 0;
+
 
   // 🧪 Float moyen
-  const averageFloat = inputs.reduce((sum, skin) => sum + (skin.float ?? 0), 0) / inputs.length;
+  const averageFloat = validInputs.length > 0
+    ? validInputs.reduce((sum, skin) => sum + (skin.float ?? 0), 0) / validInputs.length
+    : 0;
+
 
   // 📈 Rentabilité
   const profit = averageOutputValue - totalCost;
@@ -83,9 +92,12 @@ function TradeUpCard({ trade, priceMap, onDelete , onEdit }) {
           </ul>
           <h4>Sorties :</h4>
           <ul>
-            {outputs.map((skin, i) => (
-              <li key={i}>{skin.name}</li>
-            ))}
+            {outputs
+                ?.filter(skin => skin && skin.name)
+                .map((skin) => (
+                    <div key={skin.name}>{skin.name}</div>
+                ))
+                }
           </ul>
         </div>
       </details>

@@ -42,20 +42,21 @@ function TradeUpCurrent({ priceMap, onRefreshPrices, onEdit }) {
   };
 
   // 🔧 Enrichit un trade-up avec les valeurs calculées
-  const enrichTradeUp = (trade) => {
-    const totalCost = calculateTotalCost(trade.inputs);
-    const averageOutputValue = calculateAverageOutputValue(trade.outputs);
+    const enrichTradeUp = (trade) => {
+    const totalInputPrice = calculateTotalCost(trade.inputs);
+    const totalOutputPrice = calculateAverageOutputValue(trade.outputs);
     const profitability = calculateProfitability(trade.inputs, trade.resultSkin);
     const averageFloat = calculateAverageFloat(trade.inputs);
 
     return {
-      ...trade,
-      totalCost,
-      averageOutputValue,
-      profitability,
-      averageFloat
+        ...trade,
+        totalInputPrice,
+        totalOutputPrice,
+        profitability,
+        averageFloat
     };
-  };
+    };
+
 
   const calculateTotalCost = (inputs) => {
     return inputs.reduce((sum, skin) => {
