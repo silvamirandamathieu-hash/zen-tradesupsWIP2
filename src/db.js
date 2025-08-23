@@ -152,3 +152,12 @@ export async function deleteSavedTradeUp(id) {
 export async function clearSavedTradeUps() {
   return db.savedTradeUps.clear();
 }
+export async function updateSavedTradeUp(id, updatedTradeUp) {
+  if (!id || typeof updatedTradeUp !== 'object') {
+    throw new Error('Trade-up invalide');
+  }
+  return db.savedTradeUps.update(id, {
+    ...updatedTradeUp,
+    date: new Date().toISOString()
+  });
+}
