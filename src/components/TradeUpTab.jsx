@@ -83,6 +83,8 @@ const [warning, setWarning] = useState(null);
       outputs,
       resultSkin,
       isStatTrak: inputs.some(s => s?.isStatTrak),
+      totalInputPrice: stats.totalInputPrice,
+      totalOutputPrice: stats.totalOutputPrice,
       profitability: stats.rentability,
       avgFloat: stats.avgFloat,
       chance: stats.chance,

@@ -48,20 +48,22 @@ function TradeUpCard({ trade, priceMap, onDelete }) {
 
   return (
     <div style={{
-      border: '1px solid #ccc',
+      border: '2px solid #241853ff',
       padding: '1rem',
       marginBottom: '1rem',
       borderRadius: '8px',
-      backgroundColor: '#f9f9f9'
+      backgroundColor: '#302d56ff'
     }}>
       <h3>🎯 {name} {isStatTrak ? 'StatTrak™' : ''}</h3>
       <p><strong>📦 Collection:</strong> {collection}</p>
       <p><strong>📅 Date:</strong> {new Date(date).toLocaleDateString()}</p>
       <p><strong>🎯 Résultat:</strong> {resultSkin?.name ?? '—'}</p>
-      <p><strong>💰 Coût total:</strong> {totalCost.toFixed(2)} €</p>
-      <p><strong>🎯 Valeur moyenne de sortie:</strong> {averageOutputValue.toFixed(2)} €</p>
+      <p>💰 Coût total : {trade.totalInputPrice} €</p>
+      <p>📈 Valeur moyenne de sortie : {trade.totalOutputPrice} €</p>
       <p><strong>🧪 Float moyen:</strong> {averageFloat.toFixed(4)}</p>
-      <p><strong>📈 Rentabilité:</strong> <span style={{ color: profitColor }}>{profit.toFixed(2)} €</span></p>
+      <p style={{ color: trade.profitability >= 0 ? 'green' : 'red' }}>
+        📊 Rentabilité : {trade.profitability}%
+      </p>
 
       <div style={{ marginTop: '1rem' }}>
         <button onClick={handleSave} style={{ marginRight: '1rem' }}>📥 Sauvegarder</button>
