@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './TradeUp.css';
-import { getAllInventory, getInventory, clearCurrentTradeUps , addCurrentTradeUp, addSavedTradeUp} from '../db';
+import { v4 as uuid } from 'uuid';
+import {
+  getAllInventory,
+  getInventory,
+  addSavedTradeUp,
+  deleteCurrentTradeUp,
+  saveCurrentTradeUp,
+  getSavedTradeUps
+} from '../db';
 import { useAdvancedFilters } from './useAdvancedFilters';
 import { filterSkins } from './filterSkins';
 import AdvancedFilterPanel from './AdvancedFilterPanel';
-import { calculateTradeStats } from '../utils/tradeupCalc'
+import { calculateTradeStats } from '../utils/tradeupCalc';
+
 
 
 function TradeUp() {
@@ -21,6 +30,8 @@ function TradeUp() {
   const [collectionSearch, setCollectionSearch] = useState('');
   const [showCollectionDropdown, setShowCollectionDropdown] = useState(false);
   const stats = useMemo(() => calculateTradeStats(inputs, outputs), [inputs, outputs]);
+  const [currentTradeUp, setCurrentTradeUp] = useState(null);
+
 
 
 useEffect(() => {
@@ -53,27 +64,34 @@ const [warning, setWarning] = useState(null);
       searchTerm === '' || skin.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [inventory, allSkins, activeTab, filters, searchTerm]);
-  const handleSetAsCurrent = async () => {
-    try {
-      await clearCurrentTradeUps();
-      await addCurrentTradeUp({ inputs, outputs });
-      alert('⚙️ Trade-up défini comme en cours');
-    } catch (err) {
-      console.error('Erreur lors de la mise à jour du trade-up en cours :', err);
-      alert('❌ Une erreur est survenue');
-    }
-  };
 
   const handleSaveTradeUp = async () => {
-    try {
-      await addSavedTradeUp({ inputs, outputs });
-      alert('✅ Trade-up sauvegardé');
-    } catch (err) {
-      console.error('Erreur lors de la sauvegarde :', err);
-      alert('❌ Impossible de sauvegarder');
-    }
-  };
+    const resultSkin = outputs.find(o => o?.chance === Math.max(...outputs.map(o => o?.chance ?? 0)));
 
+    if (!resultSkin || inputs.every(i => i === null)) {
+      alert('⛔ Trade-up incomplet');
+      return;
+    }
+
+    const stats = calculateTradeStats(inputs, outputs);
+
+    const tradeUpToSave = {
+      id: uuid(),
+      name: `TradeUp ${resultSkin.name}`,
+      collection: resultSkin.collection,
+      inputs,
+      outputs,
+      resultSkin,
+      isStatTrak: inputs.some(s => s?.isStatTrak),
+      profitability: stats.rentability,
+      avgFloat: stats.avgFloat,
+      chance: stats.chance,
+      date: new Date().toISOString()
+    };
+
+    await addSavedTradeUp(tradeUpToSave);
+    alert('📥 Trade-up sauvegardé !');
+  };
 
   const handleSelectSkin = (skin) => {
     if (panelType === 'input') {
@@ -145,8 +163,9 @@ const [warning, setWarning] = useState(null);
     if (updated[index]) updated[index].price = value;
     setOutputs(updated);
   };
-
-
+  const handleSetAsCurrent = (tradeUp) => {
+    setCurrentTradeUp(tradeUp); // ← à adapter selon ton state
+  };
 
   const fillAllWithSkin = (skin) => {
     if (!skin) return;
@@ -361,6 +380,7 @@ const [warning, setWarning] = useState(null);
         </div>
         <button onClick={handleSaveTradeUp}>💾 Sauvegarder</button>
         <button onClick={handleSetAsCurrent}>⚙️ Définir comme en cours</button>
+
 
       </section>
 

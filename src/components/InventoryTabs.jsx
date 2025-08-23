@@ -1,14 +1,11 @@
-// InventoryTabs.js
-
 import { useState, useRef } from 'react';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import InventoryManager from './InventoryManager';
-import '../styles/InventoryTabs.css';
 import AllSkins from './AllSkins';
-import TradeUp from './TradeUpTab'; 
+import TradeUp from './TradeUpTab';
 import TradeUpCurrent from './TradeUpCurrent';
 import TradeUpSaved from './TradeUpSaved';
-
+import '../styles/InventoryTabs.css';
 
 function InventoryTabs({
   inventory,
@@ -23,85 +20,67 @@ function InventoryTabs({
   onAllImport
 }) {
   const [activeTab, setActiveTab] = useState('inventory');
-  const [currentTradeUps, setCurrentTradeUps] = useState([]);
-  const [addSavedTradeUp, setSavedTradeUps] = useState([]);
+  const nodeRef = useRef(null);
 
   const tabs = [
     { key: 'inventory', label: '🎒 Mon inventaire' },
     { key: 'allskins', label: '🗂️ All skins' },
-    { key: 'TradeUp', label: '💹Trade-Ups'},
+    { key: 'TradeUp', label: '💹 Trade-Ups' },
     { key: 'tradeupcurrent', label: '⚙️ Trade-up en cours' },
     { key: 'tradeupsaved', label: '💾 Trade-ups sauvegardés' }
   ];
 
-  const nodeRef = useRef(null);
   const handleRefreshPrices = () => {
-    // Exemple : re-fetch des prix depuis AllSkins ou API
     console.log('🔄 Mise à jour des prix demandée');
   };
-    const handleDeleteCurrent = async (id) => {
-    await deleteCurrentTradeUp(id);
-      setCurrentTradeUps(prev => prev.filter(trade => trade.id !== id));
-      console.log(`🗑️ Trade-up en cours supprimé : ${id}`);
-    };
 
-    const handleDeleteSaved = async (id) => {
-      await deleteSavedTradeUp(id);
-      setSavedTradeUps(prev => prev.filter(trade => trade.id !== id));
-      console.log(`🗑️ Trade-up sauvegardé supprimé : ${id}`);
-    };
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'inventory':
+        return (
+          <InventoryManager
+            inventory={inventory}
+            priceMap={priceMap}
+            onExport={onExport}
+            onImport={onImport}
+            onReset={onReset}
+          />
+        );
 
+      case 'allskins':
+        return (
+          <AllSkins
+            allSkinsInventory={allInventory}
+            setAllInventory={setAllInventory}
+            priceMap={priceMap}
+            onAllImport={onAllImport}
+            onAllReset={onAllReset}
+          />
+        );
 
-    const renderTabContent = () => {
-      switch (activeTab) {
-        case 'inventory':
-          return (
-            <InventoryManager
-              inventory={inventory}
-              priceMap={priceMap}
-              onExport={onExport}
-              onImport={onImport}
-              onReset={onReset}
-            />
-          );
+      case 'TradeUp':
+        return <TradeUp />;
 
-        case 'allskins':
-          return (
-            <AllSkins
-              allSkinsInventory={allInventory}
-              setAllInventory={setAllInventory}
-              priceMap={priceMap}
-              onAllImport={onAllImport}
-              onAllReset={onAllReset}
-            />
-          );
+      case 'tradeupcurrent':
+        return (
+          <TradeUpCurrent
+            priceMap={priceMap}
+            onRefreshPrices={handleRefreshPrices}
+          />
+        );
 
-        case 'TradeUp':
-          return <TradeUp />;
+      case 'tradeupsaved':
+        return (
+          <TradeUpSaved
+            priceMap={priceMap}
+            onRefreshPrices={handleRefreshPrices}
+          />
+        );
 
-        case 'tradeupcurrent':
-          return (
-            <TradeUpCurrent
-              priceMap={priceMap}
-              onRefreshPrices={handleRefreshPrices}
-              onDelete={handleDeleteCurrent}
-            />
-          );
-
-        case 'tradeupsaved':
-          return (
-            <TradeUpSaved
-              priceMap={priceMap}
-              onRefreshPrices={handleRefreshPrices}
-              handleDelete={handleDeleteSaved}
-            />
-          );
-
-        default:
-          return <p>🧭 Onglet inconnu : {activeTab}</p>;
-      }
-    };
-
+      default:
+        return <p>🧭 Onglet inconnu : {activeTab}</p>;
+    }
+  };
 
   return (
     <div style={{ padding: '2rem' }}>
