@@ -657,9 +657,9 @@ function AllSkins({ priceMap = {} }) {
                       ) : (
                         filteredVariants.map((variant, index) => {
                           const key = `${variant.name} (${variant.wear})`;
-                          const price = priceMap[key] || variant.price || 'N/A';
-                          const volume = variant.volume !== undefined ? `${variant.volume} offres` : '—';
-
+                          const marketData = priceMap[key] || {};
+                          const price = !isNaN(Number(marketData.price)) ? `${Number(marketData.price).toFixed(2)} €` : '—';
+                          const volume = marketData.volume !== undefined ? `${marketData.volume} offres` : '—';
                           return (
                             <div
                               key={`${variant.name}-${variant.wear}-${index}`}
@@ -684,13 +684,12 @@ function AllSkins({ priceMap = {} }) {
 
                               {/* 📊 Volume centré */}
                               <span style={{ textAlign: 'center', color: '#aaa', fontSize: '0.95rem' }}>
-                                {variant.volume !== undefined ? `${variant.volume} offres` : '—'}
+                                {volume}
+                              </span>
+                              <span style={{ textAlign: 'right' }}>
+                                {price}
                               </span>
 
-                              {/* 💰 Prix à droite */}
-                              <span style={{ textAlign: 'right' }}>
-                                {priceMap[`${variant.name} (${variant.wear})`] || variant.price || 'N/A'} €
-                              </span>
                             </div>
                           );
                         })

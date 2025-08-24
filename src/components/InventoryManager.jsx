@@ -311,7 +311,7 @@ function InventoryManager({ inventory, priceMap = {}, onExport, onImport, onRese
                         : '—'} €
                     </div>
                     <div>
-                      💵 : {marketPrice !== undefined ? marketPrice.toFixed(2) + ' €' : '—'}
+                      💵 : {marketPrice !== undefined ? !isNaN(Number(marketPrice)) ? Number(marketPrice).toFixed(2) : '—' + ' €' : '—'}
                     </div>
                   </PriceColumn>
 
