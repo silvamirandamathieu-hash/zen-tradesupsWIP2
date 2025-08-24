@@ -320,13 +320,13 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
             throw new Error('Aucun item trouvé dans le fichier JSON.');
           }
 
-          // 🔍 Fonction pour extraire les infos du market_hash_name
+          // 🔍 Fonction robuste pour extraire les infos du market_hash_name
           const parseMarketHashName = (fullName) => {
-            const isStatTrak = fullName.startsWith('StatTrak™');
-            const isSouvenir = fullName.startsWith('Souvenir');
+            const isStatTrak = /StatTrak/i.test(fullName);
+            const isSouvenir = /Souvenir/i.test(fullName);
             const baseName = fullName
-              .replace(/^StatTrak™ /, '')
-              .replace(/^Souvenir /, '')
+              .replace(/^StatTrak™ /i, '')
+              .replace(/^Souvenir /i, '')
               .trim();
             const wearMatch = baseName.match(/\(([^)]+)\)$/);
             const wear = wearMatch ? wearMatch[1] : null;
@@ -334,22 +334,24 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
             return { name, wear, isStatTrak, isSouvenir };
           };
 
-          const updatedSkins = allSkins.map(skin => {
-            const match = priceData.find(p => {
-              const { name, wear, isStatTrak, isSouvenir } = parseMarketHashName(p.market_hash_name);
-              return (
-                name === skin.name &&
-                wear === skin.wear &&
-                isStatTrak === !!skin.isStatTrak &&
-                isSouvenir === !!skin.isSouvenir
-              );
-            });
+          // 🧠 Création d'une Map pour lookup rapide
+          const priceMap = new Map();
+          priceData.forEach((item) => {
+            const parsed = parseMarketHashName(item.market_hash_name);
+            const key = `${parsed.name}_${parsed.wear}_${parsed.isStatTrak}_${parsed.isSouvenir}`;
+            priceMap.set(key, item);
+          });
+
+          // 🔄 Mise à jour des prix dans allSkins
+          const updatedSkins = allSkins.map((skin) => {
+            const key = `${skin.name}_${skin.wear}_${skin.isStatTrak}_${skin.isSouvenir}`;
+            const match = priceMap.get(key);
 
             if (match) {
               return {
                 ...skin,
                 price: parseFloat(match.price) || 0,
-                volume: parseInt(match.volume) || 0
+                volume: parseInt(match.volume) || 0,
               };
             }
 
@@ -373,6 +375,8 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
 
       input.click();
     };
+
+
 
 
   //
