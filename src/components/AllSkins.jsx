@@ -83,7 +83,7 @@ const scrapedData = [
 ];
 
 
-function AllSkins({ allInventory, setAllInventory, priceMap, refreshPriceMap }) {
+function AllSkins({ priceMap = {}, refreshPriceMap }) {
   const [allSkins, setAllSkins] = useState([]);
   const [typeFilter, setTypeFilter] = useState('all');
   const [wearFilter, setWearFilter] = useState('all');
@@ -301,6 +301,7 @@ function AllSkins({ allInventory, setAllInventory, priceMap, refreshPriceMap }) 
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'application/json';
+
       input.onchange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -309,7 +310,11 @@ function AllSkins({ allInventory, setAllInventory, priceMap, refreshPriceMap }) 
           const text = await file.text();
           const parsed = JSON.parse(text);
 
-          const priceData = Array.isArray(parsed.items) ? parsed.items : [];
+          const priceData = Array.isArray(parsed.items)
+            ? parsed.items
+            : Array.isArray(parsed)
+            ? parsed
+            : [];
 
           if (priceData.length === 0) {
             throw new Error('Aucun item trouvé dans le fichier JSON.');
@@ -343,25 +348,32 @@ function AllSkins({ allInventory, setAllInventory, priceMap, refreshPriceMap }) 
             if (match) {
               return {
                 ...skin,
-                price: parseFloat(match.price),
-                volume: parseInt(match.volume)
+                price: parseFloat(match.price) || 0,
+                volume: parseInt(match.volume) || 0
               };
             }
+
             return skin;
           });
 
           await clearAllInventory();
           await bulkAddAllSkins(updatedSkins);
           await loadSkins();
-          if (refreshPriceMap) await refreshPriceMap();
+
+          if (typeof refreshPriceMap === 'function') {
+            await refreshPriceMap();
+          }
+
           alert(`✅ Prix mis à jour pour ${priceData.length} items.`);
         } catch (err) {
           console.error('Erreur lors de la mise à jour des prix:', err);
           alert('❌ Fichier invalide ou erreur de parsing.');
         }
       };
+
       input.click();
     };
+
 
   //
   // 📚 Collections uniques

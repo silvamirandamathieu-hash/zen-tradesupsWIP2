@@ -7,6 +7,7 @@ import TradeUpCurrent from './TradeUpCurrent';
 import TradeUpSaved from './TradeUpSaved';
 import '../styles/InventoryTabs.css';
 
+
 function InventoryTabs({
   inventory,
   setInventory,
@@ -17,7 +18,8 @@ function InventoryTabs({
   onImport,
   onReset,
   onAllReset,
-  onAllImport
+  onAllImport,
+  refreshPriceMap
 }) {
   const [activeTab, setActiveTab] = useState('inventory');
   const [editingTradeUp, setEditingTradeUp] = useState(null);
@@ -60,6 +62,7 @@ function InventoryTabs({
             priceMap={priceMap}
             onAllImport={onAllImport}
             onAllReset={onAllReset}
+            refreshPriceMap={refreshPriceMap}
           />
         );
 
