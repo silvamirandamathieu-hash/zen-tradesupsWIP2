@@ -187,7 +187,8 @@ const [warning, setWarning] = useState(null);
     outputs,
     resultSkin,
     isStatTrak: inputs.some(s => s?.isStatTrak),
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    urls: []
   };
 
   await addCurrentTradeUp(tradeUp);

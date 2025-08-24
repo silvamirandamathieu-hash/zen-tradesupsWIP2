@@ -3,12 +3,12 @@ import Dexie from 'dexie';
 export const db = new Dexie('cs2TradeUpDB');
 
 // 📦 Définition des tables
-db.version(5).stores({
+db.version(7).stores({
   inventory: '++id,name,wear,float,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
   allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl',
   history: '++id,date,name,wear,float,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume',
-  currentTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date',
-  savedTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date'
+  currentTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls',
+  savedTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls'
 });
 
 //
@@ -158,6 +158,23 @@ export async function updateSavedTradeUp(id, updatedTradeUp) {
   }
   return db.savedTradeUps.update(id, {
     ...updatedTradeUp,
+    date: new Date().toISOString()
+  });
+}
+export async function updateTradeUpUrl(id, url, type = 'current') {
+  if (!id || typeof url !== 'string') {
+    throw new Error('Paramètres invalides');
+  }
+
+  const table =
+    type === 'saved' ? db.savedTradeUps :
+    type === 'current' ? db.currentTradeUps :
+    null;
+
+  if (!table) throw new Error('Type de trade-up inconnu');
+
+  return table.update(id, {
+    urlTradeUp: url,
     date: new Date().toISOString()
   });
 }
