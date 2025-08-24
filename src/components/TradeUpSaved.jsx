@@ -85,6 +85,8 @@ function TradeUpSaved({ priceMap }) {
         <div key={trade.id} style={{ marginBottom: '2rem' }}>
           <TradeUpCard
             trade={trade}
+            id={trade.id}
+            isSaved={true}
             priceMap={priceMap}
             onDelete={() => handleDelete(trade.id)}
           />

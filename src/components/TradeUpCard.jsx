@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { deleteCurrentTradeUp, updateCurrentTradeUp } from '../db';
+import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
 
-function TradeUpCard({ trade, onDelete, onEdit }) {
+function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const [urlInput, setUrlInput] = useState('');
-  const [urls, setUrls] = useState([]);
+  const [localUrls, setLocalUrls] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
-    if (Array.isArray(trade?.urls)) {
-      setUrls(trade.urls);
-    } else if (trade?.id) {
-      updateCurrentTradeUp(trade.id, { ...trade, urls: [] })
-        .then(() => setUrls([]))
-        .catch(err => console.error('Erreur lors de l’initialisation des URLs :', err));
-    }
+    setLocalUrls(trade.urls || []);
   }, [trade]);
 
   if (!trade) return null;
 
   const {
-    id,
     name,
     collection,
     date,
@@ -36,7 +29,7 @@ function TradeUpCard({ trade, onDelete, onEdit }) {
   const handleDelete = async () => {
     await deleteCurrentTradeUp(id);
     alert('🗑️ Supprimé des trade-ups en cours');
-    if (onDelete) onDelete();
+    onDelete?.();
   };
 
   const handleUrlChange = (e) => {
@@ -56,12 +49,18 @@ function TradeUpCard({ trade, onDelete, onEdit }) {
     if (e.key === 'Enter') {
       e.preventDefault();
       const newUrl = urlInput.trim();
-      if (!newUrl || urls.includes(newUrl) || !isValidUrl(newUrl)) return;
+      if (!newUrl || localUrls.includes(newUrl) || !isValidUrl(newUrl)) return;
 
-      const updatedUrls = [...urls, newUrl];
+      const updatedUrls = [...localUrls, newUrl];
+      const updatedTrade = { ...trade, urls: updatedUrls };
+
       try {
-        await updateCurrentTradeUp(id, { ...trade, urls: updatedUrls });
-        setUrls(updatedUrls);
+        if (isSaved) {
+          await updateSavedTradeUp(id, updatedTrade);
+        } else {
+          await updateCurrentTradeUp(id, updatedTrade);
+        }
+        setLocalUrls(updatedUrls);
         setUrlInput('');
         alert('🔗 URL enregistrée !');
       } catch (err) {
@@ -72,11 +71,17 @@ function TradeUpCard({ trade, onDelete, onEdit }) {
   };
 
   const handleUrlDelete = async (urlToDelete) => {
-    const updatedUrls = urls.filter(u => u !== urlToDelete);
+    const updatedUrls = localUrls.filter(u => u !== urlToDelete);
+    const updatedTrade = { ...trade, urls: updatedUrls };
+
     try {
-      await updateCurrentTradeUp(id, { ...trade, urls: updatedUrls });
-      setUrls(updatedUrls);
-      if (onEdit) onEdit();
+      if (isSaved) {
+        await updateSavedTradeUp(id, updatedTrade);
+      } else {
+        await updateCurrentTradeUp(id, updatedTrade);
+      }
+      setLocalUrls(updatedUrls);
+      onEdit?.();
     } catch (err) {
       console.error('Erreur lors de la suppression de l’URL :', err);
       alert('❌ Impossible de supprimer l’URL');
@@ -98,7 +103,7 @@ function TradeUpCard({ trade, onDelete, onEdit }) {
       backgroundColor: '#302d56',
       color: '#fff'
     }}>
-      {/* 🗑️ Bouton Supprimer en haut à droite */}
+      {/* 🗑️ Bouton Supprimer */}
       <button
         onClick={() => setConfirmDelete(true)}
         style={{
@@ -183,29 +188,52 @@ function TradeUpCard({ trade, onDelete, onEdit }) {
         ✅ Prix mis à jour selon le marché
       </p>
 
-      {urls.length > 0 && (
+      {localUrls.length > 0 && (
         <div style={{ marginTop: '1rem' }}>
           <strong>🔗 Liens enregistrés :</strong>
           <ul style={{ paddingLeft: '1rem' }}>
-            {urls.map((link, i) => (
-              <li key={i} style={{ marginBottom: '0.5rem' }}>
-                <a href={link} target="_blank" rel="noopener noreferrer" style={{ color: '#90cdf4' }}>
-                  {link}
-                </a>{' '}
-                <button
-                  onClick={() => handleUrlDelete(link)}
+            {localUrls.map((url, i) => (
+              <li key={i} style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#3a3660',
+                padding: '0.5rem 0.75rem',
+                marginBottom: '0.5rem',
+                borderRadius: '6px'
+              }}>
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
-                    marginLeft: '0.5rem',
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#ff6b6b',
-                    cursor: 'pointer'
+                    color: '#9fd3ff',
+                    textDecoration: 'none',
+                    wordBreak: 'break-all',
+                    flexGrow: 1
                   }}
                 >
-                  ❌ Supprimer
+                  {url}
+                </a>
+                <button
+                  onClick={() => handleUrlDelete(url)}
+                  style={{
+                    marginLeft: '1rem',
+                    backgroundColor: '#ff4d4d',
+                    border: 'none',
+                    borderRadius: '4px',
+                    padding: '0.3rem 0.6rem',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                  title="Supprimer ce lien"
+                >
+                  🗑️
                 </button>
               </li>
             ))}
+
           </ul>
         </div>
       )}
