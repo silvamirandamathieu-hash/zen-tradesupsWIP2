@@ -297,6 +297,25 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
       setAllSkins([]);
     }
   };
+  const findMatchingPrice = (skin, priceMap) => {
+    const prefix = skin.isStatTrak ? 'StatTrak™ ' : skin.isSouvenir ? 'Souvenir ' : '';
+    const fullName = `${prefix}${skin.name} (${skin.wear})`;
+
+    if (priceMap.has(fullName)) {
+      return priceMap.get(fullName);
+    }
+
+    // 🔄 Fallback : essayer la version StatTrak™ si la normale est absente
+    if (!skin.isStatTrak) {
+      const fallbackName = `StatTrak™ ${skin.name} (${skin.wear})`;
+      if (priceMap.has(fallbackName)) {
+        return priceMap.get(fallbackName);
+      }
+    }
+
+    return null;
+  };
+
     const handlePriceUpdate = async () => {
       const input = document.createElement('input');
       input.type = 'file';
@@ -311,41 +330,32 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
           const parsed = JSON.parse(text);
 
           const priceData = Array.isArray(parsed.items)
-            ? parsed.items
-            : Array.isArray(parsed)
-            ? parsed
+            ? parsed.items.filter(item => typeof item.market_hash_name === 'string')
             : [];
 
           if (priceData.length === 0) {
             throw new Error('Aucun item trouvé dans le fichier JSON.');
           }
+          searchInPriceData('Bloodsport', priceData);
+          searchInPriceData('Wild Lotus', priceData);
 
-          // 🔍 Fonction robuste pour extraire les infos du market_hash_name
-          const parseMarketHashName = (fullName) => {
-            const isStatTrak = /StatTrak/i.test(fullName);
-            const isSouvenir = /Souvenir/i.test(fullName);
-            const baseName = fullName
-              .replace(/^StatTrak™ /i, '')
-              .replace(/^Souvenir /i, '')
-              .trim();
-            const wearMatch = baseName.match(/\(([^)]+)\)$/);
-            const wear = wearMatch ? wearMatch[1] : null;
-            const name = wear ? baseName.replace(/\s*\([^)]+\)$/, '') : baseName;
-            return { name, wear, isStatTrak, isSouvenir };
-          };
+          listUnmatchedSkins(allSkins, priceData);
+          showMatchingTable(allSkins, priceData);
+          debugMatchingSkins(allSkins, priceData);
+          showUnmatchedSkins(allSkins, priceData);
 
-          // 🧠 Création d'une Map pour lookup rapide
+
+
+          // 🧠 Création d'une Map avec le market_hash_name comme clé
           const priceMap = new Map();
           priceData.forEach((item) => {
-            const parsed = parseMarketHashName(item.market_hash_name);
-            const key = `${parsed.name}_${parsed.wear}_${parsed.isStatTrak}_${parsed.isSouvenir}`;
+            const key = item.market_hash_name.trim();
             priceMap.set(key, item);
           });
 
           // 🔄 Mise à jour des prix dans allSkins
           const updatedSkins = allSkins.map((skin) => {
-            const key = `${skin.name}_${skin.wear}_${skin.isStatTrak}_${skin.isSouvenir}`;
-            const match = priceMap.get(key);
+            const match = findMatchingPrice(skin, priceMap);
 
             if (match) {
               return {
@@ -358,6 +368,7 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
             return skin;
           });
 
+
           await clearAllInventory();
           await bulkAddAllSkins(updatedSkins);
           await loadSkins();
@@ -366,15 +377,118 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
             await refreshPriceMap();
           }
 
+          // 🧪 Debug : afficher les non-matchés
+          const unmatched = allSkins.filter((skin) => {
+            const prefix = skin.isStatTrak ? 'StatTrak™ ' : skin.isSouvenir ? 'Souvenir ' : '';
+            const fullName = `${prefix}${skin.name} (${skin.wear})`;
+            return !priceMap.has(fullName);
+          });
+
+          if (unmatched.length > 0) {
+            console.warn(`⚠️ ${unmatched.length} skins non matchés. Voici les 10 premiers :`);
+            console.table(unmatched.slice(0, 10));
+          }
+
           alert(`✅ Prix mis à jour pour ${priceData.length} items.`);
         } catch (err) {
           console.error('Erreur lors de la mise à jour des prix:', err);
-          alert('❌ Fichier invalide ou erreur de parsing.');
+          alert('❌ Erreur inattendue lors du traitement du fichier.');
         }
       };
 
       input.click();
     };
+    const showMatchingTable = (allSkins, priceData) => {
+      const priceSet = new Set(priceData.map(item => item.market_hash_name.trim()));
+
+      const comparison = allSkins.map(skin => {
+        const prefix = skin.isStatTrak ? 'StatTrak™ ' : skin.isSouvenir ? 'Souvenir ' : '';
+        const fullName = `${prefix}${skin.name} (${skin.wear})`;
+
+        return {
+          generatedName: fullName,
+          match: priceSet.has(fullName) ? '✅' : '❌',
+        };
+      });
+
+      console.table(comparison.slice(0, 50)); // Affiche les 50 premiers pour éviter de spammer la console
+    };
+    const debugMatchingSkins = (allSkins, priceData) => {
+      const priceMap = new Map();
+      priceData.forEach(item => {
+        priceMap.set(item.market_hash_name.trim(), item);
+      });
+
+      const result = allSkins.map((skin, index) => {
+        const prefix = skin.isStatTrak ? 'StatTrak™ ' : skin.isSouvenir ? 'Souvenir ' : '';
+        const generatedName = `${prefix}${skin.name} (${skin.wear})`;
+        const match = priceMap.has(generatedName);
+        const price = match ? priceMap.get(generatedName).price : null;
+
+        return {
+          '#': index + 1,
+          generatedName,
+          match: match ? '✅' : '❌',
+          price: price ?? '—',
+        };
+      });
+
+      console.table(result.slice(0, 50)); // Affiche les 50 premiers
+    };
+    const showUnmatchedSkins = (allSkins, priceData) => {
+      const priceSet = new Set(priceData.map(item => item.market_hash_name.trim()));
+
+      const unmatched = allSkins.filter(skin => {
+        const prefix = skin.isStatTrak ? 'StatTrak™ ' : skin.isSouvenir ? 'Souvenir ' : '';
+        const fullName = `${prefix}${skin.name} (${skin.wear})`;
+        return !priceSet.has(fullName);
+      });
+
+      const result = unmatched.map((skin, index) => {
+        const prefix = skin.isStatTrak ? 'StatTrak™ ' : skin.isSouvenir ? 'Souvenir ' : '';
+        const generatedName = `${prefix}${skin.name} (${skin.wear})`;
+
+        return {
+          '#': index + 1,
+          generatedName,
+          wear: skin.wear,
+          isStatTrak: skin.isStatTrak,
+          isSouvenir: skin.isSouvenir,
+          price: skin.price ?? '—',
+        };
+      });
+
+      console.table(result.slice(0, 50)); // Affiche les 50 premiers non-matchés
+    };
+    const listUnmatchedSkins = (allSkins, priceData) => {
+      const priceSet = new Set(priceData.map(item => item.market_hash_name.trim()));
+
+      const unmatched = allSkins.filter(skin => {
+        const prefix = skin.isStatTrak ? 'StatTrak™ ' : skin.isSouvenir ? 'Souvenir ' : '';
+        const fullName = `${prefix}${skin.name} (${skin.wear})`;
+        return !priceSet.has(fullName);
+      });
+
+      console.table(unmatched.map((skin, i) => ({
+        '#': i + 1,
+        generatedName: `${skin.isStatTrak ? 'StatTrak™ ' : skin.isSouvenir ? 'Souvenir ' : ''}${skin.name} (${skin.wear})`,
+        wear: skin.wear,
+        isStatTrak: skin.isStatTrak,
+        isSouvenir: skin.isSouvenir,
+        price: skin.price ?? '—',
+      })).slice(0, 50));
+    };
+    const searchInPriceData = (query, priceData) => {
+      const results = priceData.filter(item =>
+        item.market_hash_name.toLowerCase().includes(query.toLowerCase())
+      );
+
+      console.table(results.map(item => ({
+        market_hash_name: item.market_hash_name,
+        price: item.price,
+      })));
+    };
+
 
 
 
@@ -601,7 +715,6 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
             };
 
             const mainSkin = group[0];
-            const normalizeRarity = normalizedRarity(mainSkin.rarity);
             const getWearValue = (wear) => wearOrder[wear?.trim()] ?? 99;
 
             const sortedVariants = [...group].sort(
