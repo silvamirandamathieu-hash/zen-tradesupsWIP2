@@ -3,12 +3,16 @@ import { deleteCurrentTradeUp, updateCurrentTradeUp } from '../db';
 
 function TradeUpCard({ trade, onDelete, onEdit }) {
   const [urlInput, setUrlInput] = useState('');
-  const [urls, setUrls] = useState(trade?.urls || []);
+  const [urls, setUrls] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
-    if (trade?.urls) {
+    if (Array.isArray(trade?.urls)) {
       setUrls(trade.urls);
+    } else if (trade?.id) {
+      updateCurrentTradeUp(trade.id, { ...trade, urls: [] })
+        .then(() => setUrls([]))
+        .catch(err => console.error('Erreur lors de l’initialisation des URLs :', err));
     }
   }, [trade]);
 
@@ -26,7 +30,7 @@ function TradeUpCard({ trade, onDelete, onEdit }) {
     totalInputPrice,
     avgOutputValue,
     profit,
-    profitability
+    profitability,
   } = trade;
 
   const handleDelete = async () => {
@@ -39,11 +43,20 @@ function TradeUpCard({ trade, onDelete, onEdit }) {
     setUrlInput(e.target.value);
   };
 
+  const isValidUrl = (str) => {
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   const handleUrlSubmit = async (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const newUrl = urlInput.trim();
-      if (!newUrl || urls.includes(newUrl)) return;
+      if (!newUrl || urls.includes(newUrl) || !isValidUrl(newUrl)) return;
 
       const updatedUrls = [...urls, newUrl];
       try {
@@ -63,14 +76,13 @@ function TradeUpCard({ trade, onDelete, onEdit }) {
     try {
       await updateCurrentTradeUp(id, { ...trade, urls: updatedUrls });
       setUrls(updatedUrls);
-      if (onEdit) onEdit(); // 🔁 recharge les données
+      if (onEdit) onEdit();
     } catch (err) {
       console.error('Erreur lors de la suppression de l’URL :', err);
       alert('❌ Impossible de supprimer l’URL');
     }
   };
 
-  // 🧪 Float moyen
   const validInputs = inputs.filter(skin => skin && skin.name);
   const averageFloat = validInputs.length > 0
     ? validInputs.reduce((sum, skin) => sum + (skin.float ?? 0), 0) / validInputs.length
