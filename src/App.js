@@ -122,6 +122,7 @@ function App() {
         setAllInventory(dataall);
         await db.allSkins.clear();
         await db.allSkins.bulkAdd(dataall);
+        await refreshPriceMap(); // ✅ mise à jour des prix
         alert('AllSkins importé avec succès !');
       } catch (err) {
         console.error('Erreur d’importation AllSkins :', err);
@@ -157,6 +158,23 @@ function App() {
     setAllInventory([]);
     alert('AllSkins réinitialisé !');
   };
+  const refreshPriceMap = async () => {
+    const allSkins = await getAllInventory();
+    const newMap = {};
+
+    for (const skin of allSkins) {
+      const prefix = skin.isStatTrak ? '★ ST ' : skin.isSouvenir ? '★ SV ' : '';
+      const key = `${prefix}${skin.name} (${skin.wear})`;
+      newMap[key] = {
+        price: parseFloat(skin.price) || 0,
+        volume: parseInt(skin.volume) || 0
+      };
+    }
+
+    setPriceMap(newMap);
+    localStorage.setItem('priceMap', JSON.stringify(newMap));
+  };
+
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
@@ -202,6 +220,7 @@ function App() {
           onImport={handleImport}
           onAllReset={handleAllReset}
           onAllImport={handleAllSkinsImport}
+          refreshPriceMap={refreshPriceMap} // ✅ nouveau
         />
       </div>
     </ThemeProvider>

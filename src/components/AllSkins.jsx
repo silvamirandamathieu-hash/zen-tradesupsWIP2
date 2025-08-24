@@ -83,7 +83,7 @@ const scrapedData = [
 ];
 
 
-function AllSkins({ priceMap = {} }) {
+function AllSkins({ allInventory, setAllInventory, priceMap, refreshPriceMap }) {
   const [allSkins, setAllSkins] = useState([]);
   const [typeFilter, setTypeFilter] = useState('all');
   const [wearFilter, setWearFilter] = useState('all');
@@ -353,6 +353,7 @@ function AllSkins({ priceMap = {} }) {
           await clearAllInventory();
           await bulkAddAllSkins(updatedSkins);
           await loadSkins();
+          if (refreshPriceMap) await refreshPriceMap();
           alert(`✅ Prix mis à jour pour ${priceData.length} items.`);
         } catch (err) {
           console.error('Erreur lors de la mise à jour des prix:', err);
