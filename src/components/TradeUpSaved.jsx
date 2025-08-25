@@ -125,6 +125,49 @@ function TradeUpSaved({ priceMap }) {
 
   const amplifyProfitability = (realPercent) => 100 + realPercent;
 
+  const getWearStyle = (rarity, isStatTrak = false) => {
+    if (isStatTrak) return { color: '#FFA500', fontWeight: 'bold' };
+
+    const rarityColors = {
+      'Mil-spec': '#4B69FF',
+      'Industrial': '#82addfff',
+      'Restricted': '#8847FF',
+      'Classified': '#D32CE6',
+      'Covert': '#EB4B4B',
+      'Consumer': '#AFAFAF',
+      'Contraband': '#FFD700'
+    };
+
+    return { color: rarityColors[rarity] || '#CCCCCC' };
+  };
+
+  const getWearAbbreviationsStyled = (inputs, isStatTrak) => {
+    const wearMap = {
+      'Factory New': 'FN',
+      'Minimal Wear': 'MW',
+      'Field-Tested': 'FT',
+      'Well-Worn': 'WW',
+      'Battle-Scarred': 'BS'
+    };
+
+    const seen = new Map();
+
+    for (const skin of inputs) {
+      const abbrev = wearMap[skin?.wear];
+      if (abbrev && skin?.rarity) {
+        seen.set(abbrev, getWearStyle(skin.rarity));
+      }
+      if (skin?.name?.includes('StatTrak') || isStatTrak) {
+        seen.set('ST', getWearStyle(null, true));
+      }
+    }
+
+    return Array.from(seen.entries()).map(([label, style], i) => (
+      <span key={i} style={style}>{label}</span>
+    ));
+  };
+
+
   // 🧩 Rendu
   return (
     <div style={{ padding: '2rem' }}>
@@ -150,11 +193,8 @@ function TradeUpSaved({ priceMap }) {
             width: '100%',
             borderRadius: '6px',
             border: '1px solid #2e245cff',
-            
           }}
         />
-
-
       </div>
 
       {sortedTradeUps.map((trade) => {
@@ -185,8 +225,18 @@ function TradeUpSaved({ priceMap }) {
               <span style={{ flexBasis: '60%' }}>
                 {visibleCards.includes(trade.id) ? '🔽 Masquer les détails' : '🔍 Afficher les détails'} —{' '}
                 <strong>{trade.result?.name}</strong>{' '}
-                <span style={{ fontStyle: 'italic', color: '#ffffffff', fontWeight: 'bold, italic' }}>
+                <span style={{ fontStyle: 'italic', color: '#fff', fontWeight: 'bold' }}>
                   {trade.collection}
+                </span>{' '}
+                <span style={{ fontStyle: 'normal', fontSize: '0.9rem' }}>
+                  [
+                  {getWearAbbreviationsStyled(trade.inputs, trade.isStatTrak).map((span, i) => (
+                    <React.Fragment key={i}>
+                      {i > 0 && ', '}
+                      {span}
+                    </React.Fragment>
+                  ))}
+                  ]
                 </span>
               </span>
 
@@ -218,7 +268,6 @@ function TradeUpSaved({ priceMap }) {
               </span>
             </button>
 
-
             {visibleCards.includes(trade.id) && (
               <TradeUpCard
                 key={trade.id}
@@ -234,6 +283,7 @@ function TradeUpSaved({ priceMap }) {
       })}
     </div>
   );
+
 }
 
 export default TradeUpSaved;
