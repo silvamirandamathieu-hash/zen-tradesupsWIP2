@@ -107,6 +107,9 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
   //
   useEffect(() => {
     loadSkins();
+    console.log('🧩 Clés du priceMap :', Object.keys(priceMap));
+    console.log('🔍 Exemple clé :', priceMap["Souvenir"]);
+    console.log(Object.keys(priceMap).filter(k => k.includes('Souvenir')));
   }, []);
 
   const normalizedRarity = (rarity) => {
@@ -785,9 +788,15 @@ function AllSkins({ priceMap = {}, refreshPriceMap }) {
                           Aucune variante ne correspond à la recherche.
                         </p>
                       ) : (
+                        
+
                         filteredVariants.map((variant, index) => {
-                          const key = `${variant.name} (${variant.wear})`;
-                          const marketData = priceMap[key] || {};
+                          const someId = `variant-${index}`; // ✅ now index is defined
+                          const prefix = variant.isStatTrak ? '★ ST ' : variant.isSouvenir ? '★ SV ' : '';
+                          const key = `${prefix}${variant.name} (${variant.wear})`;
+                          const fallbackKey = `${variant.name} (${variant.wear})`; // au cas où ST/SV ne matchent pas
+                          const marketData = priceMap[key] || priceMap[fallbackKey] || {};
+
                           const price = !isNaN(Number(marketData.price)) ? `${Number(marketData.price).toFixed(2)} €` : '—';
                           const volume = marketData.volume !== undefined ? `${marketData.volume} offres` : '—';
                           return (
