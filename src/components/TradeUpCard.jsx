@@ -358,41 +358,65 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
 
       <details style={{ marginTop: '1rem' }}>
         <summary>📦 Voir les détails des skins</summary>
-        <div>
-          <h4>🎒 Entrées :</h4>
-          <ul>
-            {inputs.map((skin, i) => (
-              <li key={i}>
-                {skin.name} — Float: {skin.float ?? 'N/A'} — Prix mis à jour: {skin.price?.toFixed(2) ?? '—'} €
-              </li>
-            ))}
-          </ul>
-          <h4>🎁 Sorties :</h4>
-          <ul>
-            {outputs
-              .filter(skin => skin && skin.name)
-              .map((skin, i) => (
-                <li key={i}>
-                  {skin.name} — Chance: {skin.chance}% — Valeur mise à jour: {skin.price?.toFixed(2) ?? '—'} €
-                </li>
-              ))
-            }
-          </ul>
-        </div>
+          <div>
+            <h4>🎒 Entrées :</h4>
 
-        <label>
-          🔗 Ajouter une URL :
-          <input
-            type="url"
-            name="url"
-            value={urlInput}
-            onChange={handleUrlChange}
-            onKeyDown={handleUrlSubmit}
-            placeholder="https://exemple.com/trade-up"
-            style={{ width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
-          />
-          <small style={{ color: '#ccc' }}>Appuie sur Entrée pour enregistrer</small>
-        </label>
+            {/* Calcul de la valeur moyenne des sorties */}
+            {outputs.length > 0 && (
+              <>
+                {(() => {
+                  const averageOutputValue = outputs.reduce((sum, skin) => sum + (skin.price || 0), 0) / outputs.length;
+                  const prixMaxParItem = (averageOutputValue / 1.25) / inputs.length;
+
+                  return (
+                    <ul>
+                      {inputs.map((skin, i) => {
+                        const prixActuel = skin.price ?? 0;
+                        const estTropCher = prixActuel > prixMaxParItem;
+
+                        return (
+                          <li key={i}>
+                            {skin.name} — Float: {skin.float ?? 'N/A'} — Prix mis à jour:{" "}
+                            <span style={{ color: estTropCher ? 'red' : 'green' }}>
+                              {prixActuel.toFixed(2)} €
+                            </span>{" "}
+                            —  Max avg. : {prixMaxParItem.toFixed(2)} €
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  );
+                })()}
+              </>
+            )}
+
+            <h4>🎁 Sorties :</h4>
+            <ul>
+              {outputs
+                .filter(skin => skin && skin.name)
+                .map((skin, i) => (
+                  <li key={i}>
+                    {skin.name} — Chance: {skin.chance}% — Valeur mise à jour: {skin.price?.toFixed(2) ?? '—'} €
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <label>
+            🔗 Ajouter une URL :
+            <input
+              type="url"
+              name="url"
+              value={urlInput}
+              onChange={handleUrlChange}
+              onKeyDown={handleUrlSubmit}
+              placeholder="https://exemple.com/trade-up"
+              style={{ width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
+            />
+            <small style={{ color: '#ccc' }}>Appuie sur Entrée pour enregistrer</small>
+          </label>
+
       </details>
     </div>
   );
