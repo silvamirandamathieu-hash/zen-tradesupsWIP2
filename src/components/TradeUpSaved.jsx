@@ -11,6 +11,40 @@ function TradeUpSaved({ priceMap }) {
   const [favorites, setFavorites] = useState([]);
   const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
 
+  // 📦 Chargement initial (favoris + trade-ups)
+  useEffect(() => {
+    const fetchData = async () => {
+      // 1️⃣ Charger les favoris
+      let loadedFavorites = [];
+      const storedFavorites = localStorage.getItem('favoriteTradeUps');
+      if (storedFavorites) {
+        try {
+          loadedFavorites = JSON.parse(storedFavorites);
+        } catch (err) {
+          console.warn('❌ Erreur parsing favoris:', err);
+        }
+      }
+      setFavorites(loadedFavorites);
+
+      // 2️⃣ Nettoyer et enrichir les trade-ups
+      const cleaned = await cleanSavedTradeUps();
+      setSavedTradeUps(cleaned);
+
+      const enriched = cleaned.map(trade => {
+        const enrichedTrade = enrichTradeUp(trade, priceMap);
+        return enrichedTrade;
+      });
+      setEnrichedTradeUps(enriched);
+    };
+
+    fetchData();
+  }, [priceMap]);
+
+  // 💾 Sauvegarde des favoris à chaque changement
+  useEffect(() => {
+    localStorage.setItem('favoriteTradeUps', JSON.stringify(favorites));
+  }, [favorites]);
+
   // 🔧 Nettoyage des trade-ups corrompus
   const cleanSavedTradeUps = async () => {
     const saved = await getSavedTradeUps();
@@ -32,47 +66,6 @@ function TradeUpSaved({ priceMap }) {
 
     return validTradeUps;
   };
-
-  // 📦 Chargement initial (favoris + trade-ups)
-  useEffect(() => {
-    const fetchData = async () => {
-      // 1️⃣ Charger les favoris
-      let loadedFavorites = [];
-      const storedFavorites = localStorage.getItem('favoriteTradeUps');
-      if (storedFavorites) {
-        try {
-          loadedFavorites = JSON.parse(storedFavorites);
-          setFavorites(loadedFavorites); // on les stocke
-        } catch (err) {
-          console.warn('❌ Erreur parsing favoris:', err);
-          loadedFavorites = [];
-          setFavorites([]);
-        }
-      }
-
-      // 2️⃣ Nettoyer et enrichir les trade-ups
-      const cleaned = await cleanSavedTradeUps();
-      setSavedTradeUps(cleaned);
-
-      // ✅ enrichir avec les favoris déjà chargés
-      const enriched = cleaned.map(trade => {
-        const enrichedTrade = enrichTradeUp(trade, priceMap);
-        enrichedTrade.isFavorite = loadedFavorites.includes(trade.id); // facultatif si tu veux marquer
-        return enrichedTrade;
-      });
-      setEnrichedTradeUps(enriched);
-    };
-
-    fetchData();
-  }, [priceMap]);
-
-
-
-
-  // 💾 Sauvegarde des favoris à chaque changement
-  useEffect(() => {
-    localStorage.setItem('favoriteTradeUps', JSON.stringify(favorites));
-  }, [favorites]);
 
   // 🔁 Toggle visibilité
   const toggleCardVisibility = (id) => {
@@ -197,7 +190,6 @@ function TradeUpSaved({ priceMap }) {
                   textShadow: favorites.includes(trade.id) ? '0 0 6px #ffd700' : 'none',
                   transition: 'all 0.3s ease',
                 }}
-                title={favorites.includes(trade.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
               >
                 {favorites.includes(trade.id) ? '⭐' : '☆'}
               </span>
@@ -205,6 +197,7 @@ function TradeUpSaved({ priceMap }) {
 
             {visibleCards.includes(trade.id) && (
               <TradeUpCard
+                key={trade.id}
                 trade={trade}
                 id={trade.id}
                 isSaved={true}
