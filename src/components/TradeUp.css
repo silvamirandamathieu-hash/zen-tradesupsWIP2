@@ -623,7 +623,7 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
-  max-height: 842px; /* ou plus selon ton design */
+  max-height: 1324px; /* ou plus selon ton design */
   overflow-y: auto;
   padding: 1rem;
   background: #1a1a1a;
