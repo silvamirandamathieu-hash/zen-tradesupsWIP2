@@ -446,6 +446,7 @@ const [warning, setWarning] = useState(null);
                 {['Consumer', 'Industrial', 'Mil-spec', 'Restricted', 'Classified', 'Covert'].map(rarity => (
                   <button
                     key={rarity}
+                    className={filters.rarity === rarity ? 'active' : ''}
                     style={{ backgroundColor: rarityColors[rarity], color: 'white' }}
                     onClick={() => setFilters(prev => ({ ...prev, rarity }))}
                   >
@@ -453,6 +454,7 @@ const [warning, setWarning] = useState(null);
                   </button>
                 ))}
               </div>
+
               <div className="collection-search-wrapper">
                 <div className="collection-search-bar">
                   <input
@@ -492,13 +494,15 @@ const [warning, setWarning] = useState(null);
                 {['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle-Scarred'].map(wear => (
                   <button
                     key={wear}
+                    className={filters.wear === wear ? 'active' : ''}
                     style={{ backgroundColor: colorMap[wear], color: 'white' }}
-                    onClick={() => setFilters(prev => ({ ...prev, wear: wear }))}
+                    onClick={() => setFilters(prev => ({ ...prev, wear }))}
                   >
                     {wear}
                   </button>
                 ))}
               </div>
+
               <button className="reset-filters-btn" onClick={resetFilters}>
                 🔄 Réinitialiser tous les filtres
               </button>
