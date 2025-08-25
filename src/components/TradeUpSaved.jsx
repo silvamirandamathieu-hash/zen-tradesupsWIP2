@@ -7,6 +7,7 @@ function TradeUpSaved({ priceMap }) {
   const [savedTradeUps, setSavedTradeUps] = useState([]);
   const [sortByProfitability, setSortByProfitability] = useState(false);
   const [enrichedTradeUps, setEnrichedTradeUps] = useState([]);
+  const [visibleCards, setVisibleCards] = useState([]);
 
   // 🔧 Nettoyage des trade-ups corrompus
   const cleanSavedTradeUps = async () => {
@@ -39,7 +40,14 @@ function TradeUpSaved({ priceMap }) {
       setEnrichedTradeUps(enriched);
     };
     fetchAndCleanTradeUps();
-  }, [priceMap]); // ✅ Ajout de priceMap comme dépendance
+  }, [priceMap]);
+
+  // 🔁 Toggle visibilité
+  const toggleCardVisibility = (id) => {
+    setVisibleCards((prev) =>
+      prev.includes(id) ? prev.filter(cardId => cardId !== id) : [...prev, id]
+    );
+  };
 
   // 🗑️ Suppression manuelle
   const handleDelete = async (id) => {
@@ -67,6 +75,11 @@ function TradeUpSaved({ priceMap }) {
     return (b.profitability ?? 0) - (a.profitability ?? 0);
   });
 
+  // 🧮 Formatage sécurisé
+  const formatFloat = (value, digits = 2) => {
+    return typeof value === 'number' ? value.toFixed(digits) : '0.00';
+  };
+
   // 🧩 Rendu
   return (
     <div style={{ padding: '2rem' }}>
@@ -83,13 +96,40 @@ function TradeUpSaved({ priceMap }) {
 
       {sortedTradeUps.map((trade) => (
         <div key={trade.id} style={{ marginBottom: '2rem' }}>
-          <TradeUpCard
-            trade={trade}
-            id={trade.id}
-            isSaved={true}
-            priceMap={priceMap}
-            onDelete={() => handleDelete(trade.id)}
-          />
+          <button
+            onClick={() => toggleCardVisibility(trade.id)}
+            style={{
+              width: '100%',
+              padding: '1rem',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              backgroundColor: '#f0f0f0',
+              border: '2px solid #ccc',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              textAlign: 'left',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <span>
+              {visibleCards.includes(trade.id) ? '🔽 Masquer les détails' : '🔍 Afficher les détails'} — <strong>{trade.result?.name}</strong>
+            </span>
+            <span style={{ fontSize: '0.9rem', fontWeight: 'normal' }}>
+              💰 Coût: {formatFloat(trade.totalInputPrice)} € | 📈 Rentabilité: {formatFloat(trade.profitability, 2)}% | 🧮 Profit: {formatFloat(trade.profit)} €
+            </span>
+          </button>
+
+          {visibleCards.includes(trade.id) && (
+            <TradeUpCard
+              trade={trade}
+              id={trade.id}
+              isSaved={true}
+              priceMap={priceMap}
+              onDelete={() => handleDelete(trade.id)}
+            />
+          )}
         </div>
       ))}
     </div>
