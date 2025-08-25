@@ -170,118 +170,174 @@ function TradeUpSaved({ priceMap }) {
 
   // 🧩 Rendu
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>💾 Trade-ups sauvegardés</h2>
+    // Replace your outer <div> with this:
+      <div style={{
+        padding: '2rem',
+        background: 'linear-gradient(to right, #1e1e2f, #2c2c3e)',
+        minHeight: '100vh',
+        color: '#f0f0f0',
+        fontFamily: 'Segoe UI, Roboto, sans-serif'
+      }}>
+        <h2 style={{
+          fontSize: '2rem',
+          marginBottom: '1.5rem',
+          color: '#ffffff',
+          textShadow: '0 0 8px #6c63ff'
+        }}>
+          💾 Trade-ups sauvegardés
+        </h2>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <button onClick={toggleSort} style={{ marginRight: '1rem' }}>
-          📊 Trier par % de rentabilité {sortByProfitability ? '⬇️' : '↕️'}
-        </button>
-        <button onClick={() => setFilterFavoritesOnly(prev => !prev)} style={{ marginRight: '1rem' }}>
-          ⭐ Filtrer par favoris {filterFavoritesOnly ? '✅' : '❌'}
-        </button>
-        <input
-          type="text"
-          placeholder="🔎 Rechercher par collection..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            background: '#323758ff',
-            padding: '0.5rem',
-            marginTop: '1rem',
-            marginBottom: '0.5rem',
-            width: '100%',
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          marginBottom: '2rem'
+        }}>
+          <button onClick={toggleSort} style={{
+            background: '#6c63ff',
+            color: '#fff',
+            border: 'none',
+            padding: '0.6rem 1rem',
             borderRadius: '6px',
-            border: '1px solid #2e245cff',
-          }}
-        />
-      </div>
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+            transition: 'background 0.3s ease'
+          }}>
+            📊 Trier par % de rentabilité {sortByProfitability ? '⬇️' : '↕️'}
+          </button>
 
-      {sortedTradeUps.map((trade) => {
-        const profitability = trade.profitability ?? 0;
-        const borderColor = getProfitabilityColor(profitability);
-        const textColor = getProfitabilityColor(profitability);
+          <button onClick={() => setFilterFavoritesOnly(prev => !prev)} style={{
+            background: filterFavoritesOnly ? '#ffd700' : '#444',
+            color: filterFavoritesOnly ? '#000' : '#fff',
+            border: 'none',
+            padding: '0.6rem 1rem',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+            transition: 'background 0.3s ease'
+          }}>
+            ⭐ Filtrer par favoris {filterFavoritesOnly ? '✅' : '❌'}
+          </button>
 
-        return (
-          <div key={trade.id} style={{ marginBottom: '2rem' }}>
-            <button
-              onClick={() => toggleCardVisibility(trade.id)}
-              style={{
-                width: '100%',
-                padding: '1rem',
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                backgroundColor: '#4b4977',
-                border: `2px solid ${borderColor}`,
-                borderRadius: '8px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-              }}
-            >
-              <span style={{ flexBasis: '60%' }}>
-                {visibleCards.includes(trade.id) ? '🔽 Masquer les détails' : '🔍 Afficher les détails'} —{' '}
-                <strong>{trade.result?.name}</strong>{' '}
-                <span style={{ fontStyle: 'italic', color: '#fff', fontWeight: 'bold' }}>
-                  {trade.collection}
-                </span>{' '}
-                <span style={{ fontStyle: 'normal', fontSize: '0.9rem' }}>
-                  [
-                  {getWearAbbreviationsStyled(trade.inputs, trade.isStatTrak).map((span, i) => (
-                    <React.Fragment key={i}>
-                      {i > 0 && ', '}
-                      {span}
-                    </React.Fragment>
-                  ))}
-                  ]
-                </span>
-              </span>
+          <input
+            type="text"
+            placeholder="🔎 Rechercher par collection..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              flexGrow: 1,
+              background: '#2e2e3e',
+              color: '#fff',
+              padding: '0.6rem',
+              borderRadius: '6px',
+              border: '1px solid #6c63ff',
+              fontSize: '1rem'
+            }}
+          />
+        </div>
 
-              <span style={{
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                color: textColor,
-                textAlign: 'center',
-                flexBasis: '25%',
-              }}>
-                📈 {profitability >= 0 ? ' ' : ''}{formatFloat(amplifyProfitability(profitability), 0)}%
-              </span>
+        {sortedTradeUps.map((trade) => {
+          const profitability = trade.profitability ?? 0;
+          const borderColor = getProfitabilityColor(profitability);
+          const textColor = getProfitabilityColor(profitability);
 
-              <span
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleFavorite(trade.id);
-                }}
+          return (
+            <div key={trade.id} style={{
+              marginBottom: '2rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '12px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+              overflow: 'hidden',
+              transition: 'transform 0.3s ease',
+            }}>
+              <button
+                onClick={() => toggleCardVisibility(trade.id)}
                 style={{
-                  marginLeft: '1rem',
-                  fontSize: '1.5rem',
+                  width: '100%',
+                  padding: '1rem',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  backgroundColor: '#3a3a4f',
+                  border: `2px solid ${borderColor}`,
+                  borderRadius: '12px 12px 0 0',
                   cursor: 'pointer',
-                  color: favorites.includes(trade.id) ? '#ffd700' : '#888',
-                  textShadow: favorites.includes(trade.id) ? '0 0 6px #ffd700' : 'none',
-                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  transition: 'background 0.3s ease'
                 }}
               >
-                {favorites.includes(trade.id) ? '⭐' : '☆'}
-              </span>
-            </button>
+                <span style={{ flexBasis: '60%' }}>
+                  {visibleCards.includes(trade.id) ? '🔽 Masquer les détails' : '🔍 Afficher les détails'} —{' '}
+                  <strong>{trade.result?.name}</strong>{' '}
+                  <span style={{ fontStyle: 'italic', color: '#ccc', fontWeight: 'bold' }}>
+                    {trade.collection}
+                  </span>{' '}
+                  <span style={{ fontStyle: 'normal', fontSize: '0.9rem' }}>
+                    [
+                    {getWearAbbreviationsStyled(trade.inputs, trade.isStatTrak).map((span, i) => (
+                      <React.Fragment key={i}>
+                        {i > 0 && ', '}
+                        {span}
+                      </React.Fragment>
+                    ))}
+                    ]
+                  </span>
+                </span>
 
-            {visibleCards.includes(trade.id) && (
-              <TradeUpCard
-                key={trade.id}
-                trade={trade}
-                id={trade.id}
-                isSaved={true}
-                priceMap={priceMap}
-                onDelete={() => handleDelete(trade.id)}
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
+                <span style={{
+                  fontSize: '1.2rem',
+                  fontWeight: 'bold',
+                  color: textColor,
+                  textAlign: 'center',
+                  flexBasis: '25%',
+                }}>
+                  📈 {profitability >= 0 ? ' ' : ''}{formatFloat(amplifyProfitability(profitability), 0)}%
+                </span>
+
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(trade.id);
+                  }}
+                  style={{
+                    marginLeft: '1rem',
+                    fontSize: '1.5rem',
+                    cursor: 'pointer',
+                    color: favorites.includes(trade.id) ? '#ffd700' : '#888',
+                    textShadow: favorites.includes(trade.id) ? '0 0 6px #ffd700' : 'none',
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  {favorites.includes(trade.id) ? '⭐' : '☆'}
+                </span>
+              </button>
+
+              {visibleCards.includes(trade.id) && (
+                <div style={{
+                  animation: 'fadeIn 0.3s ease-in-out',
+                  padding: '1rem',
+                  backgroundColor: '#2c2c3e',
+                  borderTop: `1px solid ${borderColor}`
+                }}>
+                  <TradeUpCard
+                    key={trade.id}
+                    trade={trade}
+                    id={trade.id}
+                    isSaved={true}
+                    priceMap={priceMap}
+                    onDelete={() => handleDelete(trade.id)}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
   );
 
 }

@@ -112,25 +112,29 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   return (
     <div style={{
       position: 'relative',
-      border: '2px solid #241853',
-      padding: '1rem',
-      marginBottom: '1rem',
-      borderRadius: '8px',
-      backgroundColor: '#302d56',
-      color: '#fff'
+      border: '1px solid #4b4b6b',
+      padding: '1.5rem',
+      marginBottom: '2rem',
+      borderRadius: '12px',
+      background: 'rgba(48, 45, 86, 0.85)',
+      backdropFilter: 'blur(6px)',
+      color: '#f0f0f0',
+      boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+      transition: 'transform 0.3s ease',
     }}>
       {/* 🗑️ Bouton Supprimer */}
       <button
         onClick={() => setConfirmDelete(true)}
         style={{
           position: 'absolute',
-          top: '0.5rem',
-          right: '0.5rem',
+          top: '0.75rem',
+          right: '0.75rem',
           background: 'transparent',
           border: 'none',
-          color: '#ff6b6b',
-          fontSize: '1.2rem',
-          cursor: 'pointer'
+          color: '#ff4d4d',
+          fontSize: '1.4rem',
+          cursor: 'pointer',
+          transition: 'transform 0.2s ease',
         }}
         title="Supprimer ce trade-up"
       >
@@ -145,27 +149,31 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
           left: '0',
           width: '100%',
           height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.85)',
+          backgroundColor: 'rgba(0,0,0,0.9)',
           color: '#fff',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: '8px',
-          zIndex: 10
+          borderRadius: '12px',
+          zIndex: 10,
+          animation: 'fadeIn 0.3s ease-in-out'
         }}>
-          <p style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>⚠️ Êtes-vous sûr de vouloir supprimer ce trade-up ?</p>
+          <p style={{ fontSize: '1.3rem', marginBottom: '1rem', textAlign: 'center' }}>
+            ⚠️ Êtes-vous sûr de vouloir supprimer ce trade-up ?
+          </p>
           <div>
             <button
               onClick={handleDelete}
               style={{
-                backgroundColor: '#ff6b6b',
+                backgroundColor: '#ff4d4d',
                 border: 'none',
-                padding: '0.5rem 1rem',
+                padding: '0.6rem 1.2rem',
                 marginRight: '1rem',
-                borderRadius: '4px',
+                borderRadius: '6px',
                 cursor: 'pointer',
-                color: '#fff'
+                color: '#fff',
+                fontWeight: 'bold'
               }}
             >
               Oui
@@ -173,12 +181,13 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
             <button
               onClick={() => setConfirmDelete(false)}
               style={{
-                backgroundColor: '#444',
+                backgroundColor: '#555',
                 border: 'none',
-                padding: '0.5rem 1rem',
-                borderRadius: '4px',
+                padding: '0.6rem 1.2rem',
+                borderRadius: '6px',
                 cursor: 'pointer',
-                color: '#fff'
+                color: '#fff',
+                fontWeight: 'bold'
               }}
             >
               Non
@@ -188,116 +197,101 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
       )}
 
       {/* 📋 Contenu principal */}
-        
+      <h3 style={{
+        fontSize: '2rem',
+        fontWeight: 'bold',
+        color: '#ffd369',
+        marginBottom: '0.5rem',
+        textShadow: '0 0 6px #ffd36988'
+      }}>
+        🎯 {name} {isStatTrak ? 'StatTrak™' : ''}
+      </h3>
 
-        <h3 style={{
-          fontSize: '1.8rem',
-          fontWeight: 'bold',
-          color: '#ffd369',
-          marginBottom: '0.5rem',
-        }}>
-          🎯 {name} {isStatTrak ? 'StatTrak™' : ''}
-        </h3>
+      <p><strong>📅 Date :</strong> {new Date(date).toLocaleDateString()}</p>
+      <p><strong>🎯 Résultat :</strong> {resultSkin?.name ?? '—'}</p>
 
-        <p style={{ margin: '0.2rem 0', color: '#ccc' }}>
-          <strong>📅 Date :</strong> <span style={{ color: '#fff' }}>{new Date(date).toLocaleDateString()}</span>
-        </p>
-        <p style={{ margin: '0.2rem 0', color: '#ccc' }}>
-          <strong>🎯 Résultat :</strong> <span style={{ color: '#fff' }}>{resultSkin?.name ?? '—'}</span>
-        </p>
-        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-          <p style={{
-            fontSize: '1.6rem',
-            fontWeight: 'bold',
-            color: '#a0a8e5ff',
-            backgroundColor: '#1e1e2f',
-            padding: '0.6rem 1rem',
-            borderRadius: '8px',
-            display: 'inline-block',
-            border: '1px solid #3a3a5a',
-            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
-          }}>
-            {collection}
-          </p>
-        </div>
-
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.5rem',
-          marginTop: '1rem',
-        }}>
-          <p style={{
-            backgroundColor: '#2c2c44',
-            padding: '0.6rem',
-            borderRadius: '6px',
-            color: '#9fd3ff',
-            fontWeight: 'bold',
-            fontSize: '1.1rem',
-            border: '1px solid #3a3a5a',
-            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
-          }}>
-            Coût du trade-up : <span style={{ color: '#fff' }}>{totalInputPrice} €</span>
-          </p>
-          <p style={{
-            backgroundColor: '#2c2c44',
-            padding: '0.6rem',
-            borderRadius: '6px',
-            color: '#9fd3ff',
-            fontWeight: 'bold',
-            fontSize: '1.1rem',
-            border: '1px solid #3a3a5a',
-            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
-          }}>
-            Valeur moy. sortie : <span style={{ color: '#fff' }}>{avgOutputValue} €</span>
-          </p>
-          <p style={{
-            backgroundColor: '#2c2c44',
-            padding: '0.6rem',
-            borderRadius: '6px',
-            color: '#9fd3ff',
-            fontWeight: 'bold',
-            fontSize: '1.1rem',
-            border: '1px solid #3a3a5a',
-            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
-          }}>
-            💸 Profit moy/trade : <span style={{ color: '#fff' }}>{profit} €</span>
-          </p>
-        </div>
-
+      <div style={{ textAlign: 'center', margin: '1rem 0' }}>
         <p style={{
-          backgroundColor: '#1e1e2f',
-          padding: '0.8rem',
-          borderRadius: '6px',
-          color: profitabilityColor,
-          fontSize: '1.5rem',
+          fontSize: '1.4rem',
           fontWeight: 'bold',
-          textAlign: 'center',
-          boxShadow: '0 0 8px rgba(255,255,255,0.1)',
-          marginTop: '1rem',
-        }}>
-          📈  Rentabilité : {profitability >= 0 ? '+' : ''}{amplified.toFixed(0)}%
-          {amplified >= 180 && ' 🔥'}
-          {amplified <= 70 && ' 🧊'}
-        </p>
-
-        <p style={{
+          color: '#a0a8e5',
           backgroundColor: '#1e1e2f',
           padding: '0.6rem 1rem',
-          borderRadius: '6px',
-          fontSize: '1.3rem',
-          fontWeight: 'bold',
-          color: '#a0a8e5ff',
-          fontFamily: 'monospace',
+          borderRadius: '8px',
+          display: 'inline-block',
           border: '1px solid #3a3a5a',
-          marginTop: '1rem',
-          textAlign: 'center',
+          boxShadow: '0 0 6px rgba(0,255,213,0.3)',
         }}>
-          🧪 Float moyen : {averageFloat.toFixed(4)}
+          {collection}
         </p>
+      </div>
 
-      
+      {/* 💰 Infos financières */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gap: '0.75rem',
+        marginTop: '1rem',
+      }}>
+        {[{
+          label: 'Coût du trade-up',
+          value: `${totalInputPrice} €`
+        }, {
+          label: 'Valeur moy. sortie',
+          value: `${avgOutputValue} €`
+        }, {
+          label: '💸 Profit moy/trade',
+          value: `${profit} €`
+        }].map(({ label, value }, i) => (
+          <p key={i} style={{
+            backgroundColor: '#2c2c44',
+            padding: '0.6rem',
+            borderRadius: '6px',
+            color: '#9fd3ff',
+            fontWeight: 'bold',
+            fontSize: '1.1rem',
+            border: '1px solid #3a3a5a',
+            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
+          }}>
+            {label} : <span style={{ color: '#fff' }}>{value}</span>
+          </p>
+        ))}
+      </div>
 
+      {/* 📈 Rentabilité */}
+      <p style={{
+        backgroundColor: '#1e1e2f',
+        padding: '0.8rem',
+        borderRadius: '6px',
+        color: profitabilityColor,
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        boxShadow: '0 0 8px rgba(255,255,255,0.1)',
+        marginTop: '1rem',
+      }}>
+        📈 Rentabilité : {profitability >= 0 ? '+' : ''}{amplified.toFixed(0)}%
+        {amplified >= 180 && ' 🔥'}
+        {amplified <= 70 && ' 🧊'}
+      </p>
+
+      {/* 🧪 Float */}
+      <p style={{
+        backgroundColor: '#1e1e2f',
+        padding: '0.6rem 1rem',
+        borderRadius: '6px',
+        fontSize: '1.3rem',
+        fontWeight: 'bold',
+        color: '#a0a8e5',
+        fontFamily: 'monospace',
+        border: '1px solid #3a3a5a',
+        marginTop: '1rem',
+        textAlign: 'center',
+      }}>
+        🧪 Float moyen : {averageFloat.toFixed(4)}
+      </p>
+
+      {/* 🔗 Liens enregistrés */}
       {localUrls.length > 0 && (
         <div style={{ marginTop: '1rem' }}>
           <strong>🔗 Liens enregistrés :</strong>
@@ -319,7 +313,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                   style={{
                     color: '#9fd3ff',
                     textDecoration: 'none',
-                    wordBreak: 'break-all',
+                    wordBreak: 'break-word',
                     flexGrow: 1
                   }}
                 >
@@ -343,81 +337,118 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                 </button>
               </li>
             ))}
-
           </ul>
         </div>
+      
       )}
 
       {onEdit && (
-        <div style={{ marginTop: '1rem' }}>
-          <button onClick={() => onEdit(trade)} style={{ marginRight: '1rem' }}>
+        <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+          <button
+            onClick={() => onEdit(trade)}
+            style={{
+              backgroundColor: '#6c63ff',
+              color: '#fff',
+              padding: '0.6rem 1.2rem',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              boxShadow: '0 0 8px rgba(108,99,255,0.4)',
+              transition: 'background 0.3s ease',
+            }}
+          >
             🛠 Modifier
           </button>
         </div>
       )}
 
-      <details style={{ marginTop: '1rem' }}>
-        <summary>📦 Voir les détails des skins</summary>
-          <div>
-            <h4>🎒 Entrées :</h4>
 
-            {/* Calcul de la valeur moyenne des sorties */}
-            {outputs.length > 0 && (
-              <>
-                {(() => {
-                  const averageOutputValue = outputs.reduce((sum, skin) => sum + (skin.price || 0), 0) / outputs.length;
-                  const prixMaxParItem = (averageOutputValue / 1.25) / inputs.length;
+      <details style={{
+        marginTop: '2rem',
+        backgroundColor: '#2c2c44',
+        padding: '1rem',
+        borderRadius: '8px',
+        border: '1px solid #3a3a5a',
+        boxShadow: '0 0 6px rgba(0,255,213,0.2)',
+        color: '#f0f0f0'
+      }}>
+        <summary style={{
+          fontSize: '1.2rem',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          marginBottom: '1rem',
+          color: '#9fd3ff'
+        }}>
+          📦 Voir les détails des skins
+        </summary>
 
-                  return (
-                    <ul>
-                      {inputs.map((skin, i) => {
-                        const prixActuel = skin.price ?? 0;
-                        const estTropCher = prixActuel > prixMaxParItem;
+        <div>
+          <h4 style={{ color: '#ffd369' }}>🎒 Entrées :</h4>
+          {outputs.length > 0 && (
+            <>
+              {(() => {
+                const averageOutputValue = outputs.reduce((sum, skin) => sum + (skin.price || 0), 0) / outputs.length;
+                const prixMaxParItem = (averageOutputValue / 1.25) / inputs.length;
 
-                        return (
-                          <li key={i}>
-                            {skin.name} — Float: {skin.float ?? 'N/A'} — Prix mis à jour:{" "}
-                            <span style={{ color: estTropCher ? 'red' : 'green' }}>
-                              {prixActuel.toFixed(2)} €
-                            </span>{" "}
-                            —  Max avg. : {prixMaxParItem.toFixed(2)} €
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  );
-                })()}
-              </>
-            )}
+                return (
+                  <ul style={{ paddingLeft: '1rem' }}>
+                    {inputs.map((skin, i) => {
+                      const prixActuel = skin.price ?? 0;
+                      const estTropCher = prixActuel > prixMaxParItem;
 
-            <h4>🎁 Sorties :</h4>
-            <ul>
-              {outputs
-                .filter(skin => skin && skin.name)
-                .map((skin, i) => (
-                  <li key={i}>
-                    {skin.name} — Chance: {skin.chance}% — Valeur mise à jour: {skin.price?.toFixed(2) ?? '—'} €
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
+                      return (
+                        <li key={i} style={{ marginBottom: '0.5rem' }}>
+                          {skin.name} — Float: {skin.float ?? 'N/A'} — Prix mis à jour:{" "}
+                          <span style={{ color: estTropCher ? '#ff4d4d' : '#4dff88' }}>
+                            {prixActuel.toFixed(2)} €
+                          </span>{" "}
+                          — Max avg. : {prixMaxParItem.toFixed(2)} €
+                        </li>
+                      );
+                    })}
+                  </ul>
+                );
+              })()}
+            </>
+          )}
 
-          <label>
-            🔗 Ajouter une URL :
-            <input
-              type="url"
-              name="url"
-              value={urlInput}
-              onChange={handleUrlChange}
-              onKeyDown={handleUrlSubmit}
-              placeholder="https://exemple.com/trade-up"
-              style={{ width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
-            />
-            <small style={{ color: '#ccc' }}>Appuie sur Entrée pour enregistrer</small>
-          </label>
+          <h4 style={{ color: '#ffd369', marginTop: '1rem' }}>🎁 Sorties :</h4>
+          <ul style={{ paddingLeft: '1rem' }}>
+            {outputs
+              .filter(skin => skin && skin.name)
+              .map((skin, i) => (
+                <li key={i} style={{ marginBottom: '0.5rem' }}>
+                  {skin.name} — Chance: {skin.chance}% — Valeur mise à jour: {skin.price?.toFixed(2) ?? '—'} €
+                </li>
+              ))
+            }
+          </ul>
+        </div>
 
+        <label style={{ display: 'block', marginTop: '1.5rem' }}>
+          🔗 Ajouter une URL :
+          <input
+            type="url"
+            name="url"
+            value={urlInput}
+            onChange={handleUrlChange}
+            onKeyDown={handleUrlSubmit}
+            placeholder="https://exemple.com/trade-up"
+            style={{
+              width: '100%',
+              padding: '0.6rem',
+              marginTop: '0.5rem',
+              borderRadius: '6px',
+              border: '1px solid #6c63ff',
+              backgroundColor: '#1e1e2f',
+              color: '#fff'
+            }}
+          />
+          <small style={{ color: '#ccc' }}>Appuie sur Entrée pour enregistrer</small>
+        </label>
       </details>
+
     </div>
   );
 }
