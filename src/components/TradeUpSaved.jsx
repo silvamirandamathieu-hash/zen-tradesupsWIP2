@@ -8,6 +8,8 @@ function TradeUpSaved({ priceMap }) {
   const [sortByProfitability, setSortByProfitability] = useState(false);
   const [enrichedTradeUps, setEnrichedTradeUps] = useState([]);
   const [visibleCards, setVisibleCards] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
 
   // 🔧 Nettoyage des trade-ups corrompus
   const cleanSavedTradeUps = async () => {
@@ -31,16 +33,46 @@ function TradeUpSaved({ priceMap }) {
     return validTradeUps;
   };
 
-  // 📦 Chargement initial
+  // 📦 Chargement initial (favoris + trade-ups)
   useEffect(() => {
-    const fetchAndCleanTradeUps = async () => {
+    const fetchData = async () => {
+      // 1️⃣ Charger les favoris
+      let loadedFavorites = [];
+      const storedFavorites = localStorage.getItem('favoriteTradeUps');
+      if (storedFavorites) {
+        try {
+          loadedFavorites = JSON.parse(storedFavorites);
+          setFavorites(loadedFavorites); // on les stocke
+        } catch (err) {
+          console.warn('❌ Erreur parsing favoris:', err);
+          loadedFavorites = [];
+          setFavorites([]);
+        }
+      }
+
+      // 2️⃣ Nettoyer et enrichir les trade-ups
       const cleaned = await cleanSavedTradeUps();
       setSavedTradeUps(cleaned);
-      const enriched = cleaned.map(trade => enrichTradeUp(trade, priceMap));
+
+      // ✅ enrichir avec les favoris déjà chargés
+      const enriched = cleaned.map(trade => {
+        const enrichedTrade = enrichTradeUp(trade, priceMap);
+        enrichedTrade.isFavorite = loadedFavorites.includes(trade.id); // facultatif si tu veux marquer
+        return enrichedTrade;
+      });
       setEnrichedTradeUps(enriched);
     };
-    fetchAndCleanTradeUps();
+
+    fetchData();
   }, [priceMap]);
+
+
+
+
+  // 💾 Sauvegarde des favoris à chaque changement
+  useEffect(() => {
+    localStorage.setItem('favoriteTradeUps', JSON.stringify(favorites));
+  }, [favorites]);
 
   // 🔁 Toggle visibilité
   const toggleCardVisibility = (id) => {
@@ -69,30 +101,35 @@ function TradeUpSaved({ priceMap }) {
     setEnrichedTradeUps(updated);
   };
 
-  // 📊 Tri des trade-ups enrichis
-  const sortedTradeUps = [...enrichedTradeUps].sort((a, b) => {
+  // ⭐ Toggle favori
+  const toggleFavorite = (id) => {
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter(favId => favId !== id) : [...prev, id]
+    );
+  };
+
+  // 📊 Tri et filtrage
+  const filteredTradeUps = filterFavoritesOnly
+    ? enrichedTradeUps.filter(trade => favorites.includes(trade.id))
+    : enrichedTradeUps;
+
+  const sortedTradeUps = [...filteredTradeUps].sort((a, b) => {
     if (!sortByProfitability) return 0;
     return (b.profitability ?? 0) - (a.profitability ?? 0);
   });
 
-  // 🧮 Formatage sécurisé
+  // 🧮 Formatage
   const formatFloat = (value, digits = 2) => {
     return typeof value === 'number' ? value.toFixed(digits) : '0.00';
   };
   const getProfitabilityColor = (profitability) => {
-    const clamped = Math.max(-100, Math.min(100, profitability)); // clamp entre -100% et +100%
-    const ratio = (clamped + 100) / 200; // convertit en ratio 0–1
-
+    const clamped = Math.max(-100, Math.min(100, profitability));
+    const ratio = (clamped + 100) / 200;
     const red = Math.round(255 * (1 - ratio));
     const green = Math.round(255 * ratio);
-    return `rgb(${red}, ${green}, 80)`; // teinte rouge-vert
+    return `rgb(${red}, ${green}, 80)`;
   };
-  const amplifyProfitability = (realPercent) => {
-    const amplified = 100 + realPercent; // +40% devient 140%, -20% devient 80%
-    return amplified;
-  };
-
-
+  const amplifyProfitability = (realPercent) => 100 + realPercent;
 
   // 🧩 Rendu
   return (
@@ -102,6 +139,9 @@ function TradeUpSaved({ priceMap }) {
       <div style={{ marginBottom: '1rem' }}>
         <button onClick={toggleSort} style={{ marginRight: '1rem' }}>
           📊 Trier par % de rentabilité {sortByProfitability ? '⬇️' : '↕️'}
+        </button>
+        <button onClick={() => setFilterFavoritesOnly(prev => !prev)} style={{ marginRight: '1rem' }}>
+          ⭐ Filtrer par favoris {filterFavoritesOnly ? '✅' : '❌'}
         </button>
         <button onClick={handleUpdatePrices}>
           🔄 Mettre à jour les prix
@@ -144,6 +184,23 @@ function TradeUpSaved({ priceMap }) {
               }}>
                 📈 {profitability >= 0 ? ' ' : ''}{formatFloat(amplifyProfitability(profitability), 0)}%
               </span>
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(trade.id);
+                }}
+                style={{
+                  marginLeft: '1rem',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: favorites.includes(trade.id) ? '#ffd700' : '#888',
+                  textShadow: favorites.includes(trade.id) ? '0 0 6px #ffd700' : 'none',
+                  transition: 'all 0.3s ease',
+                }}
+                title={favorites.includes(trade.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+              >
+                {favorites.includes(trade.id) ? '⭐' : '☆'}
+              </span>
             </button>
 
             {visibleCards.includes(trade.id) && (
@@ -158,7 +215,6 @@ function TradeUpSaved({ priceMap }) {
           </div>
         );
       })}
-
     </div>
   );
 }
