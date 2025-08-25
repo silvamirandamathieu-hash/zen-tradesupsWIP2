@@ -8,7 +8,8 @@ db.version(7).stores({
   allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl',
   history: '++id,date,name,wear,float,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume',
   currentTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls',
-  savedTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls'
+  savedTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls',
+  favoriteTradeUps: 'id' // ⭐ Table des favoris
 });
 
 //
@@ -104,54 +105,46 @@ export async function clearHistory() {
 //
 // 🧪 TRADE-UP
 //
-
-// 📥 Ajouter un trade-up en cours
 export async function addCurrentTradeUp(tradeUp) {
   if (!tradeUp || typeof tradeUp !== 'object') throw new Error('Trade-up invalide');
   return db.currentTradeUps.add({ ...tradeUp, date: new Date().toISOString() });
 }
 
-// 📋 Récupérer tous les trade-ups en cours
 export async function getCurrentTradeUps() {
   return db.currentTradeUps.orderBy('date').reverse().toArray();
 }
 
-// 🛠 Modifier un trade-up en cours
 export async function updateCurrentTradeUp(id, updatedTradeUp) {
   if (!id || typeof updatedTradeUp !== 'object') throw new Error('Trade-up invalide');
   return db.currentTradeUps.update(id, { ...updatedTradeUp, date: new Date().toISOString() });
 }
 
-// ❌ Supprimer un trade-up en cours
 export async function deleteCurrentTradeUp(id) {
   return db.currentTradeUps.delete(id);
 }
 
-// 🧹 Tout supprimer (optionnel)
 export async function clearCurrentTradeUps() {
   return db.currentTradeUps.clear();
 }
 
-// 💾 Ajouter un trade-up sauvegardé
 export async function addSavedTradeUp(tradeUp) {
   if (!tradeUp || typeof tradeUp !== 'object') throw new Error('Trade-up invalide');
-  return db.savedTradeUps.add({ ...tradeUp, date: new Date().toISOString() });
+  const id = tradeUp.id || crypto.randomUUID();
+  return db.savedTradeUps.put({ ...tradeUp, id, date: new Date().toISOString() });
 }
 
-// 📋 Récupérer tous les trade-ups sauvegardés
 export async function getSavedTradeUps() {
   return db.savedTradeUps.orderBy('date').reverse().toArray();
 }
 
-// ❌ Supprimer un trade-up sauvegardé
 export async function deleteSavedTradeUp(id) {
   return db.savedTradeUps.delete(id);
 }
 
-// 🧹 Tout supprimer
 export async function clearSavedTradeUps() {
   return db.savedTradeUps.clear();
 }
+
 export async function updateSavedTradeUp(id, updatedTradeUp) {
   if (!id || typeof updatedTradeUp !== 'object') {
     throw new Error('Trade-up invalide');
@@ -161,6 +154,7 @@ export async function updateSavedTradeUp(id, updatedTradeUp) {
     date: new Date().toISOString()
   });
 }
+
 export async function updateTradeUpUrl(id, url, type = 'current') {
   if (!id || typeof url !== 'string') {
     throw new Error('Paramètres invalides');
@@ -177,4 +171,37 @@ export async function updateTradeUpUrl(id, url, type = 'current') {
     urlTradeUp: url,
     date: new Date().toISOString()
   });
+}
+
+//
+// ⭐ FAVORIS
+//
+export async function addFavoriteTradeUp(id) {
+  if (!id) throw new Error('ID invalide');
+  return db.favoriteTradeUps.put({ id });
+}
+
+export async function removeFavoriteTradeUp(id) {
+  if (!id) throw new Error('ID invalide');
+  return db.favoriteTradeUps.delete(id);
+}
+
+export async function getFavoriteTradeUps() {
+  const all = await db.favoriteTradeUps.toArray();
+  return all.map(fav => fav.id);
+}
+
+export async function clearFavoriteTradeUps() {
+  return db.favoriteTradeUps.clear();
+}
+
+export async function cleanOrphanFavorites() {
+  const saved = await getSavedTradeUps();
+  const savedIds = saved.map(t => t.id);
+  const favorites = await getFavoriteTradeUps();
+  const orphans = favorites.filter(id => !savedIds.includes(id));
+  for (const id of orphans) {
+    await removeFavoriteTradeUp(id);
+  }
+  return orphans.length;
 }

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { getSavedTradeUps, deleteSavedTradeUp } from '../db';
+import {
+  getSavedTradeUps,
+  deleteSavedTradeUp,
+  getFavoriteTradeUps,
+  addFavoriteTradeUp,
+  removeFavoriteTradeUp
+} from '../db';
 import TradeUpCard from './TradeUpCard';
 import { enrichTradeUp } from './EnrichedTradeUp';
 
@@ -11,39 +17,21 @@ function TradeUpSaved({ priceMap }) {
   const [favorites, setFavorites] = useState([]);
   const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
 
-  // 📦 Chargement initial (favoris + trade-ups)
+  // 📦 Chargement initial des favoris et trade-ups
   useEffect(() => {
     const fetchData = async () => {
-      // 1️⃣ Charger les favoris
-      let loadedFavorites = [];
-      const storedFavorites = localStorage.getItem('favoriteTradeUps');
-      if (storedFavorites) {
-        try {
-          loadedFavorites = JSON.parse(storedFavorites);
-        } catch (err) {
-          console.warn('❌ Erreur parsing favoris:', err);
-        }
-      }
-      setFavorites(loadedFavorites);
+      const favs = await getFavoriteTradeUps();
+      setFavorites(favs);
 
-      // 2️⃣ Nettoyer et enrichir les trade-ups
       const cleaned = await cleanSavedTradeUps();
       setSavedTradeUps(cleaned);
 
-      const enriched = cleaned.map(trade => {
-        const enrichedTrade = enrichTradeUp(trade, priceMap);
-        return enrichedTrade;
-      });
+      const enriched = cleaned.map(trade => enrichTradeUp(trade, priceMap));
       setEnrichedTradeUps(enriched);
     };
 
     fetchData();
   }, [priceMap]);
-
-  // 💾 Sauvegarde des favoris à chaque changement
-  useEffect(() => {
-    localStorage.setItem('favoriteTradeUps', JSON.stringify(favorites));
-  }, [favorites]);
 
   // 🔧 Nettoyage des trade-ups corrompus
   const cleanSavedTradeUps = async () => {
@@ -77,10 +65,12 @@ function TradeUpSaved({ priceMap }) {
   // 🗑️ Suppression manuelle
   const handleDelete = async (id) => {
     await deleteSavedTradeUp(id);
+    await removeFavoriteTradeUp(id); // Supprime aussi des favoris
     const updated = await cleanSavedTradeUps();
     setSavedTradeUps(updated);
     const enriched = updated.map(trade => enrichTradeUp(trade, priceMap));
     setEnrichedTradeUps(enriched);
+    setFavorites(await getFavoriteTradeUps());
   };
 
   // 🔁 Toggle tri
@@ -95,10 +85,16 @@ function TradeUpSaved({ priceMap }) {
   };
 
   // ⭐ Toggle favori
-  const toggleFavorite = (id) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter(favId => favId !== id) : [...prev, id]
-    );
+  const toggleFavorite = async (id) => {
+    let updated;
+    if (favorites.includes(id)) {
+      await removeFavoriteTradeUp(id);
+      updated = favorites.filter(favId => favId !== id);
+    } else {
+      await addFavoriteTradeUp(id);
+      updated = [...favorites, id];
+    }
+    setFavorites(updated);
   };
 
   // 📊 Tri et filtrage
