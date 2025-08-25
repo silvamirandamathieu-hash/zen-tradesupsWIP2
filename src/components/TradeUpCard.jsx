@@ -44,6 +44,18 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
       return false;
     }
   };
+  const amplifyProfitability = (realPercent) => {
+    return 100 + realPercent;
+  };
+
+  const getProfitabilityColor = (profitability) => {
+    const clamped = Math.max(-100, Math.min(100, profitability));
+    const ratio = (clamped + 100) / 200;
+    const red = Math.round(255 * (1 - ratio));
+    const green = Math.round(255 * ratio);
+    return `rgb(${red}, ${green}, 80)`;
+  };
+
 
   const handleUrlSubmit = async (e) => {
     if (e.key === 'Enter') {
@@ -92,6 +104,10 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const averageFloat = validInputs.length > 0
     ? validInputs.reduce((sum, skin) => sum + (skin.float ?? 0), 0) / validInputs.length
     : 0;
+
+  const amplified = amplifyProfitability(profitability ?? 0);
+  const profitabilityColor = getProfitabilityColor(profitability ?? 0);
+
 
   return (
     <div style={{
@@ -172,21 +188,115 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
       )}
 
       {/* 📋 Contenu principal */}
-      <h3>🎯 {name} {isStatTrak ? 'StatTrak™' : ''}</h3>
-      <p><strong>📦 Collection:</strong> {collection}</p>
-      <p><strong>📅 Date:</strong> {new Date(date).toLocaleDateString()}</p>
-      <p><strong>🎯 Résultat:</strong> {resultSkin?.name ?? '—'}</p>
+        
 
-      <p>💰 <strong>Coût total :</strong> {totalInputPrice} €</p>
-      <p>📈 <strong>Valeur moyenne de sortie :</strong> {avgOutputValue} €</p>
-      <p>💸 <strong>Profit estimé :</strong> {profit} €</p>
-      <p style={{ color: profitability >= 0 ? 'limegreen' : 'orangered' }}>
-        📊 <strong>Rentabilité :</strong> {profitability}%
-      </p>
-      <p><strong>🧪 Float moyen:</strong> {averageFloat.toFixed(4)}</p>
-      <p style={{ fontStyle: 'italic', fontSize: '0.9rem', color: '#aaa' }}>
-        ✅ Prix mis à jour selon le marché
-      </p>
+        <h3 style={{
+          fontSize: '1.8rem',
+          fontWeight: 'bold',
+          color: '#ffd369',
+          marginBottom: '0.5rem',
+        }}>
+          🎯 {name} {isStatTrak ? 'StatTrak™' : ''}
+        </h3>
+
+        <p style={{ margin: '0.2rem 0', color: '#ccc' }}>
+          <strong>📅 Date :</strong> <span style={{ color: '#fff' }}>{new Date(date).toLocaleDateString()}</span>
+        </p>
+        <p style={{ margin: '0.2rem 0', color: '#ccc' }}>
+          <strong>🎯 Résultat :</strong> <span style={{ color: '#fff' }}>{resultSkin?.name ?? '—'}</span>
+        </p>
+        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          <p style={{
+            fontSize: '1.6rem',
+            fontWeight: 'bold',
+            color: '#a0a8e5ff',
+            backgroundColor: '#1e1e2f',
+            padding: '0.6rem 1rem',
+            borderRadius: '8px',
+            display: 'inline-block',
+            border: '1px solid #3a3a5a',
+            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
+          }}>
+            {collection}
+          </p>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5rem',
+          marginTop: '1rem',
+        }}>
+          <p style={{
+            backgroundColor: '#2c2c44',
+            padding: '0.6rem',
+            borderRadius: '6px',
+            color: '#9fd3ff',
+            fontWeight: 'bold',
+            fontSize: '1.1rem',
+            border: '1px solid #3a3a5a',
+            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
+          }}>
+            Coût du trade-up : <span style={{ color: '#fff' }}>{totalInputPrice} €</span>
+          </p>
+          <p style={{
+            backgroundColor: '#2c2c44',
+            padding: '0.6rem',
+            borderRadius: '6px',
+            color: '#9fd3ff',
+            fontWeight: 'bold',
+            fontSize: '1.1rem',
+            border: '1px solid #3a3a5a',
+            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
+          }}>
+            Valeur moy. sortie : <span style={{ color: '#fff' }}>{avgOutputValue} €</span>
+          </p>
+          <p style={{
+            backgroundColor: '#2c2c44',
+            padding: '0.6rem',
+            borderRadius: '6px',
+            color: '#9fd3ff',
+            fontWeight: 'bold',
+            fontSize: '1.1rem',
+            border: '1px solid #3a3a5a',
+            boxShadow: '0 0 6px rgba(0,255,213,0.3)',
+          }}>
+            💸 Profit moy/trade : <span style={{ color: '#fff' }}>{profit} €</span>
+          </p>
+        </div>
+
+        <p style={{
+          backgroundColor: '#1e1e2f',
+          padding: '0.8rem',
+          borderRadius: '6px',
+          color: profitabilityColor,
+          fontSize: '1.5rem',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          boxShadow: '0 0 8px rgba(255,255,255,0.1)',
+          marginTop: '1rem',
+        }}>
+          📈  Rentabilité : {profitability >= 0 ? '+' : ''}{amplified.toFixed(0)}%
+          {amplified >= 180 && ' 🔥'}
+          {amplified <= 70 && ' 🧊'}
+        </p>
+
+        <p style={{
+          backgroundColor: '#1e1e2f',
+          padding: '0.6rem 1rem',
+          borderRadius: '6px',
+          fontSize: '1.3rem',
+          fontWeight: 'bold',
+          color: '#a0a8e5ff',
+          fontFamily: 'monospace',
+          border: '1px solid #3a3a5a',
+          marginTop: '1rem',
+          textAlign: 'center',
+        }}>
+          🧪 Float moyen : {averageFloat.toFixed(4)}
+        </p>
+
+      
 
       {localUrls.length > 0 && (
         <div style={{ marginTop: '1rem' }}>

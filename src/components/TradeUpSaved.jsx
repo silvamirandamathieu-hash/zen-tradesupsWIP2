@@ -79,6 +79,20 @@ function TradeUpSaved({ priceMap }) {
   const formatFloat = (value, digits = 2) => {
     return typeof value === 'number' ? value.toFixed(digits) : '0.00';
   };
+  const getProfitabilityColor = (profitability) => {
+    const clamped = Math.max(-100, Math.min(100, profitability)); // clamp entre -100% et +100%
+    const ratio = (clamped + 100) / 200; // convertit en ratio 0–1
+
+    const red = Math.round(255 * (1 - ratio));
+    const green = Math.round(255 * ratio);
+    return `rgb(${red}, ${green}, 80)`; // teinte rouge-vert
+  };
+  const amplifyProfitability = (realPercent) => {
+    const amplified = 100 + realPercent; // +40% devient 140%, -20% devient 80%
+    return amplified;
+  };
+
+
 
   // 🧩 Rendu
   return (
@@ -94,44 +108,57 @@ function TradeUpSaved({ priceMap }) {
         </button>
       </div>
 
-      {sortedTradeUps.map((trade) => (
-        <div key={trade.id} style={{ marginBottom: '2rem' }}>
-          <button
-            onClick={() => toggleCardVisibility(trade.id)}
-            style={{
-              width: '100%',
-              padding: '1rem',
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              backgroundColor: '#f0f0f0',
-              border: '2px solid #ccc',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              textAlign: 'left',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <span>
-              {visibleCards.includes(trade.id) ? '🔽 Masquer les détails' : '🔍 Afficher les détails'} — <strong>{trade.result?.name}</strong>
-            </span>
-            <span style={{ fontSize: '0.9rem', fontWeight: 'normal' }}>
-              💰 Coût: {formatFloat(trade.totalInputPrice)} € | 📈 Rentabilité: {formatFloat(trade.profitability, 2)}% | 🧮 Profit: {formatFloat(trade.profit)} €
-            </span>
-          </button>
+      {sortedTradeUps.map((trade) => {
+        const profitability = trade.profitability ?? 0;
+        const borderColor = getProfitabilityColor(profitability);
+        const textColor = getProfitabilityColor(profitability);
 
-          {visibleCards.includes(trade.id) && (
-            <TradeUpCard
-              trade={trade}
-              id={trade.id}
-              isSaved={true}
-              priceMap={priceMap}
-              onDelete={() => handleDelete(trade.id)}
-            />
-          )}
-        </div>
-      ))}
+        return (
+          <div key={trade.id} style={{ marginBottom: '2rem' }}>
+            <button
+              onClick={() => toggleCardVisibility(trade.id)}
+              style={{
+                width: '100%',
+                padding: '1rem',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                backgroundColor: '#4b4977',
+                border: `2px solid ${borderColor}`,
+                borderRadius: '8px',
+                cursor: 'pointer',
+                textAlign: 'left',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <span>
+                {visibleCards.includes(trade.id) ? '🔽 Masquer les détails' : '🔍 Afficher les détails'} — <strong>{trade.result?.name}</strong>
+              </span>
+              <span style={{
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                color: textColor,
+                textAlign: 'center',
+                flexBasis: '30%',
+              }}>
+                📈 {profitability >= 0 ? ' ' : ''}{formatFloat(amplifyProfitability(profitability), 0)}%
+              </span>
+            </button>
+
+            {visibleCards.includes(trade.id) && (
+              <TradeUpCard
+                trade={trade}
+                id={trade.id}
+                isSaved={true}
+                priceMap={priceMap}
+                onDelete={() => handleDelete(trade.id)}
+              />
+            )}
+          </div>
+        );
+      })}
+
     </div>
   );
 }
