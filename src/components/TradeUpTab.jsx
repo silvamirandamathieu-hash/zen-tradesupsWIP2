@@ -469,6 +469,31 @@ const [warning, setWarning] = useState(null);
                     ⏷
                   </button>
                 </div>
+                <div className="filter-row">
+                  <button
+                    style={{
+                      backgroundColor: filters.isStatTrak === true ? '#2196F3' :
+                                      filters.isStatTrak === false ? '#f44336' : '#9e9e9e',
+                      color: 'white'
+                    }}
+                    onClick={() => {
+                      setFilters(prev => ({
+                        ...prev,
+                        isStatTrak:
+                          prev.isStatTrak === null ? true :
+                          prev.isStatTrak === true ? false :
+                          null
+                      }));
+                    }}
+                  >
+                    {filters.isStatTrak === true
+                      ? 'StatTrak™ ON'
+                      : filters.isStatTrak === false
+                      ? 'StatTrak™ OFF'
+                      : 'StatTrak™ TOUS'}
+                  </button>
+                </div>
+
 
                 {showCollectionDropdown && (
                   <div className="collection-dropdown-list">

@@ -31,6 +31,30 @@ const PriceRange = styled.div`
   gap: 1rem;
   align-items: center;
 `;
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #2a2e3d;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: ${({ active }) => active ? '0 0 8px 2px rgba(255,255,255,0.4)' : 'none'};
+  border: ${({ active }) => active ? '2px solid #fff' : '2px solid transparent'};
+
+  &:hover {
+    background-color: #3a3f52;
+    transform: scale(1.03);
+  }
+
+  input {
+    accent-color: #00bcd4;
+    cursor: pointer;
+  }
+`;
 
 export default function AdvancedFilterPanel({
   allSkins,
