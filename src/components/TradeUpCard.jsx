@@ -40,6 +40,13 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const handleUrlChange = (e) => {
     setUrlInput(e.target.value);
   };
+  const generateMarketLink = (skinName, skinWear) => {
+    const encodedName = encodeURIComponent(skinName);
+    const encodedWear = encodeURIComponent(skinWear ?? '');
+    return `https://market.csgo.com/en/?search=${encodedName}&quality=${encodedWear}`;
+  };
+
+
   const handleNoteChange = async (e) => {
     const newNote = e.target.value;
     setNote(newNote);
@@ -456,19 +463,58 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                 const averageOutputValue = outputs.reduce((sum, skin) => sum + (skin.price || 0), 0) / outputs.length;
                 const prixMaxParItem = (averageOutputValue / 1.25) / inputs.length;
 
+                const generateMarketLink = (skinName) => {
+                  const encodedName = encodeURIComponent(skinName);
+                  const wearTiers = [
+                    'Factory New',
+                    'Minimal Wear',
+                    'Field-Tested',
+                    'Well-Worn',
+                    'Battle-Scarred'
+                  ];
+                  const qualityParams = wearTiers.map(wear => `quality=${encodeURIComponent(wear)}`).join('&');
+                  return `https://market.csgo.com/en/?search=${encodedName}&${qualityParams}`;
+                };
+
                 return (
                   <ul style={{ paddingLeft: '1rem' }}>
                     {inputs.map((skin, i) => {
                       const prixActuel = skin.price ?? 0;
                       const estTropCher = prixActuel > prixMaxParItem;
+                      const marketLink = generateMarketLink(skin.name, skin.wear);
 
                       return (
-                        <li key={i} style={{ marginBottom: '0.5rem' }}>
-                          {skin.name} — Float: {skin.float ?? 'N/A'} — Prix mis à jour:{" "}
-                          <span style={{ color: estTropCher ? '#ff4d4d' : '#4dff88' }}>
-                            {prixActuel.toFixed(2)} €
-                          </span>{" "}
-                          — Max avg. : {prixMaxParItem.toFixed(2)} €
+                        <li key={i} style={{ marginBottom: '0.75rem' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                            <span>
+                              {skin.name} — Float: {skin.float ?? 'N/A'} — Prix mis à jour:{" "}
+                              <span style={{ color: estTropCher ? '#ff4d4d' : '#4dff88' }}>
+                                {prixActuel.toFixed(2)} €
+                              </span>{" "}
+                              — Max avg. : {prixMaxParItem.toFixed(2)} €
+                            </span>
+                            <a
+                              href={marketLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                backgroundColor: '#222831',
+                                color: '#ffd369',
+                                padding: '0.4rem 0.8rem',
+                                borderRadius: '6px',
+                                textDecoration: 'none',
+                                fontWeight: 'bold',
+                                fontSize: '0.85rem',
+                                width: 'fit-content',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                                transition: 'all 0.3s ease'
+                              }}
+                              onMouseEnter={(e) => e.target.style.backgroundColor = '#393e46'}
+                              onMouseLeave={(e) => e.target.style.backgroundColor = '#222831'}
+                            >
+                              🔍 Voir sur Market
+                            </a>
+                          </div>
                         </li>
                       );
                     })}
