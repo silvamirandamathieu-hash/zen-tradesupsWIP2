@@ -45,8 +45,23 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
     const encodedWear = encodeURIComponent(skinWear ?? '');
     return `https://market.csgo.com/en/?search=${encodedName}&quality=${encodedWear}`;
   };
+  const groupSimilarSkins = (skins) => {
+    const groups = {};
 
+    skins.forEach((skin) => {
+      const key = `${skin.rarity}-${skin.collection}-${skin.wear}`;
+      if (!groups[key]) {
+        groups[key] = {
+          ...skin,
+          count: 1,
+        };
+      } else {
+        groups[key].count += 1;
+      }
+    });
 
+    return Object.values(groups);
+  };
 
   const handleNoteChange = async (e) => {
     const newNote = e.target.value;
@@ -138,6 +153,20 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
 
   const amplified = amplifyProfitability(profitability ?? 0);
   const profitabilityColor = getProfitabilityColor(profitability ?? 0);
+  const groupedOutputs = [];
+    const seen = {};
+
+    outputs.forEach(skin => {
+      const key = `${skin.name}-${skin.imageUrl}`;
+      if (seen[key]) {
+        seen[key].chance += skin.chance;
+      } else {
+        seen[key] = { ...skin };
+      }
+    });
+
+    const finalOutputs = Object.values(seen);
+
 
 
   return (
@@ -474,9 +503,22 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
             const generateMarketLink = (name, wear) =>
               `https://market.csgo.com/en/?search=${encodeURIComponent(name)}&quality=${encodeURIComponent(wear ?? '')}`;
 
+            // 🔁 Regrouper les skins similaires
+            const groupedInputs = [];
+            const seen = new Set();
+
+            inputs.forEach((skin) => {
+              const key = `${skin.name}-${skin.wear}`;
+              if (!seen.has(key)) {
+                const count = inputs.filter(s => s.name === skin.name && s.wear === skin.wear).length;
+                groupedInputs.push({ ...skin, count });
+                seen.add(key);
+              }
+            });
+
             return (
               <ul style={{ paddingLeft: 0, listStyle: 'none', marginBottom: '1rem' }}>
-                {inputs.map((skin, i) => {
+                {groupedInputs.map((skin, i) => {
                   const prix = skin.price ?? 0;
                   const tropCher = prix > seuilParItem;
                   const link = generateMarketLink(skin.name, skin.wear);
@@ -488,54 +530,93 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                       borderRadius: '8px',
                       marginBottom: '0.6rem',
                       display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      gap: '1rem'
                     }}>
+                      {/* 🖼️ Image à gauche */}
+                      <img
+                        src={skin.imageUrl}
+                        alt={skin.name}
+                        style={{
+                          width: '64px',
+                          height: '64px',
+                          objectFit: 'contain',
+                          borderRadius: '6px',
+                          backgroundColor: '#2a2a2a',
+                          border: '1px solid #444'
+                        }}
+                      />
+
+                      {/* 📋 Infos à droite */}
                       <div style={{ color: '#eee', flex: 1 }}>
                         <strong>{skin.name}</strong> — Float: {skin.float ?? 'N/A'} — Wear: <span style={{ color: '#ffd369' }}>{skin.wear ?? 'N/A'}</span><br />
                         <span style={{ color: tropCher ? '#ff4d4d' : '#4dff88' }}>{prix.toFixed(2)} €</span> — Seuil conseillé: <span style={{ color: '#ccc' }}>{seuilParItem.toFixed(2)} €</span>
+                        {skin.count > 1 && (
+                          <div style={{ color: '#aaa', marginTop: '0.2rem' }}>× {skin.count} items similaires</div>
+                        )}
                       </div>
-                      <a
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          backgroundColor: '#222831',
-                          color: '#ffd369',
-                          borderRadius: '8px',
-                          width: '2.8rem',
-                          height: '2.8rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '1.2rem',
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                          transition: 'background-color 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#393e46'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = '#222831'}
-                      >
+
+                      {/* 🔍 Bouton */}
+                      <a href={link} target="_blank" rel="noopener noreferrer" style={{
+                        backgroundColor: '#222831',
+                        color: '#ffd369',
+                        borderRadius: '8px',
+                        width: '2.8rem',
+                        height: '2.8rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.2rem',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                        transition: 'background-color 0.3s ease'
+                      }}>
                         🔍
                       </a>
                     </li>
-                  );
+                    );
                 })}
               </ul>
             );
           })()}
 
+
           <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎁 Sorties :</h4>
           <ul style={{ paddingLeft: 0, listStyle: 'none' }}>
             {outputs.filter(s => s?.name).map((skin, i) => (
-              <li key={i} style={{
-                backgroundColor: '#1e1e2f',
-                padding: '0.6rem 0.8rem',
-                borderRadius: '8px',
-                marginBottom: '0.6rem',
-                color: '#eee'
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+                gap: '1rem',
+                marginTop: '1rem'
               }}>
-                <strong>{skin.name}</strong> — Chance: <span style={{ color: '#ffd369' }}>{skin.chance}%</span> — Valeur: <span style={{ color: '#4dff88' }}>{skin.price?.toFixed(2) ?? '—'} €</span>
-              </li>
+                {outputs.filter(s => s?.name).map((skin, i) => (
+                  <div key={i} style={{
+                    backgroundColor: '#1e1e2f',
+                    borderRadius: '8px',
+                    padding: '0.5rem',
+                    textAlign: 'center',
+                    color: '#eee',
+                    boxShadow: '0 0 6px rgba(0,0,0,0.3)'
+                  }}>
+                    <img
+                      src={skin.imageUrl}
+                      alt={skin.name}
+                      style={{
+                        width: '100%',
+                        height: '80px',
+                        objectFit: 'contain',
+                        borderRadius: '6px',
+                        marginBottom: '0.5rem',
+                        backgroundColor: '#2a2a2a'
+                      }}
+                    />
+                    <strong style={{ fontSize: '0.9rem' }}>{skin.name}</strong><br />
+                    <span style={{ color: '#ffd369', fontSize: '0.85rem' }}>{skin.chance}%</span><br />
+                    <span style={{ color: '#4dff88', fontSize: '0.85rem' }}>{skin.price?.toFixed(2) ?? '—'} €</span>
+                  </div>
+                ))}
+              </div>
+
             ))}
           </ul>
 
