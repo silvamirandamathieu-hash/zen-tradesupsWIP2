@@ -51,8 +51,31 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
       localStorage.setItem('outputLinks', JSON.stringify(updatedLinks));
     }
   };
+  function generateLisSkinsUrl(skinName, wear, float) {
+    const formattedName = skinName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/gi, '-') // remplace les espaces et caractères spéciaux
+      .replace(/^-+|-+$/g, ''); // supprime les tirets en début/fin
 
+    const wearFormatted = wear.toLowerCase().replace(/\s+/g, '-');
+    return `https://lis-skins.com/market/csgo/${formattedName}-${wearFormatted}/?sort_by=price_asc&float_to=${float.toFixed(2)}`;
+  }
+  function generateShadowPayUrl(skin) {
+    const nameEncoded = encodeURIComponent(skin.name).replace(/%20/g, '+');
+    const wearEncoded = skin.wear?.replace(/\s/g, '+') ?? 'Field-Tested';
+    const floatTo = skin.float?.toFixed(6) ?? '0.15';
 
+    const exteriors = `["${wearEncoded}"]`;
+    const floatRange = `{"from":0,"to":${floatTo}}`;
+
+    const stattrakParam = skin.isStatTrak ? 'is_stattrak=1' : 'is_stattrak';
+    const souvenirParam = skin.isSouvenir ? '&is_souvenir=1' : '';
+
+    return `https://shadowpay.com/csgo-items?exteriors=${exteriors}&float=${floatRange}&price_from=0&price_to=75143.68&${stattrakParam}${souvenirParam}&hold_days&sort_column=price&sort_dir=asc&search=${nameEncoded}`;
+  }
+  
+
+  
 
   const handleUrlChange = (e) => {
     setUrlInput(e.target.value);
@@ -122,6 +145,8 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
       }
     }
   };
+  
+
 
   const handleUrlDelete = async (urlToDelete) => {
     const updatedUrls = localUrls.filter(u => u !== urlToDelete);
@@ -487,6 +512,8 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
           fontSize: '0.95rem'
         }}>
           <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎒 Entrées :</h4>
+          
+
 
           {outputs.length > 0 && (() => {
             const avgValue = outputs.reduce((sum, s) => sum + (s.price || 0), 0) / outputs.length;
@@ -507,6 +534,41 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                 seenInputs.add(key);
               }
             });
+            const generateMarketLink2 = (skin) => {
+              const name = skin?.name ?? '';
+              const wear = skin?.wear ?? '';
+              const float = skin?.float ?? null;
+
+              // Détection des variantes
+              const isStatTrak = skin?.isStatTrak ?? false;
+              const isSouvenir = skin?.isSouvenir ?? false;
+
+              // Extraction du type d’arme
+              const allTypes = [
+                'AK-47', 'AUG', 'FAMAS', 'Galil AR', 'M4A1-S', 'M4A4', 'SG 553',
+                'AWP', 'G3SG1', 'SCAR-20', 'SSG 08',
+                'MAC-10', 'MP5-SD', 'MP7', 'MP9', 'P90', 'PP-Bizon', 'UMP-45',
+                'M249', 'Negev',
+                'MAG-7', 'Nova', 'Sawed-Off', 'XM1014'
+              ];
+
+              const type = allTypes.find(t => name.toLowerCase().includes(t.toLowerCase())) ?? '';
+
+              // Construction du lien
+              const base = `https://market.csgo.com/en/?sort=price&order=asc`;
+              const search = `&search=${encodeURIComponent(name)} (${encodeURIComponent(wear)})`;
+              const quality = `&quality=${encodeURIComponent(wear)}`;
+              const weaponType = type ? `&type=${encodeURIComponent(type)}` : '';
+              const floatMax = float ? `&floatMax=${float}` : '';
+              const category = isStatTrak
+                ? `&categories=StatTrak™`
+                : isSouvenir
+                ? `&categories=Souvenir`
+                : '';
+
+              return `${base}${search}${quality}${weaponType}${category}${floatMax}`;
+            };
+
 
             // 🔁 Regrouper les sorties identiques
             
@@ -519,6 +581,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                     const prix = skin.price ?? 0;
                     const tropCher = prix > seuilParItem;
                     const link = generateMarketLink(skin.name, skin.wear);
+                    const link2 = generateMarketLink2(skin);
 
                     return (
                       <li key={i} style={{
@@ -549,6 +612,78 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                             <div style={{ color: '#aaa', marginTop: '0.2rem' }}>× {skin.count} items similaires</div>
                           )}
                         </div>
+                        <a
+                          href={generateShadowPayUrl(skin)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            backgroundColor: '#222831',
+                            color: '#ffd369',
+                            borderRadius: '8px',
+                            width: '2.8rem',
+                            height: '2.8rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.2rem',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                            transition: 'background-color 0.3s ease'
+                          }}
+                        >
+                          <img
+                            src="https://shadowpay.com/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                        </a>
+                        {outputs.length > 0 && (
+                          <a
+                            href={generateLisSkinsUrl(inputs[0].name, inputs[0].wear, inputs[0].float)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              backgroundColor: '#222831',
+                              color: '#ffd369',
+                              borderRadius: '8px',
+                              width: '2.8rem',
+                              height: '2.8rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '1.2rem',
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                              transition: 'background-color 0.3s ease' }}
+                              >
+                                <img
+                                  src="https://assets.lis-skins.com/assets/images/logo.svg"
+                                  alt="Lis-Skins"
+                                  style={{
+                                    width: '20px',
+                                    height: '20px'
+                                  }}
+                                />
+
+                              </a>
+                        )}
+                        <a href={link2} target="_blank" rel="noopener noreferrer" style={{
+                          backgroundColor: '#222831',
+                          color: '#ffd369',
+                          borderRadius: '8px',
+                          width: '2.8rem',
+                          height: '2.8rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.2rem',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                          transition: 'background-color 0.3s ease'
+                        }}>
+                          <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                        </a>
                         <a href={link} target="_blank" rel="noopener noreferrer" style={{
                           backgroundColor: '#222831',
                           color: '#ffd369',
@@ -562,7 +697,11 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                           boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                           transition: 'background-color 0.3s ease'
                         }}>
-                          🔍
+                          <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
                         </a>
                       </li>
                     );
