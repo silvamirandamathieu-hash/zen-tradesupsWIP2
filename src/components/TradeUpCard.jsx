@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp, updateTradeUpNote } from '../db';
+import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
 
 function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const [urlInput, setUrlInput] = useState('');
