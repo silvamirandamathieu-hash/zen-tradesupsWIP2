@@ -41,6 +41,7 @@ function InventoryTabs({
     setActiveTab('TradeUp'); // Redirige vers l’éditeur
   };
 
+  
   const renderTabContent = () => {
     switch (activeTab) {
       case 'inventory':
