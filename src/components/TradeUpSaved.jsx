@@ -257,7 +257,7 @@ function TradeUpSaved({ priceMap }) {
                 style={{
                   width: '100%',
                   padding: '1rem',
-                  fontSize: '1rem',
+                  fontSize: '1.6rem',
                   fontWeight: 'bold',
                   backgroundColor: '#3a3a4f',
                   border: `2px solid ${borderColor}`,
@@ -271,12 +271,12 @@ function TradeUpSaved({ priceMap }) {
                 }}
               >
                 <span style={{ flexBasis: '60%' }}>
-                  {visibleCards.includes(trade.id) ? '🔽 Masquer les détails' : '🔍 Afficher les détails'} —{' '}
+                  {visibleCards.includes(trade.id) ? '🔽' : '🔍'} —{' '}
                   <strong>{trade.result?.name}</strong>{' '}
-                  <span style={{ fontStyle: 'italic', color: '#ccc', fontWeight: 'bold' }}>
+                  <span style={{ fontStyle: 'italic', color: '#ccc', fontWeight: 'bold', fontSize: '1.5rem' }}>
                     {trade.collection}
                   </span>{' '}
-                  <span style={{ fontStyle: 'normal', fontSize: '0.9rem' }}>
+                  <span style={{ fontStyle: 'normal', fontSize: '1.4rem' }}>
                     [
                     {getWearAbbreviationsStyled(trade.inputs, trade.isStatTrak).map((span, i) => (
                       <React.Fragment key={i}>
@@ -289,7 +289,7 @@ function TradeUpSaved({ priceMap }) {
                 </span>
 
                 <span style={{
-                  fontSize: '1.2rem',
+                  fontSize: '1.4rem',
                   fontWeight: 'bold',
                   color: textColor,
                   textAlign: 'center',
