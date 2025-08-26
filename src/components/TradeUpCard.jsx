@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
+import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp, updateTradeUpNote } from '../db';
 
 function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const [urlInput, setUrlInput] = useState('');
   const [localUrls, setLocalUrls] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [note, setNote] = useState(trade.note || '');
+
+  useEffect(() => {
+    setNote(trade.note || '');
+  }, [trade]);
 
   useEffect(() => {
     setLocalUrls(trade.urls || []);
@@ -35,6 +40,24 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const handleUrlChange = (e) => {
     setUrlInput(e.target.value);
   };
+  const handleNoteChange = async (e) => {
+    const newNote = e.target.value;
+    setNote(newNote);
+
+    const updatedTrade = { ...trade, note: newNote };
+
+    try {
+      if (isSaved) {
+        await updateSavedTradeUp(id, updatedTrade);
+      } else {
+        await updateCurrentTradeUp(id, updatedTrade);
+      }
+    } catch (err) {
+      console.error('Erreur lors de la mise à jour de la note :', err);
+      alert('❌ Impossible d’enregistrer la note');
+    }
+  };
+
 
   const isValidUrl = (str) => {
     try {
@@ -209,6 +232,48 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
 
       <p><strong>📅 Date :</strong> {new Date(date).toLocaleDateString()}</p>
       <p><strong>🎯 Résultat :</strong> {resultSkin?.name ?? '—'}</p>
+      <div style={{ marginTop: '1.5rem' }}>
+        <label htmlFor="note" style={{
+          display: 'block',
+          fontWeight: 'bold',
+          fontSize: '1rem',
+          color: '#333',
+          marginBottom: '0.5rem'
+        }}>
+          📝 Note personnelle :
+        </label>
+
+        <textarea
+          id="note"
+          value={note}
+          onChange={handleNoteChange}
+          placeholder="Notes..."
+          style={{
+            width: '97%',
+            minHeight: '100px',
+            padding: '0.75rem 1rem',
+            borderRadius: '8px',
+            border: '1px solid #5348b7ff',
+            resize: 'vertical',
+            backgroundColor: '#2a2546ff',
+            color: '#82c2f2ff',
+            fontSize: '0.95rem',
+            fontFamily: 'monospace',
+            boxShadow: 'inset 0 0 5px rgba(255, 0, 0, 0.2)',
+            transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#ff4d4d';
+            e.target.style.boxShadow = '0 0 8px rgba(255, 77, 77, 0.6)';
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = '#8948a1ff';
+            e.target.style.boxShadow = 'inset 0 0 5px rgba(255, 0, 0, 0.2)';
+          }}
+        />
+      </div>
+
+
 
       <div style={{ textAlign: 'center', margin: '1rem 0' }}>
         <p style={{

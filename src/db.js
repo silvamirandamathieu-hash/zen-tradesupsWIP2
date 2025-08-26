@@ -205,3 +205,10 @@ export async function cleanOrphanFavorites() {
   }
   return orphans.length;
 }
+export async function updateTradeUpNote(id, note) {
+  const tradeUp = await db.savedTradeUps.get(id);
+  if (tradeUp) {
+    tradeUp.data.note = note;
+    await db.savedTradeUps.put(tradeUp);
+  }
+}
