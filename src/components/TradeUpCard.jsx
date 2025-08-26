@@ -57,11 +57,6 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const handleUrlChange = (e) => {
     setUrlInput(e.target.value);
   };
-  const generateMarketLink = (skinName, skinWear) => {
-    const encodedName = encodeURIComponent(skinName);
-    const encodedWear = encodeURIComponent(skinWear ?? '');
-    return `https://market.csgo.com/en/?search=${encodedName}&quality=${encodedWear}`;
-  };
 
   const handleNoteChange = async (e) => {
     const newNote = e.target.value;

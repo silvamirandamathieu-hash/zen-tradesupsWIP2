@@ -174,8 +174,87 @@ function App() {
     setPriceMap(newMap);
     localStorage.setItem('priceMap', JSON.stringify(newMap));
   };
+  const handleFullExport = async () => {
+    const backup = {
+      version: '1.0',
+      timestamp: new Date().toISOString(),
+      inventory: await db.inventory.toArray(),
+      allSkins: await db.allSkins.toArray(),
+      history: await db.history.toArray(),
+      currentTradeUps: await db.currentTradeUps.toArray(),
+      savedTradeUps: await db.savedTradeUps.toArray(),
+      favoriteTradeUps: await db.favoriteTradeUps.toArray()
+    };
 
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cs2_full_backup_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
+  const handleFullImport = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+
+        const requiredKeys = [
+          'inventory',
+          'allSkins',
+          'history',
+          'currentTradeUps',
+          'savedTradeUps',
+          'favoriteTradeUps'
+        ];
+
+        const isValid = requiredKeys.every(key => Array.isArray(data[key]));
+        if (!isValid) {
+          alert('❌ Fichier incomplet ou invalide.');
+          return;
+        }
+
+        await db.transaction('rw',
+          db.inventory,
+          db.allSkins,
+          db.history,
+          db.currentTradeUps,
+          db.savedTradeUps,
+          db.favoriteTradeUps,
+          async () => {
+            await db.inventory.clear();
+            await db.allSkins.clear();
+            await db.history.clear();
+            await db.currentTradeUps.clear();
+            await db.savedTradeUps.clear();
+            await db.favoriteTradeUps.clear();
+
+            await db.inventory.bulkAdd(data.inventory);
+            await db.allSkins.bulkAdd(data.allSkins);
+            await db.history.bulkAdd(data.history);
+            await db.currentTradeUps.bulkAdd(data.currentTradeUps);
+            await db.savedTradeUps.bulkAdd(data.savedTradeUps);
+            await db.favoriteTradeUps.bulkAdd(data.favoriteTradeUps);
+          }
+        );
+
+        alert('✅ Import réussi ! Recharge la page pour voir les changements.');
+      } catch (err) {
+        console.error('Erreur import :', err);
+        alert('❌ Fichier corrompu ou erreur de parsing.');
+      }
+    };
+
+    input.click();
+  };
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
@@ -188,23 +267,62 @@ function App() {
       }}>
         <h1>🎮 Gestionnaire de Skins CS</h1>
 
-        {/* 🌗 Toggle mode */}
-        <div style={{ marginBottom: 20 }}>
-          <button
-            onClick={() => setDarkMode(prev => !prev)}
-            style={{
-              marginBottom: '1rem',
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              border: 'none',
-              background: darkMode ? '#334155' : '#e2e8f0',
-              color: darkMode ? '#e8ecef' : '#1f2937',
-              cursor: 'pointer'
-            }}
-          >
-            {darkMode ? '☀️ Mode clair' : '🌙 Mode sombre'}
-          </button>
-        </div>
+        {/* 🌗 Toggle + Actions */}
+          <div style={{
+            marginBottom: 20,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            {/* Bouton mode clair/sombre */}
+            <button
+              onClick={() => setDarkMode(prev => !prev)}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '8px',
+                border: 'none',
+                background: darkMode ? '#334155' : '#e2e8f0',
+                color: darkMode ? '#e8ecef' : '#1f2937',
+                cursor: 'pointer'
+              }}
+            >
+              {darkMode ? '☀️ Mode clair' : '🌙 Mode sombre'}
+            </button>
+
+            {/* Boutons Export / Import */}
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={handleFullExport}
+                style={{
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  background: '#48bb78',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >
+                📤 Export DB
+              </button>
+              <button
+                onClick={handleFullImport}
+                style={{
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  background: '#4299e1',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >
+                📥 Import DB
+              </button>
+            </div>
+          </div>
+
+        
 
         {/* ❗ Erreur */}
         {error && <p style={{ color: 'red' }}>{error}</p>}
