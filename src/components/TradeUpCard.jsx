@@ -6,6 +6,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const [localUrls, setLocalUrls] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [note, setNote] = useState(trade.note || '');
+  const [outputLinks, setOutputLinks] = useState({});
 
   useEffect(() => {
     setNote(trade.note || '');
@@ -36,6 +37,13 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
     alert('🗑️ Supprimé des trade-ups en cours');
     onDelete?.();
   };
+  const handleAddLink = (skinName) => {
+    const url = prompt(`🔗 Ajouter un lien pour ${skinName}`);
+    if (url) {
+      setOutputLinks(prev => ({ ...prev, [skinName]: url }));
+    }
+  };
+
 
   const handleUrlChange = (e) => {
     setUrlInput(e.target.value);
@@ -597,8 +605,37 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                       <strong style={{ fontSize: '0.9rem' }}>{skin.name}</strong><br />
                       <span style={{ color: '#ffd369', fontSize: '0.85rem' }}>{skin.chance.toFixed(2)}%</span><br />
                       <span style={{ color: '#4dff88', fontSize: '0.85rem' }}>{skin.price?.toFixed(2) ?? '—'} €</span>
+
+                      {/* 🔗 Lien si présent */}
+                      {outputLinks[skin.name] && (
+                        <div style={{ marginTop: '0.4rem', fontSize: '0.8rem', color: '#6c63ff' }}>
+                          <a href={outputLinks[skin.name]} target="_blank" rel="noopener noreferrer">
+                            🔗 Voir le lien
+                          </a>
+                        </div>
+                      )}
+
+                      {/* ➕ Bouton pour ajouter */}
+                      <div>
+                      <button
+                        onClick={() => handleAddLink(skin.name)}
+                        style={{
+                          marginTop: '1rem',
+                          backgroundColor: '#393e46',
+                          color: '#ffd369',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '0.3rem 0.6rem',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem'
+                        }}
+                      >
+                        ➕
+                      </button>
+                      </div>
                     </div>
                   ))}
+
                 </div>
           </ul>
 
