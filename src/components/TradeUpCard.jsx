@@ -9,6 +9,12 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const [outputLinks, setOutputLinks] = useState({});
 
   useEffect(() => {
+    const storedLinks = localStorage.getItem('outputLinks');
+    if (storedLinks) {
+      setOutputLinks(JSON.parse(storedLinks));
+    }
+  }, []);
+  useEffect(() => {
     setNote(trade.note || '');
   }, [trade]);
 
@@ -40,9 +46,12 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   const handleAddLink = (skinName) => {
     const url = prompt(`🔗 Ajouter un lien pour ${skinName}`);
     if (url) {
-      setOutputLinks(prev => ({ ...prev, [skinName]: url }));
+      const updatedLinks = { ...outputLinks, [skinName]: url };
+      setOutputLinks(updatedLinks);
+      localStorage.setItem('outputLinks', JSON.stringify(updatedLinks));
     }
   };
+
 
 
   const handleUrlChange = (e) => {
@@ -581,60 +590,98 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                   gap: '1rem',
                   marginTop: '1rem'
                 }}>
-                  {finalOutputs.map((skin, i) => (
-                    <div key={i} style={{
-                      backgroundColor: '#1e1e2f',
-                      borderRadius: '8px',
-                      padding: '0.5rem',
-                      textAlign: 'center',
-                      color: '#eee',
-                      boxShadow: '0 0 6px rgba(0,0,0,0.3)'
-                    }}>
-                      <img
-                        src={skin.imageUrl}
-                        alt={skin.name}
-                        style={{
-                          width: '100%',
-                          height: '80px',
-                          objectFit: 'contain',
-                          borderRadius: '6px',
-                          marginBottom: '0.5rem',
-                          backgroundColor: '#2a2a2a'
-                        }}
-                      />
-                      <strong style={{ fontSize: '0.9rem' }}>{skin.name}</strong><br />
-                      <span style={{ color: '#ffd369', fontSize: '0.85rem' }}>{skin.chance.toFixed(2)}%</span><br />
-                      <span style={{ color: '#4dff88', fontSize: '0.85rem' }}>{skin.price?.toFixed(2) ?? '—'} €</span>
+                  {finalOutputs.map((skin, i) => {
+                    const link = outputLinks[skin.name];
+                    const CardContent = (
+                      <div style={{
+                        backgroundColor: '#1e1e2f',
+                        borderRadius: '8px',
+                        padding: '0.5rem',
+                        textAlign: 'center',
+                        color: '#eee',
+                        boxShadow: '0 0 6px rgba(0,0,0,0.3)',
+                        cursor: link ? 'pointer' : 'default',
+                        transition: 'transform 0.2s ease'
+                      }}>
+                        <img
+                          src={skin.imageUrl}
+                          alt={skin.name}
+                          style={{
+                            width: '100%',
+                            height: '80px',
+                            objectFit: 'contain',
+                            borderRadius: '6px',
+                            marginBottom: '0.5rem',
+                            backgroundColor: '#2a2a2a'
+                          }}
+                        />
+                        <strong style={{ fontSize: '0.9rem' }}>{skin.name}</strong><br />
+                        <span style={{ color: '#ffd369', fontSize: '0.85rem' }}>{skin.chance.toFixed(2)}%</span><br />
+                        <span style={{ color: '#4dff88', fontSize: '0.85rem' }}>{skin.price?.toFixed(2) ?? '—'} €</span>
 
-                      {/* 🔗 Lien si présent */}
-                      {outputLinks[skin.name] && (
-                        <div style={{ marginTop: '0.4rem', fontSize: '0.8rem', color: '#6c63ff' }}>
-                          <a href={outputLinks[skin.name]} target="_blank" rel="noopener noreferrer">
-                            🔗 Voir le lien
-                          </a>
+                        {/* ➕ Bouton pour ajouter un lien */}
+                        {/* ➕ Bouton pour ajouter un lien */}
+                        <div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              handleAddLink(skin.name);
+                            }}
+                            style={{
+                              backgroundColor: 'transparent',
+                              border: 'none',
+                              padding: '2px',
+                              marginRight: '4px',
+                              cursor: 'pointer',
+                              fontSize: '1rem',
+                              color: '#ffd369'
+                            }}
+                            title="Ajouter un lien"
+                          >
+                            ➕
+                          </button>
+
+                          {/* ✏️ Bouton pour modifier le lien */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              handleAddLink(skin.name);
+                            }}
+                            style={{
+                              backgroundColor: 'transparent',
+                              border: 'none',
+                              padding: '2px',
+                              cursor: 'pointer',
+                              fontSize: '1rem',
+                              color: '#ffd369'
+                            }}
+                            title="Modifier le lien"
+                          >
+                            ✏️
+                          </button>
                         </div>
-                      )}
-
-                      {/* ➕ Bouton pour ajouter */}
-                      <div>
-                      <button
-                        onClick={() => handleAddLink(skin.name)}
-                        style={{
-                          marginTop: '1rem',
-                          backgroundColor: '#393e46',
-                          color: '#ffd369',
-                          border: 'none',
-                          borderRadius: '6px',
-                          padding: '0.3rem 0.6rem',
-                          cursor: 'pointer',
-                          fontSize: '0.85rem'
-                        }}
-                      >
-                        ➕
-                      </button>
                       </div>
-                    </div>
-                  ))}
+                    );
+
+                    return link ? (
+                      <a
+                        key={i}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: 'none' }}
+                      >
+                        {CardContent}
+                      </a>
+                    ) : (
+                      <div key={i}>
+                        {CardContent}
+                      </div>
+                    );
+                  })}
+
 
                 </div>
           </ul>
