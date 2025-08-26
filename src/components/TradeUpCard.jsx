@@ -47,6 +47,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   };
 
 
+
   const handleNoteChange = async (e) => {
     const newNote = e.target.value;
     setNote(newNote);
@@ -455,109 +456,116 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
           📦 Voir les détails des skins
         </summary>
 
-        <div>
-          <h4 style={{ color: '#ffd369' }}>🎒 Entrées :</h4>
-          {outputs.length > 0 && (
-            <>
-              {(() => {
-                const averageOutputValue = outputs.reduce((sum, skin) => sum + (skin.price || 0), 0) / outputs.length;
-                const prixMaxParItem = (averageOutputValue / 1.25) / inputs.length;
+        <div style={{
+          marginTop: '1rem',
+          backgroundColor: '#121212',
+          padding: '1rem',
+          borderRadius: '10px',
+          boxShadow: '0 0 10px rgba(0,0,0,0.4)',
+          fontFamily: 'Segoe UI, sans-serif',
+          fontSize: '0.95rem'
+        }}>
+          <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎒 Entrées :</h4>
 
-                const generateMarketLink = (skinName) => {
-                  const encodedName = encodeURIComponent(skinName);
-                  const wearTiers = [
-                    'Factory New',
-                    'Minimal Wear',
-                    'Field-Tested',
-                    'Well-Worn',
-                    'Battle-Scarred'
-                  ];
-                  const qualityParams = wearTiers.map(wear => `quality=${encodeURIComponent(wear)}`).join('&');
-                  return `https://market.csgo.com/en/?search=${encodedName}&${qualityParams}`;
-                };
+          {outputs.length > 0 && (() => {
+            const avgValue = outputs.reduce((sum, s) => sum + (s.price || 0), 0) / outputs.length;
+            const seuilParItem = (avgValue / 1.25) / inputs.length;
 
-                return (
-                  <ul style={{ paddingLeft: '1rem' }}>
-                    {inputs.map((skin, i) => {
-                      const prixActuel = skin.price ?? 0;
-                      const estTropCher = prixActuel > prixMaxParItem;
-                      const marketLink = generateMarketLink(skin.name, skin.wear);
+            const generateMarketLink = (name, wear) =>
+              `https://market.csgo.com/en/?search=${encodeURIComponent(name)}&quality=${encodeURIComponent(wear ?? '')}`;
 
-                      return (
-                        <li key={i} style={{ marginBottom: '0.75rem' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                            <span>
-                              {skin.name} — Float: {skin.float ?? 'N/A'} — Prix mis à jour:{" "}
-                              <span style={{ color: estTropCher ? '#ff4d4d' : '#4dff88' }}>
-                                {prixActuel.toFixed(2)} €
-                              </span>{" "}
-                              — Max avg. : {prixMaxParItem.toFixed(2)} €
-                            </span>
-                            <a
-                              href={marketLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{
-                                backgroundColor: '#222831',
-                                color: '#ffd369',
-                                padding: '0.4rem 0.8rem',
-                                borderRadius: '6px',
-                                textDecoration: 'none',
-                                fontWeight: 'bold',
-                                fontSize: '0.85rem',
-                                width: 'fit-content',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                                transition: 'all 0.3s ease'
-                              }}
-                              onMouseEnter={(e) => e.target.style.backgroundColor = '#393e46'}
-                              onMouseLeave={(e) => e.target.style.backgroundColor = '#222831'}
-                            >
-                              🔍 Voir sur Market
-                            </a>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                );
-              })()}
-            </>
-          )}
+            return (
+              <ul style={{ paddingLeft: 0, listStyle: 'none', marginBottom: '1rem' }}>
+                {inputs.map((skin, i) => {
+                  const prix = skin.price ?? 0;
+                  const tropCher = prix > seuilParItem;
+                  const link = generateMarketLink(skin.name, skin.wear);
 
-          <h4 style={{ color: '#ffd369', marginTop: '1rem' }}>🎁 Sorties :</h4>
-          <ul style={{ paddingLeft: '1rem' }}>
-            {outputs
-              .filter(skin => skin && skin.name)
-              .map((skin, i) => (
-                <li key={i} style={{ marginBottom: '0.5rem' }}>
-                  {skin.name} — Chance: {skin.chance}% — Valeur mise à jour: {skin.price?.toFixed(2) ?? '—'} €
-                </li>
-              ))
-            }
+                  return (
+                    <li key={i} style={{
+                      backgroundColor: '#1e1e2f',
+                      padding: '0.6rem 0.8rem',
+                      borderRadius: '8px',
+                      marginBottom: '0.6rem',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}>
+                      <div style={{ color: '#eee', flex: 1 }}>
+                        <strong>{skin.name}</strong> — Float: {skin.float ?? 'N/A'} — Wear: <span style={{ color: '#ffd369' }}>{skin.wear ?? 'N/A'}</span><br />
+                        <span style={{ color: tropCher ? '#ff4d4d' : '#4dff88' }}>{prix.toFixed(2)} €</span> — Seuil conseillé: <span style={{ color: '#ccc' }}>{seuilParItem.toFixed(2)} €</span>
+                      </div>
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          backgroundColor: '#222831',
+                          color: '#ffd369',
+                          borderRadius: '8px',
+                          width: '2.8rem',
+                          height: '2.8rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.2rem',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                          transition: 'background-color 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#393e46'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = '#222831'}
+                      >
+                        🔍
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            );
+          })()}
+
+          <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎁 Sorties :</h4>
+          <ul style={{ paddingLeft: 0, listStyle: 'none' }}>
+            {outputs.filter(s => s?.name).map((skin, i) => (
+              <li key={i} style={{
+                backgroundColor: '#1e1e2f',
+                padding: '0.6rem 0.8rem',
+                borderRadius: '8px',
+                marginBottom: '0.6rem',
+                color: '#eee'
+              }}>
+                <strong>{skin.name}</strong> — Chance: <span style={{ color: '#ffd369' }}>{skin.chance}%</span> — Valeur: <span style={{ color: '#4dff88' }}>{skin.price?.toFixed(2) ?? '—'} €</span>
+              </li>
+            ))}
           </ul>
+
+          <label style={{ display: 'block', marginTop: '1.5rem', color: '#ffd369', fontWeight: 'bold' }}>
+            🔗 Ajouter une URL :
+            <input
+              type="url"
+              name="url"
+              value={urlInput}
+              onChange={handleUrlChange}
+              onKeyDown={handleUrlSubmit}
+              placeholder="https://exemple.com/trade-up"
+              style={{
+                width: '100%',
+                padding: '0.6rem',
+                marginTop: '0.4rem',
+                borderRadius: '6px',
+                border: '1px solid #6c63ff',
+                backgroundColor: '#1e1e2f',
+                color: '#fff',
+                fontSize: '0.9rem',
+                boxShadow: 'inset 0 0 4px rgba(108,99,255,0.3)'
+              }}
+            />
+            <small style={{ color: '#aaa', display: 'block', marginTop: '0.3rem' }}>Appuie sur Entrée pour enregistrer</small>
+          </label>
         </div>
 
-        <label style={{ display: 'block', marginTop: '1.5rem' }}>
-          🔗 Ajouter une URL :
-          <input
-            type="url"
-            name="url"
-            value={urlInput}
-            onChange={handleUrlChange}
-            onKeyDown={handleUrlSubmit}
-            placeholder="https://exemple.com/trade-up"
-            style={{
-              width: '100%',
-              padding: '0.6rem',
-              marginTop: '0.5rem',
-              borderRadius: '6px',
-              border: '1px solid #6c63ff',
-              backgroundColor: '#1e1e2f',
-              color: '#fff'
-            }}
-          />
-          <small style={{ color: '#ccc' }}>Appuie sur Entrée pour enregistrer</small>
-        </label>
+
+
       </details>
 
     </div>
