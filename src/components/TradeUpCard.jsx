@@ -142,7 +142,7 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
   function generateShadowPayUrl(skin) {
     const nameEncoded = encodeURIComponent(skin.name).replace(/%20/g, '+');
     const wearEncoded = skin.wear?.replace(/\s/g, '+') ?? 'Field-Tested';
-    const floatTo = skin.float?.toFixed(6) ?? '0.15';
+    const floatTo = skin.float?.toFixed(6) ?? '0.2';
 
     const exteriors = `["${wearEncoded}"]`;
     const floatRange = `{"from":0,"to":${floatTo}}`;
@@ -264,6 +264,49 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
               }
             });
             const finalOutputs = Object.values(seenOutputs);
+const avgValue = outputs.reduce((sum, s) => sum + (s.price || 0), 0) / outputs.length;
+            const seuilParItem = (avgValue / 1.25) / inputs.length;
+
+            const generateMarketLink = (name, wear) =>
+              `https://market.csgo.com/en/?search=${encodeURIComponent(name)}&quality=${encodeURIComponent(wear ?? '')}`;
+
+            // 🔁 Regrouper les skins similaires (Entrées)
+            const groupedInputs = [];
+            const seenInputs = new Set();
+const generateMarketLink2 = (skin) => {
+              const name = skin?.name ?? '';
+              const wear = skin?.wear ?? '';
+              const float = skin?.float ?? null;
+
+              // Détection des variantes
+              const isStatTrak = skin?.isStatTrak ?? false;
+              const isSouvenir = skin?.isSouvenir ?? false;
+
+              // Extraction du type d’arme
+              const allTypes = [
+                'AK-47', 'AUG', 'FAMAS', 'Galil AR', 'M4A1-S', 'M4A4', 'SG 553',
+                'AWP', 'G3SG1', 'SCAR-20', 'SSG 08',
+                'MAC-10', 'MP5-SD', 'MP7', 'MP9', 'P90', 'PP-Bizon', 'UMP-45',
+                'M249', 'Negev',
+                'MAG-7', 'Nova', 'Sawed-Off', 'XM1014'
+              ];
+
+              const type = allTypes.find(t => name.toLowerCase().includes(t.toLowerCase())) ?? '';
+
+              // Construction du lien
+              const base = `https://market.csgo.com/en/?sort=price&order=asc`;
+              const search = `&search=${encodeURIComponent(name)} (${encodeURIComponent(wear)})`;
+              const quality = `&quality=${encodeURIComponent(wear)}`;
+              const weaponType = type ? `&type=${encodeURIComponent(type)}` : '';
+              const floatMax = float ? `&floatMax=${float}` : '';
+              const category = isStatTrak
+                ? `&categories=StatTrak™`
+                : isSouvenir
+                ? `&categories=Souvenir`
+                : '';
+
+              return `${base}${search}${quality}${weaponType}${category}${floatMax}`;
+            };
 
 
 
@@ -596,44 +639,71 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
             <h4>Skins similaires (collection + wear + rareté)</h4>
             <div className="inputs-grid">
               {matchingSkins.map((skin, i) => {
-                const price = priceMap?.[skin.name]?.price ?? 0;
+                const price = skin.price ?? 0;
+                const statTrakPrefix = skin.isStatTrak ? 'StatTrak™ ' : '';
+                const fullName = `${statTrakPrefix}${skin.name}`;
+                const wearSuffix = skin.wear ? ` (${skin.wear})` : '';
+                const encodedName = encodeURIComponent(fullName + wearSuffix);
+                const matchingInput = inputs.find(inp => inp.wear === skin.wear);
+                const floatValue = matchingInput?.float ?? '';
+                const skinWithFloat = { ...skin, float: floatValue };
+
+                
+                const lisUrl = `https://lis-skins.com/market/${encodeURIComponent(skin.name)}?float=${floatValue}`;
+                const marketCsgoUrl = `generateMarketLink2 remplacer avec le float de flaot value pls`;
+                const shadowpayUrl = `https://shadowpay.com/market/${encodeURIComponent(skin.name)}?float=${floatValue}`;
                 return (
                   <div key={i} className={`skin-card ${skin.rarity?.toLowerCase()}`}>
                     <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
                     <div className="skin-info">
                       <p className="skin-name">{skin.name}</p>
-                      <p className="skin-wear">{skin.wear}</p>
+                      <p className="skin-wear">{wearSuffix}</p>
                       <p className={`rarity-${skin.rarity?.toLowerCase()}`}>{skin.rarity}</p>
-                      <p className="skin-price">{skin.price} €</p>
+                      <p className="skin-price">{price} €</p>
                     </div>
 
                     <div className="input-actions actions-hidden">
                       <ul>
                         <li>
                           <a
-                            href={`https://steamcommunity.com/market/listings/730/${encodeURIComponent(skin.name)}`}
+                            href={generateLisSkinsUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            🛒 Steam Market
+                            <img
+                                  src="https://assets.lis-skins.com/assets/images/logo.svg"
+                                  alt="Lis-Skins"
+                                  style={{
+                                    width: '20px',
+                                    height: '20px'
+                                  }}
+                                />
                           </a>
                         </li>
                         <li>
                           <a
-                            href={`https://csfloat.com/search?query=${encodeURIComponent(skin.name)}`}
+                            href={generateShadowPayUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            🔍 CSFloat
+                            <img
+                            src="https://shadowpay.com/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
                           </a>
                         </li>
                         <li>
                           <a
-                            href={`https://buff.163.com/market/csgo#search=${encodeURIComponent(skin.name)}`}
+                            href={generateMarketLink2(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            💱 Buff163
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
                           </a>
                         </li>
                       </ul>
@@ -652,15 +722,7 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
 
 
           {outputs.length > 0 && (() => {
-            const avgValue = outputs.reduce((sum, s) => sum + (s.price || 0), 0) / outputs.length;
-            const seuilParItem = (avgValue / 1.25) / inputs.length;
-
-            const generateMarketLink = (name, wear) =>
-              `https://market.csgo.com/en/?search=${encodeURIComponent(name)}&quality=${encodeURIComponent(wear ?? '')}`;
-
-            // 🔁 Regrouper les skins similaires (Entrées)
-            const groupedInputs = [];
-            const seenInputs = new Set();
+            
 
             inputs.forEach((skin) => {
               const key = `${skin.name}-${skin.wear}`;
@@ -670,42 +732,7 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
                 seenInputs.add(key);
               }
             });
-            const generateMarketLink2 = (skin) => {
-              const name = skin?.name ?? '';
-              const wear = skin?.wear ?? '';
-              const float = skin?.float ?? null;
-
-              // Détection des variantes
-              const isStatTrak = skin?.isStatTrak ?? false;
-              const isSouvenir = skin?.isSouvenir ?? false;
-
-              // Extraction du type d’arme
-              const allTypes = [
-                'AK-47', 'AUG', 'FAMAS', 'Galil AR', 'M4A1-S', 'M4A4', 'SG 553',
-                'AWP', 'G3SG1', 'SCAR-20', 'SSG 08',
-                'MAC-10', 'MP5-SD', 'MP7', 'MP9', 'P90', 'PP-Bizon', 'UMP-45',
-                'M249', 'Negev',
-                'MAG-7', 'Nova', 'Sawed-Off', 'XM1014'
-              ];
-
-              const type = allTypes.find(t => name.toLowerCase().includes(t.toLowerCase())) ?? '';
-
-              // Construction du lien
-              const base = `https://market.csgo.com/en/?sort=price&order=asc`;
-              const search = `&search=${encodeURIComponent(name)} (${encodeURIComponent(wear)})`;
-              const quality = `&quality=${encodeURIComponent(wear)}`;
-              const weaponType = type ? `&type=${encodeURIComponent(type)}` : '';
-              const floatMax = float ? `&floatMax=${float}` : '';
-              const category = isStatTrak
-                ? `&categories=StatTrak™`
-                : isSouvenir
-                ? `&categories=Souvenir`
-                : '';
-
-              return `${base}${search}${quality}${weaponType}${category}${floatMax}`;
-            };
-
-
+            
             // 🔁 Regrouper les sorties identiques
             
 
