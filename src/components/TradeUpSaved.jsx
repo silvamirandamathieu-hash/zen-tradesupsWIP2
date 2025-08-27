@@ -8,6 +8,8 @@ import {
 } from '../db';
 import TradeUpCard from './TradeUpCard';
 import { enrichTradeUp } from './EnrichedTradeUp';
+import { getAllInventory } from '../db';
+
 
 function TradeUpSaved({ priceMap }) {
   const [savedTradeUps, setSavedTradeUps] = useState([]);
@@ -18,6 +20,11 @@ function TradeUpSaved({ priceMap }) {
   const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [collectionFilter, setCollectionFilter] = useState('');
+  const [allSkins, setAllSkins] = useState([]);
+
+  useEffect(() => {
+    getAllInventory().then(setAllSkins);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -330,6 +337,7 @@ function TradeUpSaved({ priceMap }) {
                     isSaved={true}
                     priceMap={priceMap}
                     onDelete={() => handleDelete(trade.id)}
+                    allSkins={allSkins}
                   />
                 </div>
               )}

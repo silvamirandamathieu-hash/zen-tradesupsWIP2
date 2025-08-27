@@ -21,22 +21,38 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
   useEffect(() => {
     setLocalUrls(trade.urls || []);
   }, [trade]);
-  const normalize = str => str?.toLowerCase().replace(/[^a-z0-9]/gi, '').trim();
-    const matchingSkins = useMemo(() => {
-    const criteria = (trade?.inputs ?? [])
-      .filter(skin => skin?.collection && skin?.wear)
+
+  const normalize = str =>
+    typeof str === 'string'
+      ? str.toLowerCase().replace(/[^a-z0-9]/gi, '').trim()
+      : '';
+
+  const matchingSkins = useMemo(() => {
+    if (!Array.isArray(trade?.inputs) || !Array.isArray(allSkins)) return [];
+
+    const criteria = trade.inputs
+      .filter(skin => skin?.collection && skin?.wear && skin?.rarity)
       .map(skin => ({
         collection: normalize(skin.collection),
-        wear: normalize(skin.wear)
+        wear: normalize(skin.wear),
+        rarity: normalize(skin.rarity)
       }));
 
-    return (allSkins ?? []).filter(skin =>
-      criteria.some(c =>
-        normalize(skin.collection) === c.collection &&
-        normalize(skin.wear) === c.wear
-      )
-    );
+    return allSkins.filter(skin => {
+      const skinNormalized = {
+        collection: normalize(skin.collection),
+        wear: normalize(skin.wear),
+        rarity: normalize(skin.rarity)
+      };
+
+      return criteria.some(c =>
+        c.collection === skinNormalized.collection &&
+        c.wear === skinNormalized.wear &&
+        c.rarity === skinNormalized.rarity
+      );
+    });
   }, [trade?.inputs, allSkins]);
+
 
 
 
