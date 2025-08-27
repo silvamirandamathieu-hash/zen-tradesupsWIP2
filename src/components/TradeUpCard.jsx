@@ -21,6 +21,11 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
   useEffect(() => {
     setLocalUrls(trade.urls || []);
   }, [trade]);
+  const getPriceKey = (skin) => {
+    const prefix = skin.isStatTrak ? "StatTrak™ " : skin.isSouvenir ? "Souvenir " : "";
+    return `${prefix}${skin.name} (${skin.wear})`;
+  };
+
 
   const normalize = str =>
     typeof str === 'string'
@@ -30,28 +35,51 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
   const matchingSkins = useMemo(() => {
     if (!Array.isArray(trade?.inputs) || !Array.isArray(allSkins)) return [];
 
+    const normalize = str =>
+      typeof str === 'string'
+        ? str.toLowerCase().replace(/[^a-z0-9]/gi, '').trim()
+        : '';
+
     const criteria = trade.inputs
       .filter(skin => skin?.collection && skin?.wear && skin?.rarity)
       .map(skin => ({
         collection: normalize(skin.collection),
         wear: normalize(skin.wear),
-        rarity: normalize(skin.rarity)
+        rarity: normalize(skin.rarity),
+        isStatTrak: !!skin.isStatTrak,
+        isSouvenir: !!skin.isSouvenir
       }));
 
+    const seen = new Set();
+
     return allSkins.filter(skin => {
+      const key = `${normalize(skin.name)}-${normalize(skin.collection)}-${normalize(skin.wear)}-${normalize(skin.rarity)}-${skin.isStatTrak}-${skin.isSouvenir}`;
+
       const skinNormalized = {
         collection: normalize(skin.collection),
         wear: normalize(skin.wear),
-        rarity: normalize(skin.rarity)
+        rarity: normalize(skin.rarity),
+        isStatTrak: !!skin.isStatTrak,
+        isSouvenir: !!skin.isSouvenir
       };
 
-      return criteria.some(c =>
+      const isMatch = criteria.some(c =>
         c.collection === skinNormalized.collection &&
         c.wear === skinNormalized.wear &&
-        c.rarity === skinNormalized.rarity
+        c.rarity === skinNormalized.rarity &&
+        c.isStatTrak === skinNormalized.isStatTrak &&
+        c.isSouvenir === skinNormalized.isSouvenir
       );
+
+      if (isMatch && !seen.has(key)) {
+        seen.add(key);
+        return true;
+      }
+
+      return false;
     });
   }, [trade?.inputs, allSkins]);
+
 
 
 
@@ -569,10 +597,19 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
             ) : (
               <div className="skin-grid">
                 {matchingSkins.map((skin, i) => (
-                  <div key={i} className="skin-card">
+                  <div key={i} className="similar-skin">
                     <img src={skin.imageUrl} alt={skin.name} />
-                    <p>{skin.name}</p>
-                    <p>{skin.collection} — {skin.wear}</p>
+                    <div className="skin-info">
+                      <p className="skin-name">{skin.name}</p>
+                      <p className="skin-meta">
+                        {skin.collection} • {skin.wear} 
+                      </p>
+                      <p>{skin.price}</p>
+                      <p className="skin-tags">
+                        {skin.isStatTrak && <span className="tag stattrak">StatTrak™</span>}
+                        {skin.isSouvenir && <span className="tag souvenir">Souvenir</span>}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
