@@ -706,6 +706,136 @@ const generateMarketLink2 = (skin) => {
                           />
                           </a>
                         </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateMarketLink2(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://market.csgo.com/ru/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
                       </ul>
                     </div>
                   </div>

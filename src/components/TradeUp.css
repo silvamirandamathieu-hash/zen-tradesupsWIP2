@@ -900,7 +900,7 @@
 
 /* Boutons cachés par défaut */
 .input-actions.actions-hidden {
-  max-height: 0;
+  max-height: 400px;
   opacity: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, opacity 0.3s ease;
@@ -908,7 +908,7 @@
 
 /* Affichage au hover */
 .skin-card:hover .input-actions.actions-hidden {
-  max-height: 200px;
+  max-height: 400px;
   opacity: 1;
   margin-top: 8px;
 }
@@ -927,7 +927,7 @@
   background-color: #2a2d35;
   color: #e0e4ec;
   font-size: 0.85rem;
-  padding: 10px 15px;
+  padding: 2px 35px;
   border-radius: 6px;
   text-decoration: none;
   transition: background 0.2s ease;
