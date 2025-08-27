@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
 
-function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
+function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins, priceMap}) {
   const [urlInput, setUrlInput] = useState('');
   const [localUrls, setLocalUrls] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -25,6 +25,27 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
     const prefix = skin.isStatTrak ? "StatTrak™ " : skin.isSouvenir ? "Souvenir " : "";
     return `${prefix}${skin.name} (${skin.wear})`;
   };
+  function SkinListItem({ skin, priceMap, onAddLink }) {
+    const price = priceMap?.[getPriceKey(skin)]?.price ?? 0;
+    const lisUrl = generateLisSkinsUrl(skin);
+    const shadowUrl = generateShadowPayUrl(skin);
+
+    return (
+      <li className="skin-list-item">
+        <img src={skin.image} alt={skin.name} className="skin-thumb" />
+        <div className="skin-details">
+          <strong>{skin.name}</strong>
+          <p>Float: {skin.float?.toFixed(3) ?? 'N/A'} • {skin.wear} • {skin.rarity}</p>
+          <p>Prix estimé : {price.toFixed(2)} €</p>
+          <div className="skin-links">
+            {lisUrl && <a href={lisUrl} target="_blank" rel="noopener noreferrer">LisSkins</a>}
+            {shadowUrl && <a href={shadowUrl} target="_blank" rel="noopener noreferrer">ShadowPay</a>}
+          </div>
+        </div>
+      </li>
+    );
+  }
+
 
 
   const normalize = str =>
@@ -591,30 +612,37 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
           fontSize: '0.95rem'
         }}>
           <section className="matching-skins">
-            <h3>🔍 Skins similaires (collection + wear)</h3>
+            <h3>🔍 Skins similaires (collection + wear + rareté)</h3>
             {matchingSkins.length === 0 ? (
               <p>Aucun skin correspondant trouvé.</p>
             ) : (
-              <div className="skin-grid">
-                {matchingSkins.map((skin, i) => (
-                  <div key={i} className="similar-skin">
-                    <img src={skin.imageUrl} alt={skin.name} />
-                    <div className="skin-info">
-                      <p className="skin-name">{skin.name}</p>
-                      <p className="skin-meta">
-                        {skin.collection} • {skin.wear} 
-                      </p>
-                      <p>{skin.price}</p>
-                      <p className="skin-tags">
-                        {skin.isStatTrak && <span className="tag stattrak">StatTrak™</span>}
-                        {skin.isSouvenir && <span className="tag souvenir">Souvenir</span>}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <ul className="skin-list">
+                {matchingSkins.map((skin, i) => {
+                  const price = priceMap?.[getPriceKey(skin)]?.price ?? 0;
+                  const lisUrl = generateLisSkinsUrl(skin);
+                  const shadowUrl = generateShadowPayUrl(skin);
+
+                  return (
+                    <li key={i} className="skin-list-item">
+                      <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
+                      <div className="skin-details">
+                        <strong>{skin.name}</strong>
+                        <p>
+                          Float: {skin.float?.toFixed(3) ?? 'N/A'} • {skin.wear} • {skin.rarity}
+                        </p>
+                        <p>Prix estimé : {price.toFixed(2)} €</p>
+                        <div className="skin-tags">
+                          {skin.isStatTrak && <span className="tag stattrak">StatTrak™</span>}
+                          {skin.isSouvenir && <span className="tag souvenir">Souvenir</span>}
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
           </section>
+
 
 
           <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎒 Entrées :</h4>

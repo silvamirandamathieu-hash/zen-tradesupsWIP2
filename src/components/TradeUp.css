@@ -749,21 +749,6 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   transition: transform 0.2s ease, box-shadow 0.3s ease, filter 0.3s ease;
 }
-.similar-skin {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 150px;
-  margin: 8px;
-  overflow: hidden;
-  text-align: center;
-  font-size: 0.85rem;
-}
-.similar-skin img {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-}
 
 .filter-row button:hover {
   transform: scale(1.05);
