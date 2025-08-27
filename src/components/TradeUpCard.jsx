@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
 
-function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
+function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
   const [urlInput, setUrlInput] = useState('');
   const [localUrls, setLocalUrls] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -21,6 +21,19 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
   useEffect(() => {
     setLocalUrls(trade.urls || []);
   }, [trade]);
+
+  const matchingSkins = useMemo(() => {
+    const criteria = (trade?.inputs ?? [])
+      .filter(skin => skin?.collection && skin?.wear)
+      .map(skin => ({ collection: skin.collection, wear: skin.wear }));
+
+    return (allSkins ?? []).filter(skin =>
+      criteria.some(c =>
+        skin.collection === c.collection && skin.wear === c.wear
+      )
+    );
+  }, [trade?.inputs, allSkins]);
+
 
   if (!trade) return null;
 
@@ -180,6 +193,8 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
       alert('❌ Impossible de supprimer l’URL');
     }
   };
+  
+
 
   const validInputs = inputs.filter(skin => skin && skin.name);
   const averageFloat = validInputs.length > 0
@@ -526,6 +541,23 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
           fontFamily: 'Segoe UI, sans-serif',
           fontSize: '0.95rem'
         }}>
+          <section className="matching-skins">
+            <h3>🔍 Skins similaires (collection + wear)</h3>
+            {matchingSkins.length === 0 ? (
+              <p>Aucun skin correspondant trouvé.</p>
+            ) : (
+              <div className="skin-grid">
+                {matchingSkins.map((skin, i) => (
+                  <div key={i} className="skin-card">
+                    <img src={skin.imageUrl} alt={skin.name} />
+                    <p>{skin.name}</p>
+                    <p>{skin.collection} — {skin.wear}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
           <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎒 Entrées :</h4>
           
 

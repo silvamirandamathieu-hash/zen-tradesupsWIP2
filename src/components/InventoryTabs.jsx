@@ -85,6 +85,7 @@ function InventoryTabs({
             priceMap={priceMap}
             editingTradeUp={editingTradeUp}
             onRefreshPrices={handleRefreshPrices}
+            allSkins={allInventory} 
           />
         );
 
