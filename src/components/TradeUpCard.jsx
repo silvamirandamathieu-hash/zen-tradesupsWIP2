@@ -51,15 +51,30 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
       localStorage.setItem('outputLinks', JSON.stringify(updatedLinks));
     }
   };
-  function generateLisSkinsUrl(skinName, wear, float) {
-    const formattedName = skinName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/gi, '-') // remplace les espaces et caractères spéciaux
-      .replace(/^-+|-+$/g, ''); // supprime les tirets en début/fin
+  function generateLisSkinsUrl(skin) {
+    if (!skin || !skin.name || !skin.wear || skin.float === undefined) return null;
 
-    const wearFormatted = wear.toLowerCase().replace(/\s+/g, '-');
-    return `https://lis-skins.com/market/csgo/${formattedName}-${wearFormatted}/?sort_by=price_asc&float_to=${float.toFixed(2)}`;
+    const isStatTrak = skin.isStatTrak ?? false;
+
+    let cleanedName = skin.name
+      .replace(/StatTrak™?\s*\|\s*/i, '')
+      .replace(/\|\s*/g, '');
+
+    let formattedName = cleanedName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-+|-+$/g, '');
+
+    if (isStatTrak) {
+      formattedName = `stattrak-${formattedName}`;
+    }
+
+    const wearFormatted = skin.wear.toLowerCase().replace(/\s+/g, '-');
+    return `https://lis-skins.com/market/csgo/${formattedName}-${wearFormatted}/?sort_by=price_asc&float_to=${skin.float.toFixed(2)}`;
   }
+
+
+
   function generateShadowPayUrl(skin) {
     const nameEncoded = encodeURIComponent(skin.name).replace(/%20/g, '+');
     const wearEncoded = skin.wear?.replace(/\s/g, '+') ?? 'Field-Tested';
@@ -638,7 +653,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id }) {
                         </a>
                         {outputs.length > 0 && (
                           <a
-                            href={generateLisSkinsUrl(inputs[0].name, inputs[0].wear, inputs[0].float)}
+                            href={generateLisSkinsUrl(inputs[0])}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
