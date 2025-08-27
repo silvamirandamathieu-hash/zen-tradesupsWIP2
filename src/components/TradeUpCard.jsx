@@ -21,18 +21,23 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
   useEffect(() => {
     setLocalUrls(trade.urls || []);
   }, [trade]);
-
-  const matchingSkins = useMemo(() => {
+  const normalize = str => str?.toLowerCase().replace(/[^a-z0-9]/gi, '').trim();
+    const matchingSkins = useMemo(() => {
     const criteria = (trade?.inputs ?? [])
       .filter(skin => skin?.collection && skin?.wear)
-      .map(skin => ({ collection: skin.collection, wear: skin.wear }));
+      .map(skin => ({
+        collection: normalize(skin.collection),
+        wear: normalize(skin.wear)
+      }));
 
     return (allSkins ?? []).filter(skin =>
       criteria.some(c =>
-        skin.collection === c.collection && skin.wear === c.wear
+        normalize(skin.collection) === c.collection &&
+        normalize(skin.wear) === c.wear
       )
     );
   }, [trade?.inputs, allSkins]);
+
 
 
   if (!trade) return null;
@@ -557,6 +562,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins}) {
               </div>
             )}
           </section>
+
 
           <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎒 Entrées :</h4>
           
