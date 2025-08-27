@@ -801,6 +801,13 @@
 }
 
 /* Carte individuelle */
+.tradeup-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 1rem 0;
+}
+
 .skin-list-item {
   background: #1b1f27;
   border-radius: 10px;
@@ -811,7 +818,6 @@
   display: flex;
   flex-direction: column;
   text-align: left;
-  padding: 0;
 }
 
 .skin-list-item:hover {
@@ -819,7 +825,6 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 
-/* Image du skin */
 .skin-thumb {
   width: 100%;
   aspect-ratio: 16 / 10;
@@ -828,7 +833,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Détails */
 .skin-details {
   padding: 10px 12px;
   display: flex;
@@ -851,7 +855,6 @@
   line-height: 1.4;
 }
 
-/* Tags */
 .skin-tags {
   display: flex;
   gap: 6px;
@@ -881,4 +884,55 @@
   color: #7cc5ff;
   border-color: #7cc5ff80;
   background-color: rgba(124, 197, 255, 0.1);
+}
+.skin-card {
+  position: relative;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 10px;
+  transition: box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.skin-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* Boutons cachés par défaut */
+.input-actions.actions-hidden {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* Affichage au hover */
+.skin-card:hover .input-actions.actions-hidden {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+/* Liste des liens */
+.input-actions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.input-actions li a {
+  display: block;
+  background-color: #2a2d35;
+  color: #e0e4ec;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.input-actions li a:hover {
+  background-color: #3a3f4a;
 }

@@ -593,35 +593,57 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
           fontSize: '0.95rem'
         }}>
           <section className="matching-skins">
-            <h3>🔍 Skins similaires (collection + wear + rareté)</h3>
-            {matchingSkins.length === 0 ? (
-              <p>Aucun skin correspondant trouvé.</p>
-            ) : (
-              <ul className="skin-list">
-                {matchingSkins.map((skin, i) => {
-                  const price = priceMap?.[getPriceKey(skin)]?.price ?? 0;
-                  
+            <h4>Skins similaires (collection + wear + rareté)</h4>
+            <div className="inputs-grid">
+              {matchingSkins.map((skin, i) => {
+                const price = priceMap?.[skin.name]?.price ?? 0;
+                return (
+                  <div key={i} className={`skin-card ${skin.rarity?.toLowerCase()}`}>
+                    <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
+                    <div className="skin-info">
+                      <p className="skin-name">{skin.name}</p>
+                      <p className="skin-wear">{skin.wear}</p>
+                      <p className={`rarity-${skin.rarity?.toLowerCase()}`}>{skin.rarity}</p>
+                      <p className="skin-price">{skin.price} €</p>
+                    </div>
 
-                  return (
-                    <li key={i} className="skin-list-item">
-                      <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
-                      <div className="skin-details">
-                        <strong>{skin.name}</strong>
-                        <p>
-                          Float: {skin.float?.toFixed(3) ?? 'N/A'} • {skin.wear} • {skin.rarity}
-                        </p>
-                        <p>Prix estimé : {skin.price} €</p>
-                        <div className="skin-tags">
-                          {skin.isStatTrak && <span className="tag stattrak">StatTrak™</span>}
-                          {skin.isSouvenir && <span className="tag souvenir">Souvenir</span>}
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+                    <div className="input-actions actions-hidden">
+                      <ul>
+                        <li>
+                          <a
+                            href={`https://steamcommunity.com/market/listings/730/${encodeURIComponent(skin.name)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            🛒 Steam Market
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={`https://csfloat.com/search?query=${encodeURIComponent(skin.name)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            🔍 CSFloat
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={`https://buff.163.com/market/csgo#search=${encodeURIComponent(skin.name)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            💱 Buff163
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </section>
+
 
 
 
