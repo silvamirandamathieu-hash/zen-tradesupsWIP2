@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
 
-function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins, priceMap}) {
+function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, priceMap}) {
   const [urlInput, setUrlInput] = useState('');
   const [localUrls, setLocalUrls] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -25,26 +25,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins, priceMap}
     const prefix = skin.isStatTrak ? "StatTrak™ " : skin.isSouvenir ? "Souvenir " : "";
     return `${prefix}${skin.name} (${skin.wear})`;
   };
-  function SkinListItem({ skin, priceMap, onAddLink }) {
-    const price = priceMap?.[getPriceKey(skin)]?.price ?? 0;
-    const lisUrl = generateLisSkinsUrl(skin);
-    const shadowUrl = generateShadowPayUrl(skin);
 
-    return (
-      <li className="skin-list-item">
-        <img src={skin.image} alt={skin.name} className="skin-thumb" />
-        <div className="skin-details">
-          <strong>{skin.name}</strong>
-          <p>Float: {skin.float?.toFixed(3) ?? 'N/A'} • {skin.wear} • {skin.rarity}</p>
-          <p>Prix estimé : {price.toFixed(2)} €</p>
-          <div className="skin-links">
-            {lisUrl && <a href={lisUrl} target="_blank" rel="noopener noreferrer">LisSkins</a>}
-            {shadowUrl && <a href={shadowUrl} target="_blank" rel="noopener noreferrer">ShadowPay</a>}
-          </div>
-        </div>
-      </li>
-    );
-  }
 
 
 
@@ -619,8 +600,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins, priceMap}
               <ul className="skin-list">
                 {matchingSkins.map((skin, i) => {
                   const price = priceMap?.[getPriceKey(skin)]?.price ?? 0;
-                  const lisUrl = generateLisSkinsUrl(skin);
-                  const shadowUrl = generateShadowPayUrl(skin);
+                  
 
                   return (
                     <li key={i} className="skin-list-item">
@@ -630,7 +610,7 @@ function TradeUpCard({ trade, onDelete, onEdit, isSaved, id, allSkins, priceMap}
                         <p>
                           Float: {skin.float?.toFixed(3) ?? 'N/A'} • {skin.wear} • {skin.rarity}
                         </p>
-                        <p>Prix estimé : {price.toFixed(2)} €</p>
+                        <p>Prix estimé : {skin.price} €</p>
                         <div className="skin-tags">
                           {skin.isStatTrak && <span className="tag stattrak">StatTrak™</span>}
                           {skin.isSouvenir && <span className="tag souvenir">Souvenir</span>}
