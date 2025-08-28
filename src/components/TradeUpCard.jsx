@@ -136,6 +136,27 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
     const wearFormatted = skin.wear.toLowerCase().replace(/\s+/g, '-');
     return `https://lis-skins.com/market/csgo/${formattedName}-${wearFormatted}/?sort_by=price_asc&float_to=${skin.float.toFixed(2)}`;
   }
+  function generateLisSkinsUnlocksUrl(skin) {
+    if (!skin || !skin.name || !skin.wear || skin.float === undefined) return null;
+
+    const isStatTrak = skin.isStatTrak ?? false;
+
+    let cleanedName = skin.name
+      .replace(/StatTrak™?\s*\|\s*/i, '')
+      .replace(/\|\s*/g, '');
+
+    let formattedName = cleanedName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-+|-+$/g, '');
+
+    if (isStatTrak) {
+      formattedName = `stattrak-${formattedName}`;
+    }
+
+    const wearFormatted = skin.wear.toLowerCase().replace(/\s+/g, '-');
+    return `https://lis-skins.com/market/csgo/${formattedName}-${wearFormatted}/?sort_by=unlock_at_desc`;
+  }
 
 
 
@@ -649,7 +670,7 @@ const generateMarketLink2 = (skin) => {
                 const skinWithFloat = { ...skin, float: floatValue };
 
                 
-                const lisUrl = `https://lis-skins.com/market/${encodeURIComponent(skin.name)}?float=${floatValue}`;
+                const lisUrl = `https://lis-skins.com/market/csgo/${skin.name}?float=${floatValue}`;
                 const marketCsgoUrl = `generateMarketLink2 remplacer avec le float de flaot value pls`;
                 const shadowpayUrl = `https://shadowpay.com/market/${encodeURIComponent(skin.name)}?float=${floatValue}`;
                 return (
@@ -708,12 +729,12 @@ const generateMarketLink2 = (skin) => {
                         </li>
                         <li>
                           <a
-                            href={generateMarketLink2(skinWithFloat)}
+                            href={lisUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://market.csgo.com/ru/favicon.ico"
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }}
                           />
@@ -773,69 +794,174 @@ const generateMarketLink2 = (skin) => {
                         </li>
                         <li>
                           <a
-                            href={generateMarketLink2(skinWithFloat)}
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://market.csgo.com/ru/favicon.ico"
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
                             alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
+                            style={{ width: '20px', height: '20px' }} 
                           />
+                          
                           </a>
                         </li>
                         <li>
                           <a
-                            href={generateMarketLink2(skinWithFloat)}
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://market.csgo.com/ru/favicon.ico"
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
                             alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
+                            style={{ width: '20px', height: '20px' }} 
                           />
+                          
                           </a>
                         </li>
                         <li>
                           <a
-                            href={generateMarketLink2(skinWithFloat)}
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://market.csgo.com/ru/favicon.ico"
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
                             alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
+                            style={{ width: '20px', height: '20px' }} 
                           />
+                          
                           </a>
                         </li>
                         <li>
                           <a
-                            href={generateMarketLink2(skinWithFloat)}
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://market.csgo.com/ru/favicon.ico"
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
                             alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
+                            style={{ width: '20px', height: '20px' }} 
                           />
+                          
                           </a>
                         </li>
                         <li>
                           <a
-                            href={generateMarketLink2(skinWithFloat)}
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://market.csgo.com/ru/favicon.ico"
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
                             alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
+                            style={{ width: '20px', height: '20px' }} 
                           />
+                          
                           </a>
                         </li>
+                        <li>
+                          <a
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        
+                       
                       </ul>
                     </div>
                   </div>
@@ -844,13 +970,8 @@ const generateMarketLink2 = (skin) => {
             </div>
           </section>
 
-
-
-
           <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎒 Entrées :</h4>
           
-
-
           {outputs.length > 0 && (() => {
             
 
