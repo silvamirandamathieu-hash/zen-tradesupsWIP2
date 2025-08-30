@@ -1,3 +1,5 @@
+//TradeUpCard.jsx
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
 
@@ -114,7 +116,7 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
 
     let formattedName = cleanedName
       .toLowerCase()
-      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/[^a-z0-9.'’]+/gi, '-') // conserve . et ' (apostrophes typographiques incluses)
       .replace(/^-+|-+$/g, '');
 
     if (isStatTrak) {
@@ -124,6 +126,7 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
     const wearFormatted = skin.wear.toLowerCase().replace(/\s+/g, '-');
     return `https://lis-skins.com/market/csgo/${formattedName}-${wearFormatted}/?sort_by=price_asc&float_to=${skin.float.toFixed(2)}`;
   }
+
   function generateLisSkinsUnlocksUrl(skin) {
     if (!skin || !skin.name || !skin.wear || skin.float === undefined) return null;
 
@@ -135,7 +138,7 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
 
     let formattedName = cleanedName
       .toLowerCase()
-      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/[^a-z0-9.'’]+/gi, '-') // conserve . et ' (apostrophes typographiques incluses)
       .replace(/^-+|-+$/g, '');
 
     if (isStatTrak) {
@@ -243,18 +246,108 @@ function generateSkinPortUrl(
     `&souvenir=${souvenirParam}`
   ].join('');
 }
+  function generateBuffMarketUrl(skin, {
+    isStatTrak = false,
+    isSouvenir = false,
+    sortBy = "price.asc"
+  } = {}) {
+    if (!skin?.name || !skin?.wear) return null;
+
+    // 1. Map d’usure vers wearcategory
+    const wearCategoryMap = {
+      "Factory New":    0,
+      "Minimal Wear":   1,
+      "Field-Tested":   2,
+      "Well-Worn":      3,
+      "Battle-Scarred": 4
+    };
+    const wearCategory = wearCategoryMap[skin.wear] ?? 2;
+
+    // 2. Détermination de la qualité
+    let quality = "normal";
+    if (skin.isSouvenir) {
+      quality = "tournament";
+    } else if (skin.isStatTrak) {
+      quality = "strange";
+    }
+
+    // 3. Nettoyage du nom
+    const cleanedName = skin.name
+      .replace(/\s*\|\s*/g, ' ')
+      .replace(/[.'’]/g, '')
+      .trim();
+
+    // 4. Encodage du nom
+    const encodedName = encodeURIComponent(cleanedName);
+
+    // 5. Construction de l’URL
+    return `https://buff.market/market/all` +
+          `?exterior=wearcategory${wearCategory}` +
+          `&quality=${quality}` +
+          `&search=${encodedName}` +
+          `&sort_by=${sortBy}`;
+  }
+    function generateHaloSkinsUrl(skin, {
+    isStatTrak = false,
+    isSouvenir = false,
+    sort = 1 // 1 = prix croissant
+  } = {}) {
+    if (!skin?.name || !skin?.wear) return null;
+
+    // 1. Map d’usure vers WearCategory
+    const wearCategoryMap = {
+      "Factory New":    0,
+      "Minimal Wear":   1,
+      "Field-Tested":   2,
+      "Well-Worn":      3,
+      "Battle-Scarred": 4
+    };
+    const wearCategory = wearCategoryMap[skin.wear] ?? 2;
+
+    // 2. Détermination de la qualité
+    let quality = "normal";
+    if (skin.isSouvenir) {
+      quality = "tournament";
+    } else if (skin.isStatTrak) {
+      quality = "strange";
+    }
+
+    // 3. Nettoyage du nom
+    const cleanedName = skin.name
+      .replace(/\s*\|\s*/g, ' ')       // remplace " | " par espace
+      .replace(/[.'’™]/g, '')          // retire ponctuation et "™"
+      .trim();
+
+    // 4. Encodage du nom
+    const encodedName = encodeURIComponent(cleanedName);
+
+    // 5. Construction de l’URL (sans ID fixe)
+    return `https://haloskins.com/fr/market` +
+          `?keyword=${encodedName}` +
+          `&exterior=WearCategory${wearCategory}` +
+          `&quality=${quality}` +
+          `&sort=${sort}`;
+  }
+
 
 
   function generateSkinPlaceUrl(skin) {
-    // 1. On remplace tout pipe (avec ses espaces) par un simple espace
-    const cleanedName = skin.name.replace(/\s*\|\s*/g, ' ');
-    
-    // 2. On encode et on convertit les espaces en tirets
+    if (!skin?.name || !skin?.wear) return null;
+
+    // 1. Nettoyage : retirer les pipes, points et apostrophes
+    const cleanedName = skin.name
+      .replace(/\s*\|\s*/g, ' ')       // remplace " | " par un espace
+      .replace(/[.'’]/g, '')           // supprime les points et apostrophes
+
+    // 2. Encodage + remplacement des espaces par des tirets
     const nameEncodedSP = encodeURIComponent(cleanedName).replace(/%20/g, '-');
+
+    // 3. Encodage du wear avec "+" pour les espaces
     const wearEncodedSP = skin.wear?.replace(/\s/g, '+') ?? 'Field-Tested';
 
     return `https://skin.place/buy-cs2-skins/${nameEncodedSP}?exterior=${wearEncodedSP}`;
   }
+
   //https://skinbaron.de/fr/csgo/Pistol/P2000/Lifted-Spirits/Minimal-Wear?sort=BE
   
   /**
@@ -964,7 +1057,8 @@ function generate49SkinsUrl(
     floatMin,
     floatMax   = skin.float,
     sortBy     = "price",
-    stattrak   = skin.isStatTrak
+    stattrak   = skin.isStatTrak,
+    souvenir   = skin.isSouvenir
   } = {}
 ) {
   if (!skin?.name || !skin?.wear) return null;
@@ -1005,7 +1099,7 @@ function generate49SkinsUrl(
   const toSlug = str =>
     str
       .toLowerCase()
-      .replace(/[^\w\s-]/g, "")    // retire ponctuation
+      .replace(/[^\w\s.'’\-]/g, "") // conserve . et ' (apostrophes typographiques incluses)
       .trim()
       .replace(/\s+/g, "-");
 
@@ -1018,16 +1112,32 @@ function generate49SkinsUrl(
     `floatMax=${encodeURIComponent(String(floatMax))}`,
     `sortBy=${encodeURIComponent(sortBy)}`
   ];
+
   if (stattrak) {
     params.push(`stattrak=1`);
   }
 
+  // 6. Ajouter le bon tagOptionsQuality[]
+  if (stattrak && souvenir) {
+    // Cas rare : les deux activés
+    params.push(`tagOptionsQuality[]=9cb18e4b-ebce-4c22-bb8a-9f93f1fbb366`);
+    params.push(`tagOptionsQuality[]=9caaa352-42b1-42f9-bdae-1d511a768a30`);
+  } else if (stattrak) {
+    params.push(`tagOptionsQuality[]=9cb18e4b-ebce-4c22-bb8a-9f93f1fbb366`);
+  } else if (souvenir) {
+    params.push(`tagOptionsQuality[]=9caaa352-42b1-42f9-bdae-1d511a768a30`);
+  } else {
+    params.push(`tagOptionsQuality[]=9caaa349-7573-4cab-9049-d1a3eed74882`);
+  }
+
+  // 7. Assemblage final
   return `https://49skins.com/market/` +
          `${categorySlug}/` +
          `${weaponSlug}/` +
          `${skinSlug}` +
          `?${params.join("&")}`;
 }
+
 
 /**
  * Génère une URL de recherche pour waxpeer.com
@@ -1144,31 +1254,31 @@ function generateSkinoutUrl(
 ) {
   if (!skin?.name || !skin?.wear) return null;
 
-  // 1) Construire le slug du nom avec les préfixes
-  //    "AK-47 | Slate" → "ak-47-slate"
+  // 1) Nettoyer le nom : retirer les séparateurs, les points et les apostrophes
   const cleanedName = skin.name
-    .replace(/\s*\|\s*/g, " ")
+    .replace(/\s*\|\s*/g, " ")       // remplace " | " par un espace
+    .replace(/[.'’]/g, "")           // supprime les points et apostrophes
     .toLowerCase()
     .trim();
-  const baseSlug = cleanedName.replace(/\s+/g, "-");
 
-  //    Ajouter "stattrak" et/ou "souvenir" devant
+  const baseSlug = cleanedName.replace(/\s+/g, "-"); // remplace les espaces par des tirets
+
+  // 2) Ajouter les préfixes "stattrak" et/ou "souvenir"
   const prefixParts = [];
-  if (skin.isStatTrak) prefixParts.push("stattrak");
-  if (skin.isSouvenir) prefixParts.push("souvenir");
+  if (skin.isStatTrak || isStatTrak) prefixParts.push("stattrak");
+  if (skin.isSouvenir || isSouvenir) prefixParts.push("souvenir");
 
   const nameSlug = prefixParts.length
     ? `${prefixParts.join("-")}-${baseSlug}`
     : baseSlug;
 
-  // 2) Slug du wear ("Minimal Wear" → "minimal-wear")
+  // 3) Slug du wear
   const wearSlug = skin.wear
     .toLowerCase()
     .replace(/\s+/g, "-");
 
-  // 3) Préparer float_min et float_max : remplacer "." par "," puis encoder
+  // 4) Encodage des floats
   function encodeFloat(f) {
-    // si l'utilisateur passe un nombre, on convertit ; s'il passe déjà une string, on l'utilise
     const str = typeof f === "number" ? f.toString() : f;
     const withComma = str.replace(".", ",");
     return encodeURIComponent(withComma);
@@ -1177,13 +1287,12 @@ function generateSkinoutUrl(
   const floatMinParam = encodeFloat(floatMin);
   const floatMaxParam = encodeFloat(floatMax);
 
-  // 4) Assemblage de l’URL finale
+  // 5) Assemblage de l’URL finale
   return `https://skinout.gg/${lang}/market/` +
          `${nameSlug}-${wearSlug}` +
          `?float_min=${floatMinParam}` +
          `&float_max=${floatMaxParam}`;
 }
-
 
 
 
@@ -1861,12 +1970,12 @@ const generateMarketLink2 = (skin) => {
                         
                         <li>
                           <a
-                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            href={generateBuffMarketUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            src="data:image/png;base64,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"
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }} 
                           />
@@ -1875,12 +1984,12 @@ const generateMarketLink2 = (skin) => {
                         </li>
                         <li>
                           <a
-                            href={generateLisSkinsUnlocksUrl(skinWithFloat)}
+                            href={generateHaloSkinsUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://assets.lis-skins.com/assets/images/logo.svg"
+                            src="data:image/png;base64,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"
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }} 
                           />
