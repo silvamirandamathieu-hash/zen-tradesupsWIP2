@@ -142,7 +142,7 @@
 
 .skin-thumb {
   width: 88px;
-  height: 88px;
+  height: 100px;
   object-fit: cover;
   border-radius: 4px;
   flex-shrink: 0;
