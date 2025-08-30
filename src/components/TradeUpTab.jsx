@@ -52,6 +52,20 @@ useEffect(() => {
     setWarning(null);
   }
 }, [outputs]);
+useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      setSelectedSlot(null);
+      setPanelType(null);
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+}, []);
+
 
 const [warning, setWarning] = useState(null);
 
