@@ -370,7 +370,7 @@ function generateSkinBaronUrl(
     Heavy:  ["Negev", "Sawed-Off", "M249", "Nova", "XM1014", "MAG-7"],
     SMG:    ["MP9", "PP-Bizon", "UMP-45", "MP7", "MAC-10", "P90", "MP5-SD"],
     Rifle:  ["AK-47", "AUG", "AWP", "FAMAS", "G3SG1", "M4A4", "SCAR-20", "M4A1-S", "Galil AR", "SG 553", "SSG 08"],
-    Pistol: ["Five-SeveN", "Glock-18", "Tec-9", "P2000", "P250", "USP-S", "CZ75-Auto", "Desert Eagle", "Dual Berettas", "Revolver R8"]
+    Pistol: ["Five-SeveN", "Glock-18", "Tec-9", "P2000", "P250", "USP-S", "CZ75-Auto", "Desert Eagle", "Dual Berettas", "Revolver R8", "R8 Revolver"]
   };
 
   // 1. Séparation nom d’arme et skin
