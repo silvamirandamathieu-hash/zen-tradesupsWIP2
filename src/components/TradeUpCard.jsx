@@ -1085,7 +1085,7 @@ function generate49SkinsUrl(
     smg:           ["MP9", "PP-Bizon", "UMP-45", "MP7", "MAC-10", "P90", "MP5-SD"],
     "sniper-rifle":["AWP", "SSG 08", "SCAR-20", "G3SG1"],
     rifle:         ["AK-47", "AUG", "FAMAS", "M4A4", "M4A1-S", "Galil AR", "SG 553"],
-    pistol:        ["Five-SeveN", "Glock-18", "Tec-9", "P2000", "P250", "USP-S", "CZ75-Auto", "Desert Eagle", "Dual Berettas", "Revolver R8"]
+    pistol:        ["Five-SeveN", "Glock-18", "Tec-9", "P2000", "P250", "USP-S", "CZ75-Auto", "Desert Eagle", "Dual Berettas","R8 Revolver" ,"Revolver R8"]
   };
   let categorySlug = "misc";
   for (const [slug, list] of Object.entries(categoryMap)) {
