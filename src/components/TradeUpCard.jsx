@@ -1448,7 +1448,20 @@ const generateMarketLink2 = (skin) => {
 
               return `${base}${search}${quality}${weaponType}${category}${floatMax}`;
             };
+  
+// 🔁 Regrouper les sorties identiques
+             
+            const ratio = amplified / 125;
 
+            const inputsWithPriceMax = inputs
+              .filter(skin => skin && skin.name)
+              .map(skin => {
+                const priceMax = skin.price * ratio;
+                return {
+                  ...skin,
+                  priceMax: parseFloat(priceMax.toFixed(2)),
+                };
+              });
 
 
   return (
@@ -2098,12 +2111,12 @@ const generateMarketLink2 = (skin) => {
               const key = `${skin.name}-${skin.wear}`;
               if (!seenInputs.has(key)) {
                 const count = inputs.filter(s => s.name === skin.name && s.wear === skin.wear).length;
-                groupedInputs.push({ ...skin, count });
+                const priceMax = skin.price * ratio;
+                groupedInputs.push({ ...skin, count, priceMax: parseFloat(priceMax.toFixed(2)) });
                 seenInputs.add(key);
               }
             });
             
-            // 🔁 Regrouper les sorties identiques
             
 
             return (
@@ -2112,7 +2125,7 @@ const generateMarketLink2 = (skin) => {
                 <ul style={{ paddingLeft: 0, listStyle: 'none', marginBottom: '1rem' }}>
                   {groupedInputs.map((skin, i) => {
                     const prix = skin.price ?? 0;
-                    const tropCher = prix > seuilParItem;
+                    const tropCher = skin.price > skin.priceMax;
                     const link = generateMarketLink(skin.name, skin.wear);
                     const link2 = generateMarketLink2(skin);
 
@@ -2140,102 +2153,25 @@ const generateMarketLink2 = (skin) => {
                         />
                         <div style={{ color: '#eee', flex: 1 }}>
                           <strong>{skin.name}</strong> — Float: {skin.float ?? 'N/A'} — Wear: <span style={{ color: '#ffd369' }}>{skin.wear ?? 'N/A'}</span><br />
-                          <span style={{ color: tropCher ? '#ff4d4d' : '#4dff88' }}>{prix.toFixed(2)} €</span> — Seuil conseillé: <span style={{ color: '#ccc' }}>{seuilParItem.toFixed(2)} €</span>
+                          <span style={{ color: tropCher ? '#ff4d4d' : '#4dff88', fontWeight: 'bold',
+                            fontSize: '1.25rem', // ≈ 20px
+                            letterSpacing: '0.5px',
+                            marginLeft: '2px' }}>
+                              {prix.toFixed(2)} €</span> — Seuil conseillé (ratio {ratio.toFixed(3)}): 
+                          <span style={{
+                            color: '#cf686bff',
+                            fontWeight: 'bold',
+                            fontSize: '1.65rem', // ≈ 20px
+                            letterSpacing: '0.5px',
+                            marginLeft: '502px'                            
+                          }}>
+                            {skin.priceMax.toFixed(2)} €
+                          </span>
+
                           {skin.count > 1 && (
                             <div style={{ color: '#aaa', marginTop: '0.2rem' }}>× {skin.count} items similaires</div>
                           )}
                         </div>
-                        <a
-                          href={generateShadowPayUrl(skin)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            backgroundColor: '#222831',
-                            color: '#ffd369',
-                            borderRadius: '8px',
-                            width: '2.8rem',
-                            height: '2.8rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '1.2rem',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                            transition: 'background-color 0.3s ease'
-                          }}
-                        >
-                          <img
-                            src="https://shadowpay.com/favicon.ico"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
-                          />
-                        </a>
-                        {outputs.length > 0 && (
-                          <a
-                            href={generateLisSkinsUrl(inputs[0])}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              backgroundColor: '#222831',
-                              color: '#ffd369',
-                              borderRadius: '8px',
-                              width: '2.8rem',
-                              height: '2.8rem',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '1.2rem',
-                              boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                              transition: 'background-color 0.3s ease' }}
-                              >
-                                <img
-                                  src="https://assets.lis-skins.com/assets/images/logo.svg"
-                                  alt="Lis-Skins"
-                                  style={{
-                                    width: '20px',
-                                    height: '20px'
-                                  }}
-                                />
-
-                              </a>
-                        )}
-                        <a href={link2} target="_blank" rel="noopener noreferrer" style={{
-                          backgroundColor: '#222831',
-                          color: '#ffd369',
-                          borderRadius: '8px',
-                          width: '2.8rem',
-                          height: '2.8rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '1.2rem',
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                          transition: 'background-color 0.3s ease'
-                        }}>
-                          <img
-                            src="https://market.csgo.com/ru/favicon.ico"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
-                          />
-                        </a>
-                        <a href={link} target="_blank" rel="noopener noreferrer" style={{
-                          backgroundColor: '#222831',
-                          color: '#ffd369',
-                          borderRadius: '8px',
-                          width: '2.8rem',
-                          height: '2.8rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '1.2rem',
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                          transition: 'background-color 0.3s ease'
-                        }}>
-                          <img
-                            src="https://market.csgo.com/ru/favicon.ico"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
-                          />
-                        </a>
                       </li>
                     );
                   })}
