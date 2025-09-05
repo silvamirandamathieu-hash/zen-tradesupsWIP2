@@ -54,10 +54,13 @@ export async function generateEnrichedInputs() {
       console.warn('Aucun skin enrichi à enregistrer.');
       return;
     }
+    console.log(`✅ ${enrichedSkins.length} skins enrichis enregistrés`);
+
 
     await bulkAddEnrichedInputs(enrichedSkins);
     console.log(`✅ ${enrichedSkins.length} skins enrichis enregistrés dans la base.`);
   } catch (err) {
     console.error('❌ Erreur lors de la génération des inputs enrichis:', err);
   }
+  
 }

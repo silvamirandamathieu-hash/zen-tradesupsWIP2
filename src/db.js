@@ -4,19 +4,21 @@ import { generateEnrichedInputs } from './utils/enrichInputs';
 export const db = new Dexie('cs2TradeUpDB');
 
 // 📦 Définition des tables
-db.version(8).stores({
-  inventory: '++id,name,wear,float,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
+db.version(9).stores({
+  inventory: '++id,name,wear,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
   allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl',
-  history: '++id,date,name,wear,float,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,volume',
-  currentTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls',
-  savedTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls',
-  favoriteTradeUps: 'id', // ⭐ Table des favoris
+  history: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume',
+  tradeUps: '++id,date,data',
+  currentTradeUps: '++id,date,data',
+  savedTradeUps: '++id,date,data',
   enrichedInputs: '++id,name,wear,float,collection,rarity,isStatTrak,isSouvenir,price,priceMax,imageUrl'
 });
+
 export async function bulkAddEnrichedInputs(skins) {
   if (!Array.isArray(skins)) throw new Error('Données invalides');
   return db.enrichedInputs.bulkPut(skins);
 }
+
 
 //
 // 📦 INVENTAIRE
