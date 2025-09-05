@@ -1,4 +1,5 @@
 import Dexie from 'dexie';
+import { generateEnrichedInputs } from './utils/enrichInputs';
 
 export const db = new Dexie('cs2TradeUpDB');
 
@@ -135,6 +136,7 @@ export async function clearCurrentTradeUps() {
 export async function addSavedTradeUp(tradeUp) {
   if (!tradeUp || typeof tradeUp !== 'object') throw new Error('Trade-up invalide');
   const id = tradeUp.id || crypto.randomUUID();
+  await generateEnrichedInputs();
   return db.savedTradeUps.put({ ...tradeUp, id, date: new Date().toISOString() });
 }
 
@@ -154,6 +156,7 @@ export async function updateSavedTradeUp(id, updatedTradeUp) {
   if (!id || typeof updatedTradeUp !== 'object') {
     throw new Error('Trade-up invalide');
   }
+  
   return db.savedTradeUps.update(id, {
     ...updatedTradeUp,
     date: new Date().toISOString()
