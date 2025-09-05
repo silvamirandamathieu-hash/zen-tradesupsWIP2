@@ -212,3 +212,12 @@ export async function updateTradeUpNote(id, note) {
     await db.savedTradeUps.put(tradeUp);
   }
 }
+export const saveSimilarSkins = (skins) => {
+  const existing = JSON.parse(localStorage.getItem('similarSkins') || '[]');
+  const updated = [...existing, ...skins];
+  localStorage.setItem('similarSkins', JSON.stringify(updated));
+};
+
+export const getSimilarSkins = () => {
+  return JSON.parse(localStorage.getItem('similarSkins') || '[]');
+};

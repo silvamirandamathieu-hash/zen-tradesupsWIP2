@@ -8,7 +8,7 @@ import {
 } from '../db';
 import TradeUpCard from './TradeUpCard';
 import { enrichTradeUp } from './EnrichedTradeUp';
-import { getAllInventory } from '../db';
+import { getAllInventory, saveSimilarSkins } from '../db';
 
 
 function TradeUpSaved({ priceMap, inputs}) {
@@ -205,11 +205,14 @@ function TradeUpSaved({ priceMap, inputs}) {
     a.click();
     URL.revokeObjectURL(url);
   };
+  
 
   const extractGroupedInputs = (savedTradeUps) => {
+    
     const grouped = [];
 
     savedTradeUps.forEach((trade, index) => {
+      
       const inputs = trade?.data?.inputs ?? [];
       const profitability = trade?.data?.profitability ?? 0;
 
@@ -218,7 +221,7 @@ function TradeUpSaved({ priceMap, inputs}) {
       const seen = new Set();
 
       inputs.forEach((skin) => {
-        const key = `${skin.collection}-${skin.wear}-${skin.rarity}`;
+        const key = `${skin.name}-${skin.wear}-${skin.rarity}`;
         if (seen.has(key)) return;
         seen.add(key);
 
@@ -258,17 +261,29 @@ function TradeUpSaved({ priceMap, inputs}) {
 
     return grouped;
   };
-  const handleExportGroupedInputs = () => {
-    const groupedInputs = extractGroupedInputs(savedTradeUps);
-    const json = JSON.stringify(groupedInputs, null, 2);
+    const downloadJSON = (data, filename = 'export.json') => {
+    const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'tradeup_grouped_inputs.json';
-    a.click();
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+
     URL.revokeObjectURL(url);
   };
+
+  const handleExportGroupedInputs = (savedTradeUps) => {
+  const grouped = extractGroupedInputs(savedTradeUps);
+  if (grouped.length === 0) {
+    alert('Aucun skin similaire trouvé à exporter.');
+    return;
+  }
+
+  saveSimilarSkins(grouped); // 💾 Enregistrement dans la DB
+  downloadJSON(grouped);     // 📤 Export JSON
+};
 
 
 
