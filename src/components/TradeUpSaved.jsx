@@ -9,6 +9,7 @@ import {
 import TradeUpCard from './TradeUpCard';
 import { enrichTradeUp } from './EnrichedTradeUp';
 import { getAllInventory } from '../db';
+import { generateEnrichedInputs } from '../utils/enrichInputs';
 
 
 function TradeUpSaved({ priceMap, inputs}) {
@@ -218,8 +219,8 @@ function TradeUpSaved({ priceMap, inputs}) {
         color: '#f0f0f0',
         fontFamily: 'Segoe UI, Roboto, sans-serif'
       }}>
-        <button onClick={handleExportInputs} className="action-btn">
-          📤 Exporter les Inputs
+        <button onClick={generateEnrichedInputs}>
+          Générer base des inputs enrichis
         </button>
 
         <h2 style={{
