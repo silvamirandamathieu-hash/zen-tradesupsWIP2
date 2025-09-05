@@ -11,7 +11,7 @@ import { enrichTradeUp } from './EnrichedTradeUp';
 import { getAllInventory } from '../db';
 
 
-function TradeUpSaved({ priceMap }) {
+function TradeUpSaved({ priceMap, inputs}) {
   const [savedTradeUps, setSavedTradeUps] = useState([]);
   const [sortByProfitability, setSortByProfitability] = useState(false);
   const [enrichedTradeUps, setEnrichedTradeUps] = useState([]);
@@ -40,6 +40,8 @@ function TradeUpSaved({ priceMap }) {
 
     fetchData();
   }, [priceMap]);
+
+  
 
   const cleanSavedTradeUps = async () => {
     const saved = await getSavedTradeUps();
@@ -173,6 +175,37 @@ function TradeUpSaved({ priceMap }) {
       <span key={i} style={style}>{label}</span>
     ));
   };
+  const formatSkinName = (skin) => {
+    const prefix = [];
+
+    if (skin.isSouvenir) prefix.push('Souvenir');
+    if (skin.isStatTrak) prefix.push('StatTrak™');
+    if (skin.rarity?.toLowerCase() === 'gold') prefix.push('★');
+
+    return `${prefix.join(' ')} ${skin.name}`.trim();
+  };
+
+  const handleExportInputs = () => {
+    const exported = inputs.map((skin, index) => ({
+      name: formatSkinName(skin),
+      rarity: skin.rarity,
+      collection: skin.collection,
+      priceMax: parseFloat(skin.priceMax?.toFixed(3)) ?? null,
+      floatMax: parseFloat(skin.float?.toFixed(5)) ?? null,
+      imageUrl: skin.imageUrl,
+      id: index + 1,
+    }));
+
+    const json = JSON.stringify(exported, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tradeup_inputs.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
 
 
   // 🧩 Rendu
@@ -185,6 +218,10 @@ function TradeUpSaved({ priceMap }) {
         color: '#f0f0f0',
         fontFamily: 'Segoe UI, Roboto, sans-serif'
       }}>
+        <button onClick={handleExportInputs} className="action-btn">
+          📤 Exporter les Inputs
+        </button>
+
         <h2 style={{
           fontSize: '2rem',
           marginBottom: '1.5rem',

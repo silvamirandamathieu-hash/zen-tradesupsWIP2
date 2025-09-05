@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
+import TradeUpSaved from './TradeUpSaved';
+
 
 function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, priceMap}) {
   const [urlInput, setUrlInput] = useState('');
@@ -2317,6 +2319,7 @@ const generateMarketLink2 = (skin) => {
 
 
       </details>
+        
 
     </div>
   );
