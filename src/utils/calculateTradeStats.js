@@ -33,3 +33,20 @@ export function calculateTradeStats(inputs, outputs) {
     chance: Math.round(profitableChance), // 🟡 arrondi à l'entier
   };
 }
+// utils/tradeUpUtils.js
+export function computePriceMaxForInputs(tradeUp, targetROI = 1.25) {
+  const { inputs, expectedPrice } = tradeUp;
+
+  const sumInputs = inputs.reduce(
+    (sum, item) => sum + item.price * (item.count || 1),
+    0
+  );
+
+  const currentROI = expectedPrice / sumInputs;
+  const yMax = currentROI / targetROI - 1;
+
+  return inputs.map(item => ({
+    ...item,
+    priceMax: parseFloat((item.price * (1 + yMax)).toFixed(3)),
+  }));
+}
