@@ -206,6 +206,72 @@ function TradeUpSaved({ priceMap, inputs}) {
     URL.revokeObjectURL(url);
   };
 
+  const extractGroupedInputs = (savedTradeUps) => {
+    const grouped = [];
+
+    savedTradeUps.forEach((trade, index) => {
+      const inputs = trade?.data?.inputs ?? [];
+      const profitability = trade?.data?.profitability ?? 0;
+
+      const ratio = profitability / 25;
+
+      const seen = new Set();
+
+      inputs.forEach((skin) => {
+        const key = `${skin.collection}-${skin.wear}-${skin.rarity}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+
+        // Trouver un skin du même groupe pour récupérer le float
+        const match = inputs.find(
+          (s) =>
+            s.collection === skin.collection &&
+            s.wear === skin.wear &&
+            s.rarity === skin.rarity
+        );
+
+        if (!match) return;
+
+        const floatMax = parseFloat(match.float?.toFixed(5)) ?? 0;
+        const priceMax = parseFloat((match.price * ratio).toFixed(3)) ?? 0;
+
+        const formattedName = [
+          match.isSouvenir ? 'Souvenir' : '',
+          match.isStatTrak ? 'StatTrak™' : '',
+          match.name,
+          `(${match.wear})`,
+        ]
+          .filter(Boolean)
+          .join(' ');
+
+        grouped.push({
+          name: formattedName,
+          rarity: match.rarity ?? 'Unknown',
+          collection: match.collection ?? 'Unknown',
+          priceMax,
+          floatMax,
+          imageUrl: match.imageUrl ?? '',
+          id: `${index}-${key}`,
+        });
+      });
+    });
+
+    return grouped;
+  };
+  const handleExportGroupedInputs = () => {
+    const groupedInputs = extractGroupedInputs(savedTradeUps);
+    const json = JSON.stringify(groupedInputs, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tradeup_grouped_inputs.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+
+
 
 
   // 🧩 Rendu
@@ -218,8 +284,8 @@ function TradeUpSaved({ priceMap, inputs}) {
         color: '#f0f0f0',
         fontFamily: 'Segoe UI, Roboto, sans-serif'
       }}>
-        <button onClick={handleExportInputs} className="action-btn">
-          📤 Exporter les Inputs
+        <button onClick={handleExportGroupedInputs} style={{ marginTop: '1rem' }}>
+          📤 Exporter les Skins similaires (collection + wear + rareté)
         </button>
 
         <h2 style={{
