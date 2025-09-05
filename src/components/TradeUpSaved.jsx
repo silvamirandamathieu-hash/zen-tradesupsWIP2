@@ -19,7 +19,7 @@ function TradeUpSaved({ priceMap }) {
   const [favorites, setFavorites] = useState([]);
   const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [collectionFilter, setCollectionFilter] = useState('');
+  const [collectionFilter] = useState('');
   const [allSkins, setAllSkins] = useState([]);
 
   useEffect(() => {

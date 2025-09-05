@@ -5,9 +5,6 @@ import {
   getAllInventory,
   getInventory,
   addSavedTradeUp,
-  deleteCurrentTradeUp,
-  saveCurrentTradeUp,
-  getSavedTradeUps,
   addCurrentTradeUp
 } from '../db';
 import { useAdvancedFilters } from './useAdvancedFilters';
@@ -31,7 +28,7 @@ function TradeUp() {
   const [collectionSearch, setCollectionSearch] = useState('');
   const [showCollectionDropdown, setShowCollectionDropdown] = useState(false);
   const stats = useMemo(() => calculateTradeStats(inputs, outputs), [inputs, outputs]);
-  const [currentTradeUp, setCurrentTradeUp] = useState(null);
+
 
 
 
