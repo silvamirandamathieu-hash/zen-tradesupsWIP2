@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
+import TradeUpSaved from './TradeUpSaved';
+
 
 function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, priceMap}) {
   const [urlInput, setUrlInput] = useState('');
@@ -1453,15 +1455,18 @@ const generateMarketLink2 = (skin) => {
              
             const ratio = amplified / 125;
 
-            const inputsWithPriceMax = inputs
-              .filter(skin => skin && skin.name)
-              .map(skin => {
-                const priceMax = skin.price * ratio;
-                return {
-                  ...skin,
-                  priceMax: parseFloat(priceMax.toFixed(2)),
-                };
-              });
+            const inputsWithPriceMax = inputs.map((skin, index) => ({
+              ...skin,
+              priceMax: parseFloat((skin.price * ratio).toFixed(3)),
+              float: parseFloat(skin.float?.toFixed(5)),
+              wear: skin.wear,
+              name: skin.name,
+              collection: skin.collection,
+              rarity: skin.rarity,
+              imageUrl: skin.imageUrl,
+              id: index + 1,
+            }));
+
 
 
   return (
@@ -2317,6 +2322,7 @@ const generateMarketLink2 = (skin) => {
 
 
       </details>
+        
 
     </div>
   );

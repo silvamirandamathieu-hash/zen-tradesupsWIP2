@@ -1,16 +1,24 @@
 import Dexie from 'dexie';
+import { generateEnrichedInputs } from './utils/enrichInputs';
 
 export const db = new Dexie('cs2TradeUpDB');
 
 // 📦 Définition des tables
-db.version(7).stores({
-  inventory: '++id,name,wear,float,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
+db.version(9).stores({
+  inventory: '++id,name,wear,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
   allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl',
-  history: '++id,date,name,wear,float,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,volume',
-  currentTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls',
-  savedTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls',
-  favoriteTradeUps: 'id' // ⭐ Table des favoris
+  history: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume',
+  tradeUps: '++id,date,data',
+  currentTradeUps: '++id,date,data',
+  savedTradeUps: '++id,date,data',
+  enrichedInputs: '++id,name,wear,float,collection,rarity,isStatTrak,isSouvenir,price,priceMax,imageUrl'
 });
+
+export async function bulkAddEnrichedInputs(skins) {
+  if (!Array.isArray(skins)) throw new Error('Données invalides');
+  return db.enrichedInputs.bulkPut(skins);
+}
+
 
 //
 // 📦 INVENTAIRE
@@ -130,6 +138,7 @@ export async function clearCurrentTradeUps() {
 export async function addSavedTradeUp(tradeUp) {
   if (!tradeUp || typeof tradeUp !== 'object') throw new Error('Trade-up invalide');
   const id = tradeUp.id || crypto.randomUUID();
+  await generateEnrichedInputs();
   return db.savedTradeUps.put({ ...tradeUp, id, date: new Date().toISOString() });
 }
 
@@ -149,6 +158,7 @@ export async function updateSavedTradeUp(id, updatedTradeUp) {
   if (!id || typeof updatedTradeUp !== 'object') {
     throw new Error('Trade-up invalide');
   }
+  
   return db.savedTradeUps.update(id, {
     ...updatedTradeUp,
     date: new Date().toISOString()
@@ -212,3 +222,12 @@ export async function updateTradeUpNote(id, note) {
     await db.savedTradeUps.put(tradeUp);
   }
 }
+export const saveSimilarSkins = (skins) => {
+  const existing = JSON.parse(localStorage.getItem('similarSkins') || '[]');
+  const updated = [...existing, ...skins];
+  localStorage.setItem('similarSkins', JSON.stringify(updated));
+};
+
+export const getSimilarSkins = () => {
+  return JSON.parse(localStorage.getItem('similarSkins') || '[]');
+};

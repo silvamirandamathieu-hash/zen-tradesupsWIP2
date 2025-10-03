@@ -410,7 +410,7 @@ const [warning, setWarning] = useState(null);
             ))}
           </div>
         </div>
-        <button class="save-button" onClick={handleSaveTradeUp}>💾 Sauvegarder</button>
+        <button className="save-button" onClick={handleSaveTradeUp}>💾 Sauvegarder</button>
         <button className="action-btn" onClick={handleSetAsCurrent}>
           ⚙️ Définir comme en cours
         </button>
