@@ -287,48 +287,259 @@ function generateSkinPortUrl(
           `&search=${encodedName}` +
           `&sort_by=${sortBy}`;
   }
-    function generateHaloSkinsUrl(skin, {
-    isStatTrak = false,
-    isSouvenir = false,
-    sort = 1 // 1 = prix croissant
-  } = {}) {
-    if (!skin?.name || !skin?.wear) return null;
 
-    // 1. Map d’usure vers WearCategory
-    const wearCategoryMap = {
-      "Factory New":    0,
-      "Minimal Wear":   1,
-      "Field-Tested":   2,
-      "Well-Worn":      3,
-      "Battle-Scarred": 4
-    };
-    const wearCategory = wearCategoryMap[skin.wear] ?? 2;
+  /**
+ * Génère une URL vers Skinbid.com pour une skin CS:GO/CS2,
+ * en utilisant un intervalle de float basé sur l’usure,
+ * et en encodant le nom pour la recherche.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.name         – ex. "FAMAS | Royal Guard"
+ * @param {string}  skin.wear         – ex. "Minimal Wear"
+ * @param {number}  skin.float        – valeur max de float
+ *
+ * @param {Object}  [options]
+ * @param {number}  [options.floatMin]             – override du min
+ * @param {number}  [options.floatMax=skin.float]  – max float
+ * @param {string}  [options.sortBy="wear"]        – critère de tri
+ * @param {boolean} [options.ascending=true]       – sens de tri
+ * @param {number}  [options.take=60]              – nombre d’items
+ * @param {number}  [options.skip=0]               – offset
+ *
+ * @returns {string|null}
+ */
+/**
+ * Génère une URL vers Skinbid.com avec Wear en format texte (MinimalWear, FieldTested…),
+ * et nom de recherche incluant "StatTrak" si nécessaire.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.name         – ex. "Five-SeveN | Urban Hazard"
+ * @param {string}  skin.wear         – ex. "Minimal Wear"
+ * @param {boolean}[skin.isStatTrak]  – true → ajoute "StatTrak" devant le nom
+ *
+ * @param {Object}  [options]
+ * @param {string}  [options.sortBy="wear"]        – critère de tri
+ * @param {boolean} [options.ascending=true]       – sens de tri
+ * @param {number}  [options.take=60]              – nombre d’items
+ * @param {number}  [options.skip=0]               – offset
+ *
+ * @returns {string|null}
+ */
+function generateSkinbidUrl(
+  skin,
+  {
+    sortBy     = "wear",
+    ascending  = true,
+    take       = 60,
+    skip       = 0
+  } = {}
+) {
+  if (!skin?.name || !skin?.wear) return null;
 
-    // 2. Détermination de la qualité
-    let quality = "normal";
-    if (skin.isSouvenir) {
-      quality = "tournament";
-    } else if (skin.isStatTrak) {
-      quality = "strange";
-    }
+  // 1. Mapping usure → slug Skinbid
+  const wearSlugMap = {
+    "Factory New":    "FactoryNew",
+    "Minimal Wear":   "MinimalWear",
+    "Field-Tested":   "FieldTested",
+    "Well-Worn":      "WellWorn",
+    "Battle-Scarred": "BattleScarred"
+  };
+  const wearSlug = wearSlugMap[skin.wear] ?? skin.wear.replace(/\s+/g, "");
 
-    // 3. Nettoyage du nom
-    const cleanedName = skin.name
-      .replace(/\s*\|\s*/g, ' ')       // remplace " | " par espace
-      .replace(/[.'’™]/g, '')          // retire ponctuation et "™"
-      .trim();
+  // 2. Construire le nom de recherche
+  const baseName = skin.name.replace(/\s*\|\s*/g, " ");
+  const searchName = (skin.isStatTrak ? "StatTrak " : "") + baseName;
+  const encodedSearch = encodeURIComponent(searchName); // garde %20
 
-    // 4. Encodage du nom
-    const encodedName = encodeURIComponent(cleanedName);
+  // 3. Encodage du tri
+  const sortParam = `${sortBy}#${ascending ? "asc" : "desc"}`;
 
-    // 5. Construction de l’URL (sans ID fixe)
-    return `https://haloskins.com/fr/market` +
-          `?keyword=${encodedName}` +
-          `&exterior=WearCategory${wearCategory}` +
-          `&quality=${quality}` +
-          `&sort=${sort}`;
+  // 4. Assemblage final
+  return `https://skinbid.com/market?Wear=${wearSlug}` +
+         `&sort=${encodeURIComponent(sortParam)}` +
+         `&search=${encodedSearch}` +
+         `&take=${take}&skip=${skip}`;
+}
+/**
+ * Génère une URL vers Tradeit.gg pour une skin CS:GO/CS2,
+ * avec nom complet encodé pour le paramètre search.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.name         – ex. "Glock-18 | Glockingbird"
+ *
+ * @returns {string|null}
+ */
+function generateTradeitUrl(skin) {
+  if (!skin?.name) return null;
+
+  // 1. Encodage du nom complet
+  const encodedName = encodeURIComponent(skin.name);
+
+  // 2. Assemblage final
+  return `https://tradeit.gg/csgo/store?aff=SkinSnipe&search=${encodedName}`;
+}
+
+/**
+ * Génère une URL vers CS.Money Market avec nom complet, usure, StatTrak/Souvenir,
+ * tri par float croissant, et float max basé sur l’input.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.name         – ex. "Negev | Terrain"
+ * @param {string}  skin.wear         – ex. "Field-Tested"
+ * @param {number}  skin.float        – valeur max de float
+ * @param {boolean}[skin.isStatTrak]  – true → version StatTrak
+ * @param {boolean}[skin.isSouvenir]  – true → version Souvenir
+ *
+ * @param {Object}  [options]
+ * @param {string}  [options.lang="fr"]            – langue du site
+ * @param {string}  [options.sortBy="float"]       – critère de tri
+ * @param {string}  [options.order="asc"]          – sens du tri
+ *
+ * @returns {string|null}
+ */
+function generateCsMoneyMarketUrl(
+  skin,
+  {
+    lang     = "fr",
+    sortBy   = "float",
+    order    = "asc"
+  } = {}
+) {
+  if (!skin?.name || !skin?.wear || typeof skin.float !== "number") return null;
+
+  // 1. Construction du nom complet avec usure
+  const fullName = `${skin.name} (${skin.wear})`;
+  const encodedName = encodeURIComponent(fullName);
+
+  // 2. StatTrak et Souvenir
+  const statTrak = skin.isStatTrak ? "true" : "false";
+  const souvenir = skin.isSouvenir ? "true" : "false";
+
+  // 3. Float max
+  const floatMaxParam = `&maxFloat=${encodeURIComponent(skin.float.toFixed(3))}`;
+
+  // 4. Assemblage final
+  return `https://cs.money/${lang}/market/buy/?` +
+         `utm_source=mediabuy&utm_medium=skinsnipe&utm_campaign=market&utm_content=link` +
+         `&search=${encodedName}` +
+         `&isStatTrak=${statTrak}` +
+         `&isSouvenir=${souvenir}` +
+         `&sort=${encodeURIComponent(sortBy)}` +
+         `&order=${encodeURIComponent(order)}` +
+         `${floatMaxParam}`;
+}
+
+/**
+ * Génère une URL vers Skinflow.gg pour une skin CS:GO/CS2,
+ * avec nom complet incluant l’usure, encodé pour le paramètre search.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.name         – ex. "AK-47 | Slate"
+ * @param {string}  skin.wear         – ex. "Minimal Wear"
+ * @param {string}  [lang="fr"]       – langue du site
+ *
+ * @returns {string|null}
+ */
+function generateSkinflowUrl(skin, lang = "fr") {
+  if (!skin?.name || !skin?.wear) return null;
+
+  // 1. Construction du nom complet avec usure
+  const fullName = `${skin.name} (${skin.wear})`;
+
+  // 2. Encodage du nom
+  const encodedName = encodeURIComponent(fullName);
+
+  // 3. Assemblage final
+  return `https://skinflow.gg/${lang}/buy?search=${encodedName}`;
+}
+
+/**
+ * Génère une URL vers SIH.app pour une skin CS:GO/CS2,
+ * avec nom complet incluant "StatTrak™" si nécessaire et usure,
+ * encodé pour le paramètre item.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.name         – ex. "AUG | Luxe Trim"
+ * @param {string}  skin.wear         – ex. "Factory New"
+ * @param {boolean}[skin.isStatTrak]  – true → ajoute "StatTrak™" devant
+ *
+ * @returns {string|null}
+ */
+function generateSihUrl(skin) {
+  if (!skin?.name || !skin?.wear) return null;
+
+  // 1. Construction du nom complet
+  const prefix = skin.isStatTrak ? "StatTrak™ " : "";
+  const fullName = `${prefix}${skin.name} (${skin.wear})`;
+
+  // 2. Encodage du nom
+  const encodedItem = encodeURIComponent(fullName);
+
+  // 3. Assemblage final
+  return `https://sih.app/market?item=${encodedItem}&sortBy=-profitPercent&appId=730`;
+}
+
+
+
+/**
+ * Génère une URL vers HaloSkins.com pour une skin CS:GO/CS2,
+ * avec nom nettoyé, usure convertie en WearCategory, qualité (StatTrak/Souvenir),
+ * et tri configurable.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.name         – ex. "UMP-45 | K.O."
+ * @param {string}  skin.wear         – ex. "Minimal Wear"
+ * @param {boolean}[skin.isStatTrak]  – true → version StatTrak
+ * @param {boolean}[skin.isSouvenir]  – true → version Souvenir
+ *
+ * @param {Object}  [options]
+ * @param {number}  [options.sort=1]  – 1 = prix croissant, 2 = float, etc.
+ *
+ * @returns {string|null}
+ */
+function generateHaloSkinsUrl(
+  skin,
+  {
+    sort = 1
+  } = {}
+) {
+  if (!skin?.name || !skin?.wear) return null;
+
+  // 1. Map d’usure vers WearCategory
+  const wearCategoryMap = {
+    "Factory New":    0,
+    "Minimal Wear":   1,
+    "Field-Tested":   2,
+    "Well-Worn":      3,
+    "Battle-Scarred": 4
+  };
+  const wearCategory = wearCategoryMap[skin.wear] ?? 2;
+
+  // 2. Détermination de la qualité
+  let quality = "normal";
+  if (skin.isSouvenir) {
+    quality = "tournament";
+  } else if (skin.isStatTrak) {
+    quality = "strange";
   }
 
+  // 3. Nettoyage du nom
+  const cleanedName = skin.name
+    .replace(/\s*\|\s*/g, " ")       // remplace " | " par espace
+    .replace(/[.'’™]/g, "")          // retire ponctuation et "™"
+    .replace(/\s+/g, " ")            // normalise les espaces
+    .trim();
+
+  // 4. Encodage du nom
+  const encodedName = encodeURIComponent(cleanedName);
+
+  // 5. Construction de l’URL
+  return `https://haloskins.com/fr/market` +
+         `?keyword=${encodedName}` +
+         `&exterior=WearCategory${wearCategory}` +
+         `&quality=${quality}` +
+         `&sort=${sort}`;
+}
 
 
   function generateSkinPlaceUrl(skin) {
@@ -1008,6 +1219,7 @@ function generateCsDealsUrl(
     }
   }
 
+
   // 4. Construction du paramètre name (sans l’usure)
   const nameParam = encodeURIComponent(skin.name).replace(/%20/g, "+");
 
@@ -1030,6 +1242,93 @@ function generateCsDealsUrl(
 
   return `https://cs.deals/new/market?${params.join("&")}`;
 }
+function generateSkinsMonkeyUrl(skin) {
+  if (!skin?.name || !skin?.wear) return null;
+
+  // 1. Construction du nom complet avec usure
+  const fullName = `${skin.name} (${skin.wear})`;
+
+  // 2. Encodage du nom pour l’URL
+  const encodedName = encodeURIComponent(fullName);
+
+  // 3. Ajout du paramètre StatTrak si actif
+  const statTrakParam = skin.isStatTrak ? "&stat_trak=1" : "";
+
+  // 4. Assemblage final
+  return `https://skinsmonkey.com/trade?r=SKINSNIPE&appId=730&q=${encodedName}${statTrakParam}`;
+}  
+
+/**
+ * Génère une URL vers CSFloat.com avec min_float et max_float,
+ * en utilisant le floatMax du skin et un floatMin par défaut selon l’usure.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.wear         – ex. "Minimal Wear"
+ * @param {number}  skin.float        – valeur max de float
+ *
+ * @returns {string|null}
+ */
+function generateCsFloatUrl(skin) {
+  if (!skin?.wear || typeof skin.float !== "number") return null;
+
+  // Valeurs minimales par usure
+  const wearFloatMinMap = {
+    "Factory New":    0.00,
+    "Minimal Wear":   0.07,
+    "Field-Tested":   0.15,
+    "Well-Worn":      0.38,
+    "Battle-Scarred": 0.45
+  };
+
+  const floatMin = wearFloatMinMap[skin.wear] ?? 0;
+  const floatMax = skin.float;
+
+  return `https://csfloat.com/search?sort_by=lowest_price&min_float=${floatMin}&max_float=${floatMax}`;
+}
+
+/**
+ * Génère une URL vers Mannco.store pour une skin CS:GO/CS2,
+ * en construisant un slug complet avec préfixes stattrak/souvenir,
+ * et en formatant le nom en minuscules avec tirets.
+ *
+ * @param {Object}  skin
+ * @param {string}  skin.name         – ex. "G3SG1 | Scavenger"
+ * @param {string}  skin.wear         – ex. "Field-Tested"
+ * @param {boolean}[skin.isStatTrak]  – true → ajoute "stattrak"
+ * @param {boolean}[skin.isSouvenir]  – true → ajoute "souvenir"
+ * @param {boolean}[skin.isStattrack] – toléré comme variante
+ * @param {boolean}[skin.isStartrack] – toléré comme variante
+ *
+ * @returns {string|null}
+ */
+function generateManncoStoreUrl(skin) {
+  if (!skin?.name || !skin?.wear) return null;
+
+  // 1. Extraire nom d’arme et nom de skin
+  const [weaponName, skinSuffix = ""] = skin.name.split(" | ").map(s => s.trim());
+
+  // 2. Slugifier chaque partie
+  const toSlug = str =>
+    str.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
+
+  const weaponSlug = toSlug(weaponName);
+  const skinSlug   = toSlug(skinSuffix);
+  const wearSlug   = toSlug(skin.wear);
+
+  // 3. Préfixes robustes
+  const isStatTrak = Boolean(
+    skin.isStatTrak || skin.isStattrack || skin.isStartrack
+  );
+  const isSouvenir = Boolean(skin.isSouvenir);
+
+  const prefix = isStatTrak ? "stattrak-" :
+                 isSouvenir ? "souvenir-" : "";
+
+  // 4. Assemblage final
+  return `https://mannco.store/item/730-${prefix}${weaponSlug}-${skinSlug}-${wearSlug}`;
+}
+
+
 
 /**
  * Génère une URL vers 49skins.com pour une skin CS:GO,
@@ -1204,6 +1503,68 @@ function generateWaxpeerUrl(
   // 4. Retourner l’URL finale
   return `https://waxpeer.com/${lang}?${params.join("&")}`;
 }
+function injectCopyButtonIntoSkinCards() {
+  document.querySelectorAll('.skin-card').forEach(card => {
+    const titleEl = card.querySelector('.skin-title');     // Nom du skin
+    const wearEl = card.querySelector('.skin-wear');       // Usure
+    const statTrakEl = card.querySelector('.skin-stattrak'); // Présence de StatTrak
+
+    if (!titleEl || !wearEl) return;
+
+    const isStatTrak = statTrakEl && /stattrak/i.test(statTrakEl.textContent);
+    const prefix = isStatTrak ? 'StatTrak™ ' : '';
+    const formattedName = `${prefix}${titleEl.textContent.trim()} (${wearEl.textContent.trim()})`;
+
+    if (card.querySelector('.copy-name-btn')) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'copy-name-btn';
+    btn.textContent = '📋 Copier le nom';
+
+    Object.assign(btn.style, {
+      marginTop: 'auto',
+      padding: '0.4rem 0.6rem',
+      fontSize: '0.8rem',
+      borderRadius: '6px',
+      border: 'none',
+      backgroundColor: '#4a4a6a',
+      color: '#fff',
+      cursor: 'pointer',
+      transition: 'background 0.2s ease',
+      width: '100%'
+    });
+
+    btn.addEventListener('mouseenter', () => {
+      btn.style.backgroundColor = '#6a6aff';
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      btn.style.backgroundColor = '#4a4a6a';
+    });
+
+    btn.addEventListener('click', () => {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = formattedName;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+
+      btn.textContent = '✅ Copié !';
+      setTimeout(() => {
+        btn.textContent = '📋 Copier le nom';
+      }, 1500);
+    });
+
+    card.appendChild(btn);
+  });
+}
+
+
+document.addEventListener('DOMContentLoaded', injectCopyButtonIntoSkinCards);
+
+
+
 /**
  * Génère une URL vers Skinout.gg pour une skin CS:GO/CS2,
  * en déterminant automatiquement la partie “wear” dans le chemin,
@@ -1462,9 +1823,45 @@ const generateMarketLink2 = (skin) => {
                   priceMax: parseFloat(priceMax.toFixed(2)),
                 };
               });
+function enableSkinCardCopyOnClick() {
+  document.querySelectorAll('.skin-card').forEach(card => {
+    const nameEl = card.querySelector('.skin-title');
+    const wearEl = card.querySelector('.skin-wear');
+    const statTrakEl = card.querySelector('.skin-stattrak');
 
+    if (!nameEl || !wearEl) return;
+
+    const isStatTrak = statTrakEl?.textContent?.toLowerCase().includes('stattrak');
+    const prefix = isStatTrak ? 'StatTrak™ ' : '';
+    const formattedName = `${prefix}${nameEl.textContent.trim()} (${wearEl.textContent.trim()})`;
+
+    card.addEventListener('click', e => {
+      // Ignore si clic sur un bouton ou un lien
+      if (e.target.closest('button, a')) return;
+
+      const tempInput = document.createElement('textarea');
+      tempInput.value = formattedName;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+
+      // Optionnel : feedback visuel
+      card.style.outline = '2px solid #6a6aff';
+      setTimeout(() => {
+        card.style.outline = '';
+      }, 800);
+    });
+  });
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  enableSkinCardCopyOnClick();
+});
 
   return (
+    
     <div style={{
       position: 'relative',
       border: '1px solid #4b4b6b',
@@ -1672,19 +2069,25 @@ const generateMarketLink2 = (skin) => {
         {amplified <= 70 && ' 🧊'}
       </p>
 
-      {/* 🧪 Float */}
-      <p style={{
-        backgroundColor: '#1e1e2f',
-        padding: '0.6rem 1rem',
-        borderRadius: '6px',
-        fontSize: '1.3rem',
-        fontWeight: 'bold',
-        color: '#a0a8e5',
-        fontFamily: 'monospace',
-        border: '1px solid #3a3a5a',
-        marginTop: '1rem',
-        textAlign: 'center',
-      }}>
+      <p
+        onClick={() => {
+          navigator.clipboard.writeText(averageFloat.toFixed(4));
+        }}
+        style={{
+          backgroundColor: '#1e1e2f',
+          padding: '0.6rem 1rem',
+          borderRadius: '6px',
+          fontSize: '1.3rem',
+          fontWeight: 'bold',
+          color: '#a0a8e5',
+          fontFamily: 'monospace',
+          border: '1px solid #3a3a5a',
+          marginTop: '1rem',
+          textAlign: 'center',
+          cursor: 'pointer' // ← indique que c’est cliquable
+        }}
+        title="Copier le float moyen"
+      >
         🧪 Float moyen : {averageFloat.toFixed(4)}
       </p>
 
@@ -1803,17 +2206,68 @@ const generateMarketLink2 = (skin) => {
                 const skinWithFloat = { ...skin, float: floatValue };
                 
                 return (
-                  <div key={i} className={`skin-card ${skin.rarity?.toLowerCase()}`}>
+                  <div
+                    key={i}
+                    className={`skin-card ${skin.rarity?.toLowerCase()}`}
+                    onClick={(e) => {
+                      if (e.target.closest('a, button, img')) return;
+                      const prefix = skin.isStatTrak ? 'StatTrak™ ' : '';
+                      const wearSuffix = skin.wear ? ` (${skin.wear})` : '';
+                      const formattedName = `${prefix}${skin.name}${wearSuffix}`;
+                      navigator.clipboard.writeText(formattedName);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <img src={skin.imageUrl} alt={skin.name} className="skin-thumb" />
+
                     <div className="skin-info">
-                      <p className="skin-name">{skin.name}</p>
-                      <p className="skin-wear">{wearSuffix}</p>
+                      <p className="skin-name">
+                        {skin.isStatTrak ? 'StatTrak™ ' : ''}
+                        {skin.name}
+                      </p>
+                      <p className="skin-wear">
+                        {skin.wear ? `(${skin.wear})` : ''}
+                      </p>
                       <p className={`rarity-${skin.rarity?.toLowerCase()}`}>{skin.rarity}</p>
                       <p className="skin-price">{price} €</p>
                     </div>
 
+
+
+                    
+
                     <div className="input-actions actions-hidden">
                       <ul>
+                        <li>
+                          <a
+                            href={generateLisSkinsUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                                  src="https://assets.lis-skins.com/assets/images/logo.svg"
+                                  alt="Lis-Skins"
+                                  style={{
+                                    width: '20px',
+                                    height: '20px'
+                                  }}
+                                />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateSkinPlaceUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="data:image/png;base64,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"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
                       <li>
                           <a
                             href={generateSkinoutUrl(skinWithFloat)}
@@ -1843,68 +2297,12 @@ const generateMarketLink2 = (skin) => {
                         </li>
                         <li>
                           <a
-                            href={generateLisSkinsUrl(skinWithFloat)}
+                            href={generateCsMoneyUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                                  src="https://assets.lis-skins.com/assets/images/logo.svg"
-                                  alt="Lis-Skins"
-                                  style={{
-                                    width: '20px',
-                                    height: '20px'
-                                  }}
-                                />
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href={generateShadowPayUrl(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="https://shadowpay.com/favicon.ico"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
-                          />
-                          </a>
-                        </li>
-                        
-                        <li>
-                          <a
-                            href={generateSkinPortUrl(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="https://ggscore.com/media/logo/t86333.png?25"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
-                          />
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href={generateSkinBaronUrl(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a40aff2b894c905f826ac16/0x0.png"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
-                          />
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href={generateBitSkinsUrlRaw(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="https://bitskins.com/assets/logo-mobile-D1I7ZSJP.svg"
+                            src="data:image/png;base64,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"
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }}
                           />
@@ -1953,12 +2351,149 @@ const generateMarketLink2 = (skin) => {
                         </li>
                         <li>
                           <a
+                            href={generateSkinPortUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://ggscore.com/media/logo/t86333.png?25"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateSkinBaronUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a40aff2b894c905f826ac16/0x0.png"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateBitSkinsUrlRaw(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://bitskins.com/assets/logo-mobile-D1I7ZSJP.svg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateBuffMarketUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="data:image/png;base64,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"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateShadowPayUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://shadowpay.com/favicon.ico"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          </a>
+                        </li>
+                        
+                        <li>
+                          <a
                             href={generateGamerPayUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
                             src="data:image/png;base64,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"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                         <li>
+                          <a
+                            href={generateSkinsMonkeyUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/6150f7e0aeab7a001d66d7fb/0x0.png"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateCsFloatUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5f5c75296c8f190001dc6120/0x0.png"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateManncoStoreUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5e08a89c053f320001f78afd/0x0.png"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                         <li>
+                          <a
+                            href={generateAvanMarketUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="data:image/png;base64,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"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                         <li>
+                          <a
+                            href={generateHaloSkinsUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="data:image/png;base64,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"
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }} 
                           />
@@ -1979,16 +2514,14 @@ const generateMarketLink2 = (skin) => {
                           
                           </a>
                         </li>
-                        
-                        
                         <li>
                           <a
-                            href={generateBuffMarketUrl(skinWithFloat)}
+                            href={generateSkinbidUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="data:image/png;base64,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"
+                            src="https://csgoskins.gg/social-images/eyJpbWFnZV91cmwiOiJodHRwczpcL1wvY3Nnb3NraW5zLmdnXC9idWlsZFwvYXNzZXRzXC9zcXVhcmUtQ0JpVnl2UGIucG5nIiwiYXNwZWN0X3JhdGlvIjoxLCJzaWciOiJlNGY5ZTAwOGU0ZGY5YWM0NjkxNGViNjQ2NjQ5NWJhZiJ9.png"
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }} 
                           />
@@ -1997,18 +2530,65 @@ const generateMarketLink2 = (skin) => {
                         </li>
                         <li>
                           <a
-                            href={generateHaloSkinsUrl(skinWithFloat)}
+                            href={generateCsMoneyMarketUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="data:image/png;base64,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"
+                            src="data:image/png;base64,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"
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }} 
                           />
                           
                           </a>
                         </li>
+                        <li>
+                          <a
+                            href={generateTradeitUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://avatars.fastly.steamstatic.com/b651ab5d7f223e831bdbd700cebee6754452cd9f_full.jpg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateSkinflowUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/63c45f4646061d086acf1438/0x0.png"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={generateSihUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://avatars.fastly.steamstatic.com/faa27c7e61ec0ec7ef08c37405bd89cab38c291f_full.jpg"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        
+
+                        
+                       
+                        
                         <li>
                           <a
                             href={generateWaxpeerUrl(skinWithFloat)}
@@ -2039,33 +2619,6 @@ const generateMarketLink2 = (skin) => {
                         </li>
                         <li>
                           <a
-                            href={generateAvanMarketUrl(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="data:image/png;base64,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"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }} 
-                          />
-                          
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href={generateCsMoneyUrl(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="data:image/png;base64,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"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }}
-                          />
-                          </a>
-                        </li>
-                        <li>
-                          <a
                             href={generateLisSkinsUnlocksUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -2078,21 +2631,7 @@ const generateMarketLink2 = (skin) => {
                           
                           </a>
                         </li>
-                        <li>
-                          <a
-                            href={generateSkinPlaceUrl(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="data:image/png;base64,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"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }} 
-                          />
-                          
-                          </a>
-                        </li>
-                        
+
                        
                       </ul>
                     </div>

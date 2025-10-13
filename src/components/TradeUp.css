@@ -1,19 +1,45 @@
 .skin-card,
 .result-card {
-  
-  position: relative; /* ← nécessaire pour positionner le bouton */
+  position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: flex-start;
-  padding: 0.75rem 0.75rem 2.5rem; /* espace en bas pour le bouton */
-  border-radius: 8px;
-  background-color: #242442;
-  border: 1px solid #615a5a;
-  height: 320px;
+  padding: 0.75rem 0.75rem 2.5rem;
+  border-radius: 10px;
+  background-color: #2c2c4d;
+  border: 1px solid #6a6a7f;
+  height: 440px;
+  width: 180px;
+  margin: 0.5rem;
   box-sizing: border-box;
-  transition: border 0.3s ease;
   text-align: center;
+  overflow: hidden;
+  scale: 1.1;
+  z-index: 1;
+  transition:
+    border 0.1s ease,
+    transform 0.1s ease,
+    box-shadow 0.1s ease,
+    z-index 0.1s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.skin-card:hover,
+.result-card:hover {
+  border-color: #8f8fff;
+  transform: scale(1.5);
+  z-index: 10;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Conteneur des cartes */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2.5rem; /* ↑ espace au-dessus des cartes */
 }
 
 
@@ -122,15 +148,15 @@
 .skin-grid,
 .result-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1rem;
-  margin-top: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem; /* ↑ espace horizontal et vertical entre les cartes */
+  margin-top: 2.5rem;
 }
 
 /* Cartes de skin et de résultat */
 .skin-price {
   position: absolute;
-  bottom: 40px; /* juste au-dessus du bouton */
+  bottom: 140px; /* juste au-dessus du bouton */
   left: 50%;
   transform: translateX(-50%);
   font-size: 1.2rem;
@@ -214,17 +240,7 @@
   margin-top: 4px;
   color: #e0d5fe;
 }
-.skin-card button {
-  margin-top: 6px;
-  padding: 4px 8px;
-  font-size: 0.85rem;
-  background: linear-gradient(135deg, #252449, #676aa2);
-  color: #f6f6f6;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+
 
 .skin-card button:hover {
   background: #3a3a8c;
@@ -333,6 +349,8 @@
   flex-direction: row;
   gap: 8px; /* or use margin below */
   z-index: 2;
+  margin-top: auto;
+  padding-top: 0.5rem;
 }
 
 .action-button {
@@ -428,17 +446,6 @@
 }
 
 
-.skin-card {
-  position: relative;
-  background-color: #1e1e1e;
-  border-radius: 8px;
-  padding: 10px;
-  min-height: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: visible;
-}
 
 
 .tradeup-actions {
@@ -885,14 +892,7 @@
   border-color: #7cc5ff80;
   background-color: rgba(124, 197, 255, 0.1);
 }
-.skin-card {
-  position: relative;
-  background-color: #1e1e1e;
-  border-radius: 8px;
-  padding: 10px;
-  transition: box-shadow 0.2s ease;
-  overflow: hidden;
-}
+
 
 .skin-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
