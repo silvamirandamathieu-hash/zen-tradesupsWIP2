@@ -2377,6 +2377,34 @@ document.addEventListener('DOMContentLoaded', () => {
                         </li>
                         <li>
                           <a
+                            href={generateManncoStoreUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5e08a89c053f320001f78afd/0x0.png"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                         <li>
+                          <a
+                            href={generateSkinsMonkeyUrl(skinWithFloat)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/6150f7e0aeab7a001d66d7fb/0x0.png"
+                            alt="ShadowPay"
+                            style={{ width: '20px', height: '20px' }} 
+                          />
+                          
+                          </a>
+                        </li>
+                        <li>
+                          <a
                             href={generateBitSkinsUrlRaw(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -2430,20 +2458,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           
                           </a>
                         </li>
-                         <li>
-                          <a
-                            href={generateSkinsMonkeyUrl(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/6150f7e0aeab7a001d66d7fb/0x0.png"
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }} 
-                          />
-                          
-                          </a>
-                        </li>
+                        
                         <li>
                           <a
                             href={generateCsFloatUrl(skinWithFloat)}
@@ -2460,18 +2475,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </li>
                         <li>
                           <a
-                            href={generateManncoStoreUrl(skinWithFloat)}
+                            href={generateCsMoneyMarketUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5e08a89c053f320001f78afd/0x0.png"
+                            src="data:image/png;base64,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"
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }} 
                           />
                           
                           </a>
                         </li>
+                        
                          <li>
                           <a
                             href={generateAvanMarketUrl(skinWithFloat)}
@@ -2500,20 +2516,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           
                           </a>
                         </li>
-                        <li>
-                          <a
-                            href={generate49SkinsUrl(skinWithFloat)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img
-                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM8AAACOCAMAAAChW6ykAAAAkFBMVEXr/wAAAAD///91fwA6PwD1/393gQCdqwADAwD5/7P9//Hw/0b7/9jt/yKjsQD1/3wvMwDH2AAkJwDj9wDQ4gAKCgAWFwCzwwAODwBMUgAbHQCquQATFAB2fxF9iAAgIgC+zgBcZAAsLwCXpABkbQDV6AA0OAA8QQBqcwDd8ABFSwDk+ACGkQCOmgCntgAsMADloJgLAAADmElEQVR4nN3ciVJaQRCFYToo4IaooLiziApu7/92SbWmYtRwp2dO22fyP8F8VfcoDBStH7i2WgThOPvRFA2l2d6JlrwG4uzuRUPewnAopqNBOBzT0QAalulo5Rya6WjFHJ7paKUcouloZRqq6WhFHK7paCUcsuloBRy26WjZGr7paLkcwulomRzG6Wh5HMrpaDka0uloGRzW6Wh2Du10NDOHdzqaUcM8Hc3GoZ6OZuJwT0ezcMino6Vr6KejJXP4p6OlciqYjpbIqWE6WpKmjulomyldtuPrHOHQEl+vj+MQeKCceA+WE+4Bc6I9aE6wp9cFc2I9eE6ox4ET6fHgBHpcOHEeH06Yx4kT5fHiBHlG6H+jsZ7jiRcnxLMaunECPC8nfppv9xzenHtqUjyDDUyr6VXX8UF76+CwyXM9cT8EsqNpE6h3FX1GW91Rk+jW/zlBNpw1gcbz6DOaerhpAsnpMvqQpvrjJtDZJPqMpoaDJlAn+oi2Hu7/L0+rdX4B9QAvpTNbbCA9nbbLIU21e0CP3C5cDmnp5BjokbHzi8+EFndAj8j9g8spLV3945nL8sgg/qXSyRnQI+Nnl0NaWq6AHpGb+Gfu8YtnLtsjswOXQ1qaXAM9MvK6bUtveQr0iEzjXy08jYAeOYx/5j5cLZR5ZPTkckhLf18tFHoo3hK+v1oo9jDcFB3MgB7pPboc0tKfqwWAR2QV/8z9vlqAeBiuId6uFjAehtvJ16sFkEfkLv5t3vkY6JFj109MklrcAj3SI7gragM9Ihvxz5z1FeVaj1zEP3PG1nsorhZMNXkYrhYsTb6+hnjX2O1bCC59fkv4KYKrBUvzxk9hZnU9c82fwvh988Wnzpob8dcIrhYsfXFT9CH/q4Xl/H56egf6HkXjIyfiq+k3/10C56l5fvlujadnuPYjuuo8k/Ufodbm6Td+86Uqz7zxf0VVnm4Ux8cTx3HxBHI8PJEcB08oB++J5cA9wRy0J5oD9oRzsJ54DtRDwEF6GDhAz7IT/WMBv7pM+mUDHNq5ne2kX56IPmZqm4m/CxJ9zsS2Ejl1ePZ2UzlVeBKnU4tnP11Tgyd5OlV4DNOpwWOZTgUe03T4PbbpsHus0yH3mKfD7bFPh9qTMR1iT9Z0eD1506H1ZE6H1ZM7HU5P/nQoPQXTYfSUTIfQUzQdOk/hdNg8pdMh8xRPh8tTPh0mD2I6RB7IdHg8mOnQeEDT0X4CHVNSXnak7QgAAAAASUVORK5CYII="
-                            alt="ShadowPay"
-                            style={{ width: '20px', height: '20px' }} 
-                          />
-                          
-                          </a>
-                        </li>
+                        
                         <li>
                           <a
                             href={generateSkinbidUrl(skinWithFloat)}
@@ -2530,18 +2533,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </li>
                         <li>
                           <a
-                            href={generateCsMoneyMarketUrl(skinWithFloat)}
+                            href={generate49SkinsUrl(skinWithFloat)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                            src="data:image/png;base64,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"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM8AAACOCAMAAAChW6ykAAAAkFBMVEXr/wAAAAD///91fwA6PwD1/393gQCdqwADAwD5/7P9//Hw/0b7/9jt/yKjsQD1/3wvMwDH2AAkJwDj9wDQ4gAKCgAWFwCzwwAODwBMUgAbHQCquQATFAB2fxF9iAAgIgC+zgBcZAAsLwCXpABkbQDV6AA0OAA8QQBqcwDd8ABFSwDk+ACGkQCOmgCntgAsMADloJgLAAADmElEQVR4nN3ciVJaQRCFYToo4IaooLiziApu7/92SbWmYtRwp2dO22fyP8F8VfcoDBStH7i2WgThOPvRFA2l2d6JlrwG4uzuRUPewnAopqNBOBzT0QAalulo5Rya6WjFHJ7paKUcouloZRqq6WhFHK7paCUcsuloBRy26WjZGr7paLkcwulomRzG6Wh5HMrpaDka0uloGRzW6Wh2Du10NDOHdzqaUcM8Hc3GoZ6OZuJwT0ezcMino6Vr6KejJXP4p6OlciqYjpbIqWE6WpKmjulomyldtuPrHOHQEl+vj+MQeKCceA+WE+4Bc6I9aE6wp9cFc2I9eE6ox4ET6fHgBHpcOHEeH06Yx4kT5fHiBHlG6H+jsZ7jiRcnxLMaunECPC8nfppv9xzenHtqUjyDDUyr6VXX8UF76+CwyXM9cT8EsqNpE6h3FX1GW91Rk+jW/zlBNpw1gcbz6DOaerhpAsnpMvqQpvrjJtDZJPqMpoaDJlAn+oi2Hu7/L0+rdX4B9QAvpTNbbCA9nbbLIU21e0CP3C5cDmnp5BjokbHzi8+EFndAj8j9g8spLV3945nL8sgg/qXSyRnQI+Nnl0NaWq6AHpGb+Gfu8YtnLtsjswOXQ1qaXAM9MvK6bUtveQr0iEzjXy08jYAeOYx/5j5cLZR5ZPTkckhLf18tFHoo3hK+v1oo9jDcFB3MgB7pPboc0tKfqwWAR2QV/8z9vlqAeBiuId6uFjAehtvJ16sFkEfkLv5t3vkY6JFj109MklrcAj3SI7gragM9Ihvxz5z1FeVaj1zEP3PG1nsorhZMNXkYrhYsTb6+hnjX2O1bCC59fkv4KYKrBUvzxk9hZnU9c82fwvh988Wnzpob8dcIrhYsfXFT9CH/q4Xl/H56egf6HkXjIyfiq+k3/10C56l5fvlujadnuPYjuuo8k/Ufodbm6Td+86Uqz7zxf0VVnm4Ux8cTx3HxBHI8PJEcB08oB++J5cA9wRy0J5oD9oRzsJ54DtRDwEF6GDhAz7IT/WMBv7pM+mUDHNq5ne2kX56IPmZqm4m/CxJ9zsS2Ejl1ePZ2UzlVeBKnU4tnP11Tgyd5OlV4DNOpwWOZTgUe03T4PbbpsHus0yH3mKfD7bFPh9qTMR1iT9Z0eD1506H1ZE6H1ZM7HU5P/nQoPQXTYfSUTIfQUzQdOk/hdNg8pdMh8xRPh8tTPh0mD2I6RB7IdHg8mOnQeEDT0X4CHVNSXnak7QgAAAAASUVORK5CYII="
                             alt="ShadowPay"
                             style={{ width: '20px', height: '20px' }} 
                           />
                           
                           </a>
                         </li>
+                        
                         <li>
                           <a
                             href={generateTradeitUrl(skinWithFloat)}

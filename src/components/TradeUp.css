@@ -28,7 +28,7 @@
 .skin-card:hover,
 .result-card:hover {
   border-color: #8f8fff;
-  transform: scale(1.5);
+  transform: scale(1.6);
   z-index: 10;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
 }
@@ -80,8 +80,8 @@
 }
 
 .skin-thumb {
-  width: 48px;
-  height: 48px;
+  width: 30px;
+  height: 30px;
   object-fit: cover;
   border-radius: 4px;
   margin-bottom: 6px;
@@ -354,6 +354,7 @@
 }
 
 .action-button {
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -430,8 +431,9 @@
 }
 
 .skin-footer button {
-  width: 100%;
+  width: 90%;
   padding: 6px 12px;
+  margin-top: 40px;
   background-color: #2d3748;
   color: white;
   border: none;
@@ -488,6 +490,7 @@
   padding: 6px 12px;
   border: none;
   border-radius: 6px;
+  margin-top: 42px;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease;

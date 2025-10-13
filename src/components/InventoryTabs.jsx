@@ -29,7 +29,6 @@ function InventoryTabs({
     { key: 'inventory', label: '🎒 Mon inventaire' },
     { key: 'allskins', label: '🗂️ All skins' },
     { key: 'TradeUp', label: '💹 Trade-Ups' },
-    { key: 'tradeupcurrent', label: '⚙️ Trade-up en cours' },
     { key: 'tradeupsaved', label: '💾 Trade-ups sauvegardés' }
   ];
 
@@ -70,14 +69,7 @@ function InventoryTabs({
       case 'TradeUp':
         return <TradeUp />;
 
-      case 'tradeupcurrent':
-        return (
-          <TradeUpCurrent
-            priceMap={priceMap}
-            editingTradeUp={editingTradeUp}
-            onRefreshPrices={handleRefreshPrices}
-          />
-        );
+      
 
       case 'tradeupsaved':
         return (
