@@ -9,7 +9,7 @@
   border-radius: 10px;
   background-color: #2c2c4d;
   border: 1px solid #6a6a7f;
-  height: 440px;
+  height: 470px;
   width: 180px;
   margin: 0.5rem;
   box-sizing: border-box;
@@ -419,7 +419,7 @@
 
 .inputs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 12px;
   margin-top: 20px;
 }
@@ -905,9 +905,9 @@
 .input-actions.actions-hidden {
   columns: 2;
   column-gap: 10px;
-  max-height: 10px;
+  max-height: 20px;
   opacity: 0;
-  overflow: hidden;
+  overflow: visible;
   transition: max-height 0.3s ease, opacity 0.3s ease;
   gap: 6px 12px;
 }
