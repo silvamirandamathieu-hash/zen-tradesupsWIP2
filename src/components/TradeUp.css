@@ -972,11 +972,24 @@
 }
 
 .edit-float-button {
-  margin-top: 9.4rem;
+  position: relative;
+  margin-top: 14rem;
   margin-left: 6rem;
   padding: 0.4rem 0.8rem;
   background-color: #eee;
   border: none;
   cursor: pointer;
   font-size: 1rem;
+  z-index: 10;
+}
+
+.float-display{
+  position: fixed;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 1rem;
+
+  z-index: 1000;
 }

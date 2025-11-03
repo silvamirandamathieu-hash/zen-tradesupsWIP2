@@ -42,6 +42,14 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
     loadFloatCaps();
   }, []);
 
+  const maxCapsByWear = {
+    'Factory New': 0.07,
+    'Minimal Wear': 0.15,
+    'Field-Tested': 0.38,
+    'Well-Worn': 0.45,
+    'Battle-Scarred': 0.70
+  };
+
 
   const updateFloatCap = (skinId, key, value) => {
     setFloatCaps(prev => ({
@@ -154,9 +162,15 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
     if (isStatTrak) {
       formattedName = `stattrak-${formattedName}`;
     }
+    const floatTo = skin.float?.toFixed(6) ?? '0.2';
+    const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+    const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  
+
+    const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
 
     const wearFormatted = skin.wear.toLowerCase().replace(/\s+/g, '-');
-    return `https://lis-skins.com/market/csgo/${formattedName}-${wearFormatted}/?sort_by=price_asc&float_to=${skin.float.toFixed(2)}`;
+    return `https://lis-skins.com/market/csgo/${formattedName}-${wearFormatted}/?sort_by=price_asc&float_to=${calculatedFloat}`;
   }
 
   function generateLisSkinsUnlocksUrl(skin) {
@@ -194,7 +208,14 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
     const stattrakParam = skin.isStatTrak ? 'is_stattrak=1' : 'is_stattrak';
     const souvenirParam = skin.isSouvenir ? '&is_souvenir=1' : '';
 
-    return `https://shadowpay.com/csgo-items?exteriors=${exteriors}&float=${floatRange}&price_from=0&price_to=75143.68&${stattrakParam}${souvenirParam}&hold_days&sort_column=price&sort_dir=asc&search=${nameEncoded}`;
+    const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+    const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  
+
+    const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
+
+
+    return `https://shadowpay.com/csgo-items?exteriors=${exteriors}&float=${calculatedFloat}&price_from=0&price_to=75143.68&${stattrakParam}${souvenirParam}&hold_days&sort_column=price&sort_dir=asc&search=${nameEncoded}`;
   }
 
 /**
