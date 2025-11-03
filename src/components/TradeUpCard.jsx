@@ -880,11 +880,14 @@ function generateCsMoneyUrl(
   const searchParam   = encodeURIComponent(skin.name).replace(/\+/g, "%20");
   const exteriorParam = encodeURIComponent(skin.wear).replace(/\+/g, "%20");
 
-  const floatTo = skin.float?.toFixed(6) ?? '0.2';
+  const floatTo = skin.float?.toFixed(3) ?? '0.2';
   const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
   const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
   
-  const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
+  const calculatedFloat = (
+    parseFloat(floatTo) * (floatMax - floatMin) + floatMin
+  ).toFixed(4);
+
 
   // 4) construction de la liste des query parts
   const parts = [
