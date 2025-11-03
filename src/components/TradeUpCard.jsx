@@ -166,7 +166,6 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
     const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
     const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
   
-
     const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
 
     const wearFormatted = skin.wear.toLowerCase().replace(/\s+/g, '-');
@@ -238,39 +237,39 @@ function generateSkinPortUrl(
   // validation minimale
   if (
     !skin ||
-    typeof skin.name  !== 'string' ||
-    typeof skin.wear  !== 'string' ||
-    typeof skin.float !== 'number'
+    typeof skin.name !== 'string' ||
+    typeof skin.wear !== 'string'
   ) {
     return null;
   }
 
   // 1) plages float par wear
   const wearRanges = {
-    'Factory New':    { min: 0,    max: 0.07  },
-    'Minimal Wear':   { min: 0.07, max: 0.15  },
-    'Field-Tested':   { min: 0.15, max: 0.38  },
-    'Well-Worn':      { min: 0.38, max: 0.45  },
-    'Battle-Scarred': { min: 0.45, max: 1     }
+    'Factory New':    { min: 0, max: 7  },
+    'Minimal Wear':   { min: 7, max: 15  },
+    'Field-Tested':   { min: 15, max: 38  },
+    'Well-Worn':      { min: 38, max: 45  },
+    'Battle-Scarred': { min: 45, max: 100  }
   };
 
-  const range = wearRanges[skin.wear] || { min: 0, max: skin.float };
+  const range = wearRanges[skin.wear] ?? { min: 0, max: 1 };
 
-  // 2) floatMin / floatMax effectifs
-  const minFloat = typeof floatMin === 'number'
-    ? floatMin
-    : range.min;
+  // 2) récupération des float caps
+  const capMin = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? range.min);
+  const capMax = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? range.max);
 
-  const maxFloat = typeof floatMax === 'number'
-    ? floatMax
-    : skin.float;
+  // 3) récupération du floatTo (cap du wear)
+  const wearCap = typeof skin.float === 'number' ? skin.float : 0.2;
 
-  // 3) conversion en pourcents et arrondi
-  const toPercent = v => Math.round(v * 100);
-  const wearGt = toPercent(minFloat);
-  const wearLt = toPercent(maxFloat);
+  // 4) calcul du float utilisé
+  const calculatedFloat = wearCap * (capMax - capMin) + capMin;
 
-  // 4) liste de tous les exterior IDs
+  // 5) conversion en pourcents et arrondi
+  const toPercent = v => Math.ceil(v * 100);
+  const wearGt = (range.min);
+  const wearLt = toPercent(calculatedFloat);
+
+  // 6) liste de tous les exterior IDs
   const wearToExterior = {
     'Factory New':    2,
     'Minimal Wear':   4,
@@ -280,14 +279,14 @@ function generateSkinPortUrl(
   };
   const allExteriors = Object.values(wearToExterior).join(',');
 
-  // 5) encodage du nom
+  // 7) encodage du nom
   const nameEncoded = encodeURIComponent(skin.name).replace(/%20/g, '+');
 
-  // 6) flags StatTrak / Souvenir
+  // 8) flags StatTrak / Souvenir
   const stattrakParam = skin.isStatTrak ? '1' : '0';
   const souvenirParam = skin.isSouvenir ? '1' : '0';
 
-  // 7) assemblage de l’URL
+  // 9) assemblage de l’URL
   return [
     'https://skinport.com/fr/market',
     '?sort=price&order=asc',
@@ -299,6 +298,7 @@ function generateSkinPortUrl(
     `&souvenir=${souvenirParam}`
   ].join('');
 }
+
   function generateBuffMarketUrl(skin, {
     isStatTrak = false,
     isSouvenir = false,
@@ -469,7 +469,14 @@ function generateCsMoneyMarketUrl(
   const souvenir = skin.isSouvenir ? "true" : "false";
 
   // 3. Float max
-  const floatMaxParam = `&maxFloat=${encodeURIComponent(skin.float.toFixed(3))}`;
+  const floatTo = skin.float?.toFixed(6) ?? '0.2';
+  const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+  const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  
+  const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
+
+  
+  const floatMaxParam = `&maxFloat=${calculatedFloat}`;
 
   // 4. Assemblage final
   return `https://cs.money/${lang}/market/buy/?` +
@@ -725,10 +732,12 @@ function generateBitSkinsUrlRaw(
     .trim()
     .replace(/\s+/g, "+");
 
-  // 4) Calcul de float_value_to
-  const fvTo = floatMax != null
-    ? floatMax
-    : (typeof skin.float === "number" ? skin.float : 1);
+  // 4) Calcul du floatMax dynamique
+  const floatMinCap = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+  const floatMaxCap = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  const wearCap = typeof skin.float === "number" ? skin.float : 0.2;
+  const calculatedFloat = wearCap * (floatMaxCap - floatMinCap) + floatMinCap;
+  const fvTo = calculatedFloat;
 
   // 5) Construction de l’objet search
   const searchObj = {
@@ -767,8 +776,6 @@ function generateBitSkinsUrlRaw(
 function generateDMarketUrl(
   skin,
   {
-    floatMin   = 0,
-    floatMax,
     isStatTrak = false,
     isSouvenir = false
   } = {}
@@ -783,10 +790,7 @@ function generateDMarketUrl(
     return null;
   }
 
-  // 2) floatValueTo
-  const fvTo = floatMax != null
-    ? floatMax
-    : skin.float;
+
 
   // 3) nettoyage du nom
   let baseName = skin.name
@@ -816,10 +820,16 @@ function generateDMarketUrl(
   if (skin.isStatTrak) catParams.push('category_0=stattrak_tm')
   if (skin.isSouvenir) catParams.push('category_1=souvenir')
 
+  const floatTo = skin.float?.toFixed(6) ?? '0.2';
+  const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+  const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  
+  const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
+
   // 8) on assemble l’URL
   const params = [
     `floatValueFrom=${floatMin}`,
-    `floatValueTo=${fvTo}`,
+    `floatValueTo=${calculatedFloat}`,
     ...catParams,
     `title=${titleEncoded}`
   ].join('&');
@@ -870,12 +880,18 @@ function generateCsMoneyUrl(
   const searchParam   = encodeURIComponent(skin.name).replace(/\+/g, "%20");
   const exteriorParam = encodeURIComponent(skin.wear).replace(/\+/g, "%20");
 
+  const floatTo = skin.float?.toFixed(6) ?? '0.2';
+  const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+  const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  
+  const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
+
   // 4) construction de la liste des query parts
   const parts = [
     `search=${searchParam}`,
     `sort=${sort}`,
     `order=${order}`,
-    `maxFloat=${mf}`,
+    `maxFloat=${calculatedFloat}`,
     `exterior=${exteriorParam}`
   ];
 
@@ -905,47 +921,65 @@ function generateAvanMarketUrl(
   // validations
   if (
     !skin ||
-    typeof skin.name  !== "string" ||
-    typeof skin.wear  !== "string" ||
-    typeof skin.float !== "number"
+    typeof skin.name !== "string" ||
+    typeof skin.wear !== "string"
   ) {
     return null;
   }
 
-  // retirer '|' et espaces autour
+  // 1) Table de floatMin par défaut selon wear
+  const wearFloatMinMap = {
+    "Factory New":    0.00,
+    "Minimal Wear":   0.07,
+    "Field-Tested":   0.15,
+    "Well-Worn":      0.38,
+    "Battle-Scarred": 0.45
+  };
+
+  // 2) Récupération des caps
+  const defaultMin = wearFloatMinMap[skin.wear] ?? 0;
+  const floatMinCap = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? defaultMin);
+  const floatMaxCap = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+
+  // 3) Cap du wear (floatTo)
+  const wearCap = typeof skin.float === "number" ? skin.float : 0.2;
+
+  // 4) Calcul du float utilisé
+  const calculatedFloat = wearCap * (floatMaxCap - floatMinCap) + floatMinCap;
+  const roundedFloatMax = calculatedFloat.toFixed(4);
+
+  // 5) Nettoyage du nom
   const cleanedName = skin.name.replace(/\s*\|\s*/g, " ");
 
-  // encodage (espaces => '+')
-  const nameEncoded    = encodeURIComponent(cleanedName).replace(/%20/g, "+");
+  // 6) Encodage (espaces => '+')
+  const nameEncoded = encodeURIComponent(cleanedName).replace(/%20/g, "+");
   const qualityEncoded = encodeURIComponent(skin.wear).replace(/%20/g, "+");
 
-  // float max arrondi à 2 décimales
-  const floatMax = skin.float.toFixed(2);
-
-  // URL de base
+  // 7) URL de base
   let url =
     "https://avan.market/en/market/cs" +
     `?name=${nameEncoded}` +
     `&sort=${sort}` +
     `&quality=${qualityEncoded}` +
-    `&float_max=${floatMax}`;
+    `&float_max=${roundedFloatMax}`;
 
-  // déterminer le filtre spécial
+  // 8) Déterminer le filtre spécial
   let specialLabel;
-  if (skin.isStatTrak) {
+  if (skin.isStatTrak || isStatTrak) {
     specialLabel = "StatTrak™";
-  } else if (skin.isSouvenir) {
+  } else if (skin.isSouvenir || isSouvenir) {
     specialLabel = "Souvenir";
   } else {
     specialLabel = "Without StatTrak™";
   }
 
-  // ajouter le paramètre spécial encodé
+  // 9) Ajouter le paramètre spécial encodé
   const specialEncoded = encodeURIComponent(specialLabel).replace(/%20/g, "+");
   url += `&special=${specialEncoded}`;
 
   return url;
 }
+
 
   //
 /**
@@ -964,8 +998,7 @@ function generateAvanMarketUrl(
 function generateWhiteMarketUrl(
   skin,
   {
-    floatFrom  = 0,
-    floatTo,
+
     isStatTrak = false,
     isSouvenir = false
   } = {}
@@ -973,45 +1006,64 @@ function generateWhiteMarketUrl(
   // 1) validation basique
   if (
     !skin ||
-    typeof skin.name  !== 'string' ||
-    typeof skin.float !== 'number'
+    typeof skin.name !== 'string'
   ) {
     return null;
   }
+
+  const floatMinByWear = {
+    'Factory New': 0.00,
+    'Minimal Wear': 0.07,
+    'Field-Tested': 0.15,
+    'Well-Worn': 0.38,
+    'Battle-Scarred': 0.45
+  };
+
 
   // 2) nettoyage du nom (supprime "|" et espaces autour)
   const cleanedName = skin.name.replace(/\s*\|\s*/g, ' ');
 
   // 3) encodage : espaces → '+'
-  const nameEncoded = encodeURIComponent(cleanedName)
-    .replace(/%20/g, '+');
+  const nameEncoded = encodeURIComponent(cleanedName).replace(/%20/g, '+');
 
-  // 4) floats effectifs
-  const from = typeof floatFrom === 'number'
-    ? floatFrom
-    : 0;
-  const to   = typeof floatTo === 'number'
+  // 4) récupération des float caps
+  const defaultMin = floatMinByWear[skin.wear] ?? 0;
+  
+  const floatTo = skin.float?.toFixed(6) ?? '0.2';
+  const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+  const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  
+
+  // 5) récupération du floatTo (cap du wear)
+  const wearCap = typeof floatTo === 'number'
     ? floatTo
-    : skin.float;
+    : typeof skin.float === 'number'
+    ? skin.float
+    : 0.2;
 
-  // 5) arrondi à 2 décimales
-  const fFrom = from.toFixed(2);
-  const fTo   = to.toFixed(2);
+  // 6) calcul du float utilisé
+  const calculatedFloat = wearCap * (floatMax - floatMin) + floatMin;
 
-  // 6) booléens en chaîne
-  const stParam = skin.isStatTrak  ? 'true' : 'false';
-  const soParam = skin.isSouvenir  ? 'true' : 'false';
+  // 7) arrondi des bornes
+  
+  const fTo = (Math.ceil(calculatedFloat * 100) / 100).toFixed(2);
 
-  // 7) assemblage final
+
+  // 8) booléens en chaîne
+  const stParam = skin.isStatTrak || isStatTrak ? 'true' : 'false';
+  const soParam = skin.isSouvenir || isSouvenir ? 'true' : 'false';
+
+  // 9) assemblage final
   return (
     'https://white.market/market' +
     `?name=${nameEncoded}&sort=pr_a` +
     `&stattrak=${stParam}` +
     `&souvenir=${soParam}` +
-    `&float-from=${fFrom}` +
+    `&float-from=${defaultMin}` +
     `&float-to=${fTo}`
   );
 }
+
 
 /**
  * Génère l’URL d’une recherche sur ExeSkins.
@@ -1046,13 +1098,21 @@ function generateWhiteMarketUrl(
 function generateExeSkinsUrl(
   skin,
   {
-    floatMax = skin.float,
     sortBy    = "price",
     direction = "asc"
   } = {}
 ) {
   // Vérification des données obligatoires
   if (!skin?.name || !skin?.wear) return null;
+
+  // Table des floatMin par wear
+  const floatMinByWear = {
+    "Factory New":    0.00,
+    "Minimal Wear":   0.07,
+    "Field-Tested":   0.15,
+    "Well-Worn":      0.38,
+    "Battle-Scarred": 0.45
+  };
 
   // Encodage du nom en gardant le '|' → %7C, espaces → +
   const searchParam = encodeURIComponent(skin.name).replace(/%20/g, "+");
@@ -1073,61 +1133,49 @@ function generateExeSkinsUrl(
   };
   const exteriorParam = exteriorMap[skin.wear] || "";
 
+  // Récupération des float caps
+  const defaultMin = floatMinByWear[skin.wear] ?? 0;
+  const floatMin = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? defaultMin);
+  const floatMaxCap = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+
+  // Cap du wear (floatTo)
+  const wearCap = typeof skin.float === "number" ? skin.float : 0.2;
+
+  // Calcul du float utilisé
+  const calculatedFloat = wearCap * (floatMaxCap - floatMin) + floatMin;
+
+  // Arrondi vers le haut à 2 décimales
+  const roundedFloatMax = (Math.ceil(calculatedFloat * 100) / 100).toFixed(2);
+
   // Construction de la liste de paramètres
   const parts = [
     `search=${searchParam}`,
     `type=${type}`,
     `exterior=${exteriorParam}`,
     `sortBy=${encodeURIComponent(sortBy)}`,
-    `direction=${encodeURIComponent(direction)}`
+    `direction=${encodeURIComponent(direction)}`,
+    `floatMax=${calculatedFloat}`
   ];
-
-  // Ajout conditionnel du floatMax
-  if (floatMax != null) {
-    parts.push(`floatMax=${encodeURIComponent(String(floatMax))}`);
-  }
 
   // Assemblage final
   return `https://exeskins.com/?${parts.join("&")}`;
 }
-/**
- * Génère une URL vers GamerPay.gg pour une skin CS:GO/CS2,
- * en appliquant un floatMin par défaut selon le skin.wear,
- * et en n’incluant statTrak/souvenir que s’ils sont actifs.
- *
- * @param {Object}  skin
- * @param {string}  skin.name         – ex. "PP-Bizon | Brass"
- * @param {string}  skin.wear         – ex. "Minimal Wear"
- * @param {number}  skin.float        – flottant par défaut
- * @param {boolean}[skin.isStatTrak]  – true si version StatTrak
- * @param {boolean}[skin.isSouvenir]  – true si version Souvenir
- *
- * @param {Object}  [options]
- * @param {number}  [options.floatMin]             – flottant min (override)
- * @param {number}  [options.floatMax=skin.float]  – flottant max
- * @param {string}  [options.sortBy="price"]       – champ de tri
- * @param {boolean}[options.ascending=true]        – sens de tri
- * @param {boolean}[options.statTrak=skin.isStatTrak]
- * @param {boolean}[options.souvenir=skin.isSouvenir]
- * @param {number}  [options.page=1]               – page de résultats
- *
- * @returns {string|null} URL formatée ou null si nom manquant
- */
+
 function generateGamerPayUrl(
   skin,
   {
-    floatMin,                          
-    floatMax    = skin.float,
-    sortBy      = "price",
-    ascending   = true,
-    statTrak    = skin.isStatTrak,
-    souvenir    = skin.isSouvenir,
-    page        = 1
+    floatMin,
+    floatMax,
+    sortBy    = "price",
+    ascending = true,
+    statTrak  = skin.isStatTrak,
+    souvenir  = skin.isSouvenir,
+    page      = 1
   } = {}
 ) {
-  if (!skin?.name) return null;
+  if (!skin?.name || !skin?.wear) return null;
 
-  // Définit floatMin par défaut selon l’usure si non précisé
+  // 1) Table de floatMin par défaut selon wear
   const wearFloatMinMap = {
     "Factory New":    0.00,
     "Minimal Wear":   0.07,
@@ -1135,37 +1183,44 @@ function generateGamerPayUrl(
     "Well-Worn":      0.38,
     "Battle-Scarred": 0.45
   };
-  if (floatMin == null) {
-    floatMin = wearFloatMinMap[skin.wear] ?? 0;
-  }
 
-  // Encodage du nom : espaces → +, pipe → %7C
+  // 2) Récupération des caps
+  const wearMin = wearFloatMinMap[skin.wear] ?? 0;
+  const floatMinCap = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? wearMin);
+  const floatMaxCap = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+
+  // 3) Cap du wear (floatTo)
+  const wearCap = typeof skin.float === "number" ? skin.float : 0.2;
+
+  // 4) Calcul du float utilisé
+  const calculatedFloat = wearCap * (floatMaxCap - floatMinCap) + floatMinCap;
+  const roundedFloatMax = calculatedFloat.toFixed(6);
+
+  // 5) FloatMin effectif = valeur min théorique du wear
+  const effectiveFloatMin = floatMin != null ? floatMin : wearMin;
+
+  // 6) Encodage du nom : espaces → +, pipe → %7C
   const queryParam = encodeURIComponent(skin.name).replace(/%20/g, "+");
 
-  // Paramètres communs
+  // 7) Construction des paramètres
   const parts = [
     `query=${queryParam}`,
-    `floatMax=${encodeURIComponent(String(floatMax))}`,
-    `floatMin=${encodeURIComponent(String(floatMin))}`,
+    `floatMax=${encodeURIComponent(String(roundedFloatMax))}`,
+    `floatMin=${encodeURIComponent(String(effectiveFloatMin))}`,
     `sortBy=${encodeURIComponent(sortBy)}`,
     `ascending=${ascending ? "true" : "false"}`
   ];
 
-  // Ajoute statTrak=1 uniquement si actif
-  if (statTrak) {
-    parts.push(`statTrak=1`);
-  }
-
-  // Ajoute souvenir=1 uniquement si actif
-  if (souvenir) {
-    parts.push(`souvenir=1`);
-  }
-
-  // Pagination
+  if (statTrak) parts.push(`statTrak=1`);
+  if (souvenir) parts.push(`souvenir=1`);
   parts.push(`page=${page}`);
 
+  // 8) Assemblage final
   return `https://gamerpay.gg/?${parts.join("&")}`;
 }
+
+
+
 /**
  * Génère une URL vers cs.deals pour une skin CS:GO/CS2,
  * en déterminant automatiquement item_type (Machinegun, Pistol, Rifle, SMG, Shotgun, Sniper Rifle)
@@ -1234,11 +1289,11 @@ function generateCsDealsUrl(
     ascending  = true,
     exactMatch = 0,
     floatMin,
-    floatMax   = skin.float,
+    floatMax,
     statTrak   = skin.isStatTrak
   } = {}
 ) {
-  if (!skin?.name || !skin?.wear) return null;
+  if (!skin?.name || !skin?.wear || typeof skin.float !== "number") return null;
 
   // 1. Float min par défaut selon l’usure
   const wearFloatMinMap = {
@@ -1248,14 +1303,20 @@ function generateCsDealsUrl(
     "Well-Worn":      0.38,
     "Battle-Scarred": 0.45
   };
-  if (floatMin == null) {
-    floatMin = wearFloatMinMap[skin.wear] ?? 0;
-  }
+  const wearMin = wearFloatMinMap[skin.wear] ?? 0;
+  const floatMinCap = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? wearMin);
+  const floatMaxCap = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  const wearCap = skin.float;
 
-  // 2. Extraire le nom d’arme (avant " | ")
+  // 2. Calcul du float utilisé
+  const calculatedFloat = wearCap * (floatMaxCap - floatMinCap) + floatMinCap;
+  const roundedFloatMax = calculatedFloat.toFixed(6);
+  const effectiveFloatMin = floatMin != null ? floatMin : wearMin;
+
+  // 3. Extraire le nom d’arme (avant " | ")
   const [weaponName] = skin.name.split(" | ").map(s => s.trim());
 
-  // 3. Catégorisation en item_type
+  // 4. Catégorisation en item_type
   const categoryMap = {
     "Machinegun":    ["Negev", "M249"],
     "Shotgun":       ["Nova", "Sawed-Off", "XM1014", "MAG-7"],
@@ -1272,11 +1333,10 @@ function generateCsDealsUrl(
     }
   }
 
-
-  // 4. Construction du paramètre name (sans l’usure)
+  // 5. Construction du paramètre name (sans l’usure)
   const nameParam = encodeURIComponent(skin.name).replace(/%20/g, "+");
 
-  // 5. Assemblage des paramètres
+  // 6. Assemblage des paramètres
   const params = [
     `game=csgo`,
     `sort=${encodeURIComponent(sortBy)}`,
@@ -1285,8 +1345,8 @@ function generateCsDealsUrl(
     `cs_weapon=${encodeURIComponent(weaponName)}`,
     `name=${nameParam}`,
     `exact_match=${exactMatch}`,
-    `cs_min_paintwear=${encodeURIComponent(String(floatMin))}`,
-    `cs_max_paintwear=${encodeURIComponent(String(floatMax))}`
+    `cs_min_paintwear=${encodeURIComponent(String(effectiveFloatMin))}`,
+    `cs_max_paintwear=${encodeURIComponent(String(roundedFloatMax))}`
   ];
 
   if (statTrak) {
@@ -1295,6 +1355,7 @@ function generateCsDealsUrl(
 
   return `https://cs.deals/new/market?${params.join("&")}`;
 }
+
 function generateSkinsMonkeyUrl(skin) {
   if (!skin?.name || !skin?.wear) return null;
 
@@ -1324,7 +1385,7 @@ function generateSkinsMonkeyUrl(skin) {
 function generateCsFloatUrl(skin) {
   if (!skin?.wear || typeof skin.float !== "number") return null;
 
-  // Valeurs minimales par usure
+  // 1) Valeurs minimales par usure
   const wearFloatMinMap = {
     "Factory New":    0.00,
     "Minimal Wear":   0.07,
@@ -1333,11 +1394,25 @@ function generateCsFloatUrl(skin) {
     "Battle-Scarred": 0.45
   };
 
-  const floatMin = wearFloatMinMap[skin.wear] ?? 0;
-  const floatMax = skin.float;
+  // 2) Récupération des caps
+  const wearMin = wearFloatMinMap[skin.wear] ?? 0;
+  const floatMinCap = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? wearMin);
+  const floatMaxCap = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
 
-  return `https://csfloat.com/search?sort_by=lowest_price&min_float=${floatMin}&max_float=${floatMax}`;
+  // 3) Cap du wear (floatTo)
+  const wearCap = typeof skin.float === "number" ? skin.float : 0.2;
+
+  // 4) Calcul du float utilisé
+  const calculatedFloat = wearCap * (floatMaxCap - floatMinCap) + floatMinCap;
+  const roundedFloatMax = calculatedFloat.toFixed(6);
+
+  // 5) min_float = valeur minimale théorique du wear
+  const minFloat = wearMin;
+
+  // 6) Construction de l’URL
+  return `https://csfloat.com/search?sort_by=lowest_price&min_float=${minFloat}&max_float=${roundedFloatMax}`;
 }
+
 
 /**
  * Génère une URL vers Mannco.store pour une skin CS:GO/CS2,
@@ -1407,7 +1482,7 @@ function generate49SkinsUrl(
   skin,
   {
     floatMin,
-    floatMax   = skin.float,
+    floatMax,
     sortBy     = "price",
     stattrak   = skin.isStatTrak,
     souvenir   = skin.isSouvenir
@@ -1423,9 +1498,13 @@ function generate49SkinsUrl(
     "Well-Worn":      0.38,
     "Battle-Scarred": 0.45
   };
-  if (floatMin == null) {
-    floatMin = wearFloatMinMap[skin.wear] ?? 0;
-  }
+  const wearMin = wearFloatMinMap[skin.wear] ?? 0;
+  const floatMinCap = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? wearMin);
+  const floatMaxCap = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  const wearCap = typeof skin.float === "number" ? skin.float : 0.2;
+  const calculatedFloat = wearCap * (floatMaxCap - floatMinCap) + floatMinCap;
+  const roundedFloatMax = calculatedFloat.toFixed(6);
+  const effectiveFloatMin = floatMin != null ? floatMin : wearMin;
 
   // 2. Extraire nom d’arme et suffixe de skin
   const [weaponName, skinSuffix = ""] = skin.name.split(" | ").map(s => s.trim());
@@ -1437,7 +1516,7 @@ function generate49SkinsUrl(
     smg:           ["MP9", "PP-Bizon", "UMP-45", "MP7", "MAC-10", "P90", "MP5-SD"],
     "sniper-rifle":["AWP", "SSG 08", "SCAR-20", "G3SG1"],
     rifle:         ["AK-47", "AUG", "FAMAS", "M4A4", "M4A1-S", "Galil AR", "SG 553"],
-    pistol:        ["Five-SeveN", "Glock-18", "Tec-9", "P2000", "P250", "USP-S", "CZ75-Auto", "Desert Eagle", "Dual Berettas","R8 Revolver" ,"Revolver R8"]
+    pistol:        ["Five-SeveN", "Glock-18", "Tec-9", "P2000", "P250", "USP-S", "CZ75-Auto", "Desert Eagle", "Dual Berettas", "R8 Revolver", "Revolver R8"]
   };
   let categorySlug = "misc";
   for (const [slug, list] of Object.entries(categoryMap)) {
@@ -1451,7 +1530,7 @@ function generate49SkinsUrl(
   const toSlug = str =>
     str
       .toLowerCase()
-      .replace(/[^\w\s.'’\-]/g, "") // conserve . et ' (apostrophes typographiques incluses)
+      .replace(/[^\w\s.'’\-]/g, "")
       .trim()
       .replace(/\s+/g, "-");
 
@@ -1460,8 +1539,8 @@ function generate49SkinsUrl(
 
   // 5. Construire la query
   const params = [
-    `floatMin=${encodeURIComponent(String(floatMin))}`,
-    `floatMax=${encodeURIComponent(String(floatMax))}`,
+    `floatMin=${encodeURIComponent(String(effectiveFloatMin))}`,
+    `floatMax=${encodeURIComponent(String(roundedFloatMax))}`,
     `sortBy=${encodeURIComponent(sortBy)}`
   ];
 
@@ -1471,7 +1550,6 @@ function generate49SkinsUrl(
 
   // 6. Ajouter le bon tagOptionsQuality[]
   if (stattrak && souvenir) {
-    // Cas rare : les deux activés
     params.push(`tagOptionsQuality[]=9cb18e4b-ebce-4c22-bb8a-9f93f1fbb366`);
     params.push(`tagOptionsQuality[]=9caaa352-42b1-42f9-bdae-1d511a768a30`);
   } else if (stattrak) {
@@ -1489,6 +1567,7 @@ function generate49SkinsUrl(
          `${skinSlug}` +
          `?${params.join("&")}`;
 }
+
 
 
 /**
@@ -1661,8 +1740,8 @@ function generateSkinoutUrl(
   {
     isStatTrak  = false,
     isSouvenir  = false,
-    floatMin    = 0,
-    floatMax    = skin.float ?? 1,
+    
+    
     lang        = "en"
   } = {}
 ) {
@@ -1697,6 +1776,11 @@ function generateSkinoutUrl(
     const withComma = str.replace(".", ",");
     return encodeURIComponent(withComma);
   }
+  const floatTo = skin.float?.toFixed(6) ?? '0.2';
+  const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+  const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  
+  const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
 
   const floatMinParam = encodeFloat(floatMin);
   const floatMaxParam = encodeFloat(floatMax);
@@ -1705,7 +1789,7 @@ function generateSkinoutUrl(
   return `https://skinout.gg/${lang}/market/` +
          `${nameSlug}-${wearSlug}` +
          `?float_min=${floatMinParam}` +
-         `&float_max=${floatMaxParam}`;
+         `&float_max=${calculatedFloat}`;
 }
 
 /**
@@ -1823,51 +1907,53 @@ function generateAimMarketUrl(
 function generateGameBoostUrl(
   skin,
   {
-    isStatTrak = false,
+    isStatTrak = skin.isStatTrak ?? false,
     floatMin,
-    floatMax = skin.float ?? 1
+    floatMax
   } = {}
 ) {
-  if (!skin?.name) return null;
+  if (!skin?.name || !skin?.wear || typeof skin.float !== "number") return null;
 
-  // 1) Déterminer floatMin par défaut selon le wear
+  // 1) Valeurs minimales par usure
   const wearFloatMinMap = {
-    "Factory New": 0.00,
-    "Minimal Wear": 0.07,
-    "Field-Tested": 0.15,
-    "Well-Worn": 0.38,
+    "Factory New":    0.00,
+    "Minimal Wear":   0.07,
+    "Field-Tested":   0.15,
+    "Well-Worn":      0.38,
     "Battle-Scarred": 0.45
   };
 
-  const defaultFloatMin = skin.wear && wearFloatMinMap[skin.wear] !== undefined
-    ? wearFloatMinMap[skin.wear]
-    : 0;
+  const wearMin = wearFloatMinMap[skin.wear] ?? 0;
+  const floatMinCap = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? wearMin);
+  const floatMaxCap = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+  const wearCap = skin.float;
 
-  const finalFloatMin = floatMin !== undefined ? floatMin : defaultFloatMin;
+  // 2) Calcul du float utilisé
+  const calculatedFloat = wearCap * (floatMaxCap - floatMinCap) + floatMinCap;
+  const roundedFloatMax = calculatedFloat.toFixed(4); // format comme dans ton exemple
+  const finalFloatMin = (floatMin !== undefined ? floatMin : wearMin).toFixed(2);
 
-  // 2) Encodage du nom complet avec wear
-  const fullName = skin.wear
-    ? `${skin.name} (${skin.wear})`
-    : skin.name;
-
+  // 3) Encodage du nom complet avec wear
+  const fullName = `${skin.name} (${skin.wear})`;
   const encodedName = encodeURIComponent(fullName);
 
-  // 3) Encodage du float range
-  const floatRange = `${finalFloatMin.toFixed(6)}-${floatMax.toFixed(6)}`;
+  // 4) Encodage du float range
+  const floatRange = `${finalFloatMin}-${roundedFloatMax}`;
 
-  // 4) Encodage du wear
-  const wearSlug = skin.wear?.toLowerCase().replace(/\s+/g, "_");
+  // 5) Encodage du wear
+  const wearSlug = skin.wear.toLowerCase().replace(/\s+/g, "_");
 
-  // 5) Paramètre StatTrak
+  // 6) Paramètre StatTrak
   const statTrakParam = isStatTrak ? "&special=is_stat_trak" : "";
 
-  // 6) Assemblage final
+  // 7) Assemblage final
   return `https://gameboost.com/counter-strike-2/skins` +
          `?float=${floatRange}` +
          `&s=${encodedName}` +
          `${statTrakParam}` +
-         (wearSlug ? `&wear=${wearSlug}` : "");
+         `&wear=${wearSlug}`;
 }
+
 
 
   const handleUrlChange = (e) => {
@@ -1987,40 +2073,52 @@ const avgValue = outputs.reduce((sum, s) => sum + (s.price || 0), 0) / outputs.l
             // 🔁 Regrouper les skins similaires (Entrées)
             const groupedInputs = [];
             const seenInputs = new Set();
-const generateMarketLink2 = (skin) => {
-              const name = skin?.name ?? '';
-              const wear = skin?.wear ?? '';
-              const float = skin?.float ?? null;
+  const generateMarketLink2 = (skin) => {
+    const name = skin?.name ?? '';
+    const wear = skin?.wear ?? '';
+    const float = skin?.float ?? null;
 
-              // Détection des variantes
-              const isStatTrak = skin?.isStatTrak ?? false;
-              const isSouvenir = skin?.isSouvenir ?? false;
+    // Détection des variantes
+    const isStatTrak = skin?.isStatTrak ?? false;
+    const isSouvenir = skin?.isSouvenir ?? false;
 
-              // Extraction du type d’arme
-              const allTypes = [
-                'AK-47', 'AUG', 'FAMAS', 'Galil AR', 'M4A1-S', 'M4A4', 'SG 553',
-                'AWP', 'G3SG1', 'SCAR-20', 'SSG 08',
-                'MAC-10', 'MP5-SD', 'MP7', 'MP9', 'P90', 'PP-Bizon', 'UMP-45',
-                'M249', 'Negev',
-                'MAG-7', 'Nova', 'Sawed-Off', 'XM1014'
-              ];
+    // Extraction du type d’arme
+    const allTypes = [
+      'AK-47', 'AUG', 'FAMAS', 'Galil AR', 'M4A1-S', 'M4A4', 'SG 553',
+      'AWP', 'G3SG1', 'SCAR-20', 'SSG 08',
+      'MAC-10', 'MP5-SD', 'MP7', 'MP9', 'P90', 'PP-Bizon', 'UMP-45',
+      'M249', 'Negev',
+      'MAG-7', 'Nova', 'Sawed-Off', 'XM1014'
+    ];
 
-              const type = allTypes.find(t => name.toLowerCase().includes(t.toLowerCase())) ?? '';
+    const type = allTypes.find(t => name.toLowerCase().includes(t.toLowerCase())) ?? '';
 
-              // Construction du lien
-              const base = `https://market.csgo.com/en/?sort=price&order=asc`;
-              const search = `&search=${encodeURIComponent(name)} (${encodeURIComponent(wear)})`;
-              const quality = `&quality=${encodeURIComponent(wear)}`;
-              const weaponType = type ? `&type=${encodeURIComponent(type)}` : '';
-              const floatMax = float ? `&floatMax=${float}` : '';
-              const category = isStatTrak
-                ? `&categories=StatTrak™`
-                : isSouvenir
-                ? `&categories=Souvenir`
-                : '';
+    // Calcul du float utilisé
+    const floatMin = parseFloat(floatCaps?.[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+    const floatMax = parseFloat(floatCaps?.[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+    const wearCap = typeof skin.float === 'number' ? skin.float : 0.2;
+    const calculatedFloat = wearCap * (floatMax - floatMin) + floatMin;
+    const roundedFloat = calculatedFloat.toFixed(3); // arrondi à 3 décimales
 
-              return `${base}${search}${quality}${weaponType}${category}${floatMax}`;
-            };
+    // Construction du lien
+    const base = `https://market.csgo.com/en/?sort=price&order=asc`;
+
+    // Préfixe dans le champ search
+    const prefix = isStatTrak ? 'StatTrak™ ' : isSouvenir ? 'Souvenir ' : '';
+    const search = `&search=${encodeURIComponent(prefix + name)} (${encodeURIComponent(wear)})`;
+
+    const quality = `&quality=${encodeURIComponent(wear)}`;
+    const weaponType = type ? `&type=${encodeURIComponent(type)}` : '';
+    const category = isStatTrak
+      ? `&categories=StatTrak™`
+      : isSouvenir
+      ? `&categories=Souvenir`
+      : '';
+    const floatParam = `&floatMax=${roundedFloat}`;
+
+    return `${base}${search}${quality}${weaponType}${category}${floatParam}`;
+  };
+
   
 // 🔁 Regrouper les sorties identiques
              
@@ -2439,9 +2537,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const wearSuffix = skin.wear ? ` (${skin.wear})` : '';
                 
-                const matchingInput = inputs.find(inp => inp.wear === skin.wear);
+                const matchingInput = inputs.find(inp => inp.wear === skin.wear);                
                 const floatValue = matchingInput?.float ?? '';
                 const skinWithFloat = { ...skin, float: floatValue };
+              
+                const floatTo = parseFloat(matchingInput?.float ?? skin.float ?? 0.2);
+
+                const floatMin = parseFloat(floatCaps[skin.id]?.floatMin ?? skin.floatMin ?? 0);
+                const floatMax = parseFloat(floatCaps[skin.id]?.floatMax ?? skin.floatMax ?? 1);
+
+                const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
+
                 
                 return (
                   <div
@@ -2469,8 +2575,14 @@ document.addEventListener('DOMContentLoaded', () => {
                       <p className={`rarity-${skin.rarity?.toLowerCase()}`}>{skin.rarity}</p>
                       <p className="skin-price">{price} €</p>
                       <div className="float-display">
-                        <p>Float Min: {floatCaps[skin.id]?.floatMin || skin.floatMin || '—'}</p>
-                        <p>Float Max: {floatCaps[skin.id]?.floatMax || skin.floatMax || '—'}</p>
+                        <p>Float Min: {floatCaps[skin.id]?.floatMin || skin.floatMin || '0'}</p>
+                        <p>Float Max: {floatCaps[skin.id]?.floatMax || skin.floatMax || '-'}</p>
+                        <p>
+                          <strong>Float utilisé:</strong>{' '}
+                          {calculatedFloat !== undefined
+                            ? calculatedFloat.toFixed(6)
+                            : '—'}
+                        </p>
                       </div>
 
 
