@@ -3,12 +3,12 @@ import Dexie from 'dexie';
 export const db = new Dexie('cs2TradeUpDB');
 
 // 📦 Définition des tables
-db.version(8).stores({
+db.version(9).stores({
   inventory: '++id,name,wear,float,collection,collectionIMGUrl,rarity,isStatTrak,imageUrl',
-  allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl',
+  allSkins: '++id,name,wear,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,date,volume,imageUrl,floatMin,floatMax',
   history: '++id,date,name,wear,float,rarity,isStatTrak,isSouvenir,isST,isSV,collection,price,volume',
-  currentTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls,floatCapMin,floatCapMax',
-  savedTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls',
+  currentTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls,floatMin,floatMax',
+  savedTradeUps: '++id,name,collection,inputs,outputs,resultSkin,isStatTrak,profitability,date,urls,floatMin,floatMax',
   favoriteTradeUps: 'id' // ⭐ Table des favoris
 });
 
@@ -211,4 +211,10 @@ export async function updateTradeUpNote(id, note) {
     tradeUp.data.note = note;
     await db.savedTradeUps.put(tradeUp);
   }
+}
+export async function updateSkinFloatCaps(skinId, floatMin, floatMax) {
+  return db.allSkins.update(skinId, {
+    floatMin: parseFloat(floatMin),
+    floatMax: parseFloat(floatMax)
+  });
 }

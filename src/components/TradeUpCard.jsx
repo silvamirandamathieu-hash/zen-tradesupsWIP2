@@ -1,7 +1,7 @@
 //TradeUpCard.jsx
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp } from '../db';
+import { deleteCurrentTradeUp, updateCurrentTradeUp, updateSavedTradeUp, updateSkinFloatCaps, getAllInventory  } from '../db';
 
 function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, priceMap}) {
   const [urlInput, setUrlInput] = useState('');
@@ -9,6 +9,9 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [note, setNote] = useState(trade.note || '');
   const [outputLinks, setOutputLinks] = useState({});
+  const [floatCaps, setFloatCaps] = useState({});
+  const [selectedSkinId, setSelectedSkinId] = useState(null); // Pour ouvrir la fenêtre
+
 
   useEffect(() => {
     const storedLinks = localStorage.getItem('outputLinks');
@@ -23,6 +26,33 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
   useEffect(() => {
     setLocalUrls(trade.urls || []);
   }, [trade]);
+
+  useEffect(() => {
+    const loadFloatCaps = async () => {
+      const allSkins = await getAllInventory(); // ou getAllSkins()
+      const caps = {};
+      allSkins.forEach(skin => {
+        caps[skin.id] = {
+          floatMin: skin.floatMin,
+          floatMax: skin.floatMax
+        };
+      });
+      setFloatCaps(caps);
+    };
+    loadFloatCaps();
+  }, []);
+
+
+  const updateFloatCap = (skinId, key, value) => {
+    setFloatCaps(prev => ({
+      ...prev,
+      [skinId]: {
+        ...prev[skinId],
+        [key]: value
+      }
+    }));
+  };
+
 
   const matchingSkins = useMemo(() => {
     if (!Array.isArray(trade?.inputs) || !Array.isArray(allSkins)) return [];
@@ -2417,7 +2447,14 @@ document.addEventListener('DOMContentLoaded', () => {
                       </p>
                       <p className={`rarity-${skin.rarity?.toLowerCase()}`}>{skin.rarity}</p>
                       <p className="skin-price">{price} €</p>
+                      <div className="float-display">
+                        <p>Float Min: {floatCaps[skin.id]?.floatMin || skin.floatMin || '—'}</p>
+                        <p>Float Max: {floatCaps[skin.id]?.floatMax || skin.floatMax || '—'}</p>
+                      </div>
+
+
                     </div>
+                    
 
 
 
@@ -2855,11 +2892,69 @@ document.addEventListener('DOMContentLoaded', () => {
                        
                       </ul>
                     </div>
+                    <button
+                      className="edit-float-button"
+                      onClick={() => setSelectedSkinId(skin.id)}
+                    >
+                      🎯    FloatCap
+                    </button>
+
                   </div>
                 );
               })}
             </div>
+            
           </section>
+          {selectedSkinId && (
+            <div className="float-modal">
+              <h3>Modifier float pour {selectedSkinId}</h3>
+              <input
+                type="number"
+                step="0.0001"
+                min="0"
+                max="1"
+                value={floatCaps[selectedSkinId]?.floatMin || ''}
+                onChange={(e) =>
+                  setFloatCaps(prev => ({
+                    ...prev,
+                    [selectedSkinId]: {
+                      ...prev[selectedSkinId],
+                      floatMin: e.target.value
+                    }
+                  }))
+                }
+                placeholder="Float Min"
+              />
+              <input
+                type="number"
+                step="0.0001"
+                min="0"
+                max="1"
+                value={floatCaps[selectedSkinId]?.floatMax || ''}
+                onChange={(e) =>
+                  setFloatCaps(prev => ({
+                    ...prev,
+                    [selectedSkinId]: {
+                      ...prev[selectedSkinId],
+                      floatMax: e.target.value
+                    }
+                  }))
+                }
+                placeholder="Float Max"
+              />
+              <button
+                onClick={async () => {
+                  const { floatMin, floatMax } = floatCaps[selectedSkinId];
+                  await updateSkinFloatCaps(selectedSkinId, floatMin, floatMax); // Appel à db.js
+                  setSelectedSkinId(null);
+                }}
+              >
+                ✅ Valider
+              </button>
+            </div>
+          )}
+
+
 
           <h4 style={{ color: '#ffd369', fontSize: '1.2rem', marginBottom: '0.8rem' }}>🎒 Entrées :</h4>
           
