@@ -90,6 +90,8 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
     avgOutputValue,
     profit,
     profitability,
+    floatCapMin,
+    floatCapMax,
   } = trade;
 
   const handleDelete = async () => {
@@ -1758,7 +1760,7 @@ function generateAimMarketUrl(
  * @param {Object}  skin
  * @param {string}  skin.name   – ex. "AK-47 | Redline"
  * @param {string}  [skin.wear] – ex. "Field-Tested"
- * @param {number}  [skin.float]– float par défaut, ex. 0.23 (utilisé si floatMax non fourni)
+ * @param {number}  [skin.float] – float par défaut, ex. 0.23 (utilisé si floatMax non fourni)
  *
  * @param {Object}  [options]
  * @param {boolean} [options.isStatTrak=false] – true pour ajouter le filtre StatTrak
@@ -1982,6 +1984,32 @@ const generateMarketLink2 = (skin) => {
                   priceMax: parseFloat(priceMax.toFixed(2)),
                 };
               });
+
+              // default float range per wear (used as fallback)
+              const wearFloatDefaults = {
+                'Factory New': { min: 0.00, max: 0.07 },
+                'Minimal Wear': { min: 0.07, max: 0.15 },
+                'Field-Tested': { min: 0.15, max: 0.38 },
+                'Well-Worn': { min: 0.38, max: 0.45 },
+                'Battle-Scarred': { min: 0.45, max: 1.00 }
+              };
+
+              function getFloatCapsForInput(input, tradeFloatCapMin, tradeFloatCapMax) {
+                // Priorités : input.floatMinCap/MaxCap -> trade.floatCapMin/Max -> wear defaults -> input.float -> sensible fallback
+                const wear = input?.wear;
+                const wearDefaults = wear ? (wearFloatDefaults[wear] || { min: 0, max: input?.float ?? 1 }) : { min: 0, max: input?.float ?? 1 };
+
+                const minCap = (typeof input?.floatMinCap === 'number')
+                  ? input.floatMinCap
+                  : (typeof tradeFloatCapMin === 'number' ? tradeFloatCapMin : wearDefaults.min);
+
+                const maxCap = (typeof input?.floatMaxCap === 'number')
+                  ? input.floatMaxCap
+                  : (typeof tradeFloatCapMax === 'number' ? tradeFloatCapMax : (typeof input?.float === 'number' ? input.float : wearDefaults.max));
+
+                return { min: minCap, max: maxCap };
+              }
+
 function enableSkinCardCopyOnClick() {
   document.querySelectorAll('.skin-card').forEach(card => {
     const nameEl = card.querySelector('.skin-title');
@@ -2859,6 +2887,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tropCher = skin.price > skin.priceMax;
                     const link = generateMarketLink(skin.name, skin.wear);
                     const link2 = generateMarketLink2(skin);
+                    const { min: floatMinCap, max: floatMaxCap } = getFloatCapsForInput(
+                      skin,
+                      trade.floatCapMin, // depuis le trade (déstructuré plus haut)
+                      trade.floatCapMax
+                    );
 
                     return (
                       <li key={i} style={{
@@ -2902,6 +2935,29 @@ document.addEventListener('DOMContentLoaded', () => {
                           {skin.count > 1 && (
                             <div style={{ color: '#aaa', marginTop: '0.2rem' }}>× {skin.count} items similaires</div>
                           )}
+                        </div>
+                    
+                        <div style={{ marginTop: 6, display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <span style={{
+                            background: '#222',
+                            color: '#a0d8ff',
+                            padding: '2px 6px',
+                            borderRadius: 6,
+                            fontFamily: 'monospace',
+                            fontSize: '0.85rem'
+                          }}>
+                            minCap: {typeof floatMinCap === 'number' ? floatMinCap.toFixed(4) : '—'}
+                          </span>
+                          <span style={{
+                            background: '#222',
+                            color: '#ffd369',
+                            padding: '2px 6px',
+                            borderRadius: 6,
+                            fontFamily: 'monospace',
+                            fontSize: '0.85rem'
+                          }}>
+                            maxCap: {typeof floatMaxCap === 'number' ? floatMaxCap.toFixed(4) : '—'}
+                          </span>
                         </div>
                       </li>
                     );
