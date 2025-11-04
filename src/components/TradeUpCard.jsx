@@ -11,6 +11,8 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
   const [outputLinks, setOutputLinks] = useState({});
   const [floatCaps, setFloatCaps] = useState({});
   const [selectedSkinId, setSelectedSkinId] = useState(null); // Pour ouvrir la fenêtre
+  const [showFloatButtons, setShowFloatButtons] = useState(false);
+
   
 
 
@@ -2535,6 +2537,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }}>
           <section className="matching-skins">
             <h4>Skins similaires (collection + wear + rareté)</h4>
+            <button
+              className="toggle-float-button"
+              onClick={() => setShowFloatButtons(prev => !prev)}
+            >
+              {showFloatButtons ? 'Hide FloatCap Buttons' : 'Edit FloatCap'}
+            </button>
             
             <div className="inputs-grid">
               {matchingSkins.map((skin, i) => {
@@ -2569,12 +2577,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                return (
                 <div className="skin-card-wrapper">
-                  <button
-                    className="edit-float-button"
-                    onClick={() => setSelectedSkinId(skin.id)}
-                  >
-                    🎯 
-                  </button>
+                  {showFloatButtons && (
+                    <button
+                      className="edit-float-button"
+                      onClick={() => setSelectedSkinId(skin.id)}
+                    >
+                      🎯
+                    </button>
+                  )}
+
 
                   <div
                     key={i}
