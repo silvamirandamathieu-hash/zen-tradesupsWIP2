@@ -157,7 +157,7 @@ function TradeUpSaved({ priceMap }) {
       'Battle-Scarred': 'BS'
     };
 
-    const countColor = '#44cfd4ff'; // ← modifie cette couleur comme tu veux
+    const countColor = '#b5adadff'; // ← modifie cette couleur comme tu veux
 
     const seen = new Map();
 
