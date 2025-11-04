@@ -157,22 +157,48 @@ function TradeUpSaved({ priceMap }) {
       'Battle-Scarred': 'BS'
     };
 
+    const countColor = '#44cfd4ff'; // ← modifie cette couleur comme tu veux
+
     const seen = new Map();
 
     for (const skin of inputs) {
       const abbrev = wearMap[skin?.wear];
       if (abbrev && skin?.rarity) {
-        seen.set(abbrev, getWearStyle(skin.rarity));
-      }
-      if (skin?.name?.includes('StatTrak') || isStatTrak) {
-        seen.set('ST', getWearStyle(null, true));
+        const style = getWearStyle(skin.rarity);
+        const count = seen.get(abbrev)?.count || 0;
+        seen.set(abbrev, { style, count: count + 1 });
       }
     }
 
-    return Array.from(seen.entries()).map(([label, style], i) => (
-      <span key={i} style={style}>{label}</span>
-    ));
+    const result = [];
+
+    // ST en premier, sans compteur
+    if (isStatTrak || inputs.some(skin => skin?.name?.includes('StatTrak'))) {
+      result.push(
+        <span key="st" style={getWearStyle(null, true)}>
+          ST
+        </span>
+      );
+    }
+
+    // Ajout des autres labels dans l’ordre du wearMap
+    Object.values(wearMap).forEach(label => {
+      const entry = seen.get(label);
+      if (entry) {
+        result.push(
+          <span key={label} style={entry.style}>
+            <span style={{ color: countColor, fontSize: '1.5rem', fontWeight: 'bold' }}>
+              {entry.count}
+            </span>{' '}
+            {label}
+          </span>
+        );
+      }
+    });
+
+    return result;
   };
+
 
 
   // 🧩 Rendu
