@@ -973,9 +973,9 @@
 
 .edit-float-button {
   position: relative;
-  margin-top: 14rem;
-  margin-left: 6rem;
-  padding: 0.4rem 0.8rem;
+  margin-top: 0.1rem;
+  margin-left: 5rem;
+  padding: 0.4rem 0.4rem;
   background-color: #d25454;
   color: #00bcd4;
   border: none;
@@ -1006,6 +1006,34 @@
 }
 
 
+.tradeup-card-wrapper {
+  position: relative;
+  display: inline-block; /* ou flex si tu veux aligner plusieurs cartes */
+  margin-top: 2rem; /* espace autour si nécessaire */
+}
+
+.floatcap-button {
+  position: absolute;
+  top: -12px; /* au-dessus de la carte */
+  right: -12px; /* à l'extérieur à droite */
+  z-index: 10;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.tradeup-card {
+  position: relative;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
 
 

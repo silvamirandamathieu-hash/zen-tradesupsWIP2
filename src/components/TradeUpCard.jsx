@@ -11,6 +11,7 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
   const [outputLinks, setOutputLinks] = useState({});
   const [floatCaps, setFloatCaps] = useState({});
   const [selectedSkinId, setSelectedSkinId] = useState(null); // Pour ouvrir la fenêtre
+  
 
 
   useEffect(() => {
@@ -60,6 +61,7 @@ function TradeUpCard({ trade, actions, onDelete, onEdit, isSaved, id, allSkins, 
       }
     }));
   };
+  
 
 
   const matchingSkins = useMemo(() => {
@@ -2533,6 +2535,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }}>
           <section className="matching-skins">
             <h4>Skins similaires (collection + wear + rareté)</h4>
+            
             <div className="inputs-grid">
               {matchingSkins.map((skin, i) => {
                 const price = skin.price ?? 0;
@@ -2551,8 +2554,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const calculatedFloat = floatTo * (floatMax - floatMin) + floatMin;
 
+                const wearMinValues = {
+                  'Factory New': 0.00,
+                  'Minimal Wear': 0.07,
+                  'Field-Tested': 0.15,
+                  'Well-Worn': 0.38,
+                  'Battle-Scarred': 0.45
+                };
+
+                const currentWearMin = wearMinValues[skin.wear] ?? 0;
+                const isFloatTooLow = calculatedFloat !== undefined && calculatedFloat < currentWearMin;
+
+
                 
-                return (
+               return (
+                <div className="skin-card-wrapper">
+                  <button
+                    className="edit-float-button"
+                    onClick={() => setSelectedSkinId(skin.id)}
+                  >
+                    🎯 
+                  </button>
+
                   <div
                     key={i}
                     className={`skin-card ${skin.rarity?.toLowerCase()}`}
@@ -2578,23 +2601,24 @@ document.addEventListener('DOMContentLoaded', () => {
                       <p className={`rarity-${skin.rarity?.toLowerCase()}`}>{skin.rarity}</p>
                       <p className="skin-price">{price} €</p>
                       <div className="float-display">
-                        <p>Float Min: {floatCaps[skin.id]?.floatMin || skin.floatMin || '0'}</p>
-                        <p>Float Max: {floatCaps[skin.id]?.floatMax || skin.floatMax || '-'}</p>
-                        <p>
-                          <strong>Float utilisé:</strong>{' '}
+                        <p>Cap: {floatCaps[skin.id]?.floatMin || skin.floatMin || '0'} - {floatCaps[skin.id]?.floatMax || skin.floatMax || '-'}</p>
+                        <p
+                          style={{
+                            fontWeight: 'bold',
+                            fontSize: '1rem',
+                    
+                            color: isFloatTooLow ? 'red' : 'inherit' && 'green'
+                          }}
+                        >
+                          <strong>Float:</strong>{' '}
                           {calculatedFloat !== undefined
                             ? calculatedFloat.toFixed(6)
                             : '—'}
                         </p>
+
                       </div>
-
-
                     </div>
-                    
-
-
-
-                    
+                  
 
                     <div className="input-actions actions-hidden">
                       <ul>
@@ -3023,21 +3047,13 @@ document.addEventListener('DOMContentLoaded', () => {
                           
                           </a>
                         </li>
-                        
-
-                       
-                      </ul>
+                        </ul>
+                      </div>
                     </div>
-                    <button
-                      className="edit-float-button"
-                      onClick={() => setSelectedSkinId(skin.id)}
-                    >
-                      🎯    FloatCap
-                    </button>
-
                   </div>
                 );
               })}
+              
             </div>
             
           </section>
